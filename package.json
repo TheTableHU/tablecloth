@@ -1,0 +1,36 @@
+{
+  "name": "tablecloth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node lib/server.js",
+    "start:watch": "npx nodemon -i sessions lib/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/calebstclair/tablecloth.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/calebstclair/tablecloth/issues"
+  },
+  "homepage": "https://github.com/calebstclair/tablecloth#readme",
+  "devDependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
+    "express-handlebars": "^6.0.7",
+    "express-session": "^1.17.3",
+    "http": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.0",
+    "morgan": "^1.10.0",
+    "session-file-store": "^1.5.0",
+    "triple-beam": "^1.3.0",
+    "winston": "^3.8.2"
+  }
+}
