@@ -6,8 +6,8 @@ const inventoryModel = require('../models/inventoryModel')
 
 // Example function to get all users.
 function getInventory(req, res) {
-  const inventory = inventoryModel.getAllUsers()
-  res.json(inventory)
+  const inventory = inventoryModel.Inventory()
+  res.json({ success: true, data: inventory })
 }
 
 // Exporting the functions to be used in routes.

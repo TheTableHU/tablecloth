@@ -2,15 +2,18 @@
 
 // This file defines the data model for users.
 
-// Example: Using a simple array to represent user data.
-
+const items = {
+  bananas: 5,
+  apples: 10,
+  oranges: 15,
+}
 // Example function to get all users.
-function getAllItems() {
-  return null
+function Inventory() {
+  return items
 }
 
 // Exporting the functions to be used in controllers.
 module.exports = {
-  getAllItems,
+  Inventory,
   // ... other functions related to users
 }

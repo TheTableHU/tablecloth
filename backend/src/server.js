@@ -2,19 +2,22 @@ const http = require('http')
 const express = require('express')
 const morgan = require('morgan')
 const expressSession = require('express-session')
-const expressHandlebars = require('express-handlebars')
+const cors = require('cors')
 
 const config = require('./config.js')
 //const db = require("./db.js");
 const logger = require('./logger.js')
 
+//Include routes
+const inventoryRoutes = require('./routes/inventory.js')
+
 const app = express()
+
+// Enable CORS for all routes
+app.use(cors())
 
 //Logging
 app.use(morgan(config.morganFormat, { stream: logger.httpStream }))
-
-//Rendering
-app.engine('hbs', expressHandlebars.engine({ defaultLayout: null, extname: '.hbs' }))
 
 //Session
 app.use(
@@ -26,6 +29,7 @@ app.use(
 )
 
 //Features
+app.use('/api', inventoryRoutes)
 
 //Last effort to try to find a file to serve
 

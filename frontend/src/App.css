@@ -36,3 +36,41 @@
     transform: rotate(360deg);
   }
 }
+
+/* Add box shadow to the cards */
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.MuiCard-root {
+  width: 300px;
+  background-color: #fff; /* Set background color of the card */
+  border: 1px solid #ddd; /* Add border for a subtle separation */
+  border-radius: 8px; /* Add border radius for rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add box shadow for a lifted effect */
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.MuiCard-root:hover {
+  transform: scale(1.05); /* Add a slight scale effect on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase box shadow on hover */
+}
+
+.cardContent {
+  padding: 16px; /* Add padding inside the card for content */
+  text-align: center;
+}
+
+.cardDisplay {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0 auto;
+}
+
