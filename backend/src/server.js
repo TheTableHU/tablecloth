@@ -1,10 +1,12 @@
+const http = require("http");
 const express = require("express");
 const morgan = require("morgan");
 const expressSession = require ("express-session")
 const expressHandlebars = require("express-handlebars");
 
-const config = require('../config.js');
-const logger = require('../logger.js');
+const config = require("./config.js");
+//const db = require("./db.js");
+const logger = require("./logger.js");
 
 const app = express();
 
@@ -33,3 +35,9 @@ app.use((req, res) => {
 });
 
 module.exports = app;
+
+const server = http.createServer(app);
+
+server.listen(config.httpPort, () =>{
+    logger.info("Server listening on port " + config.httpPort);
+})

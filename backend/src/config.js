@@ -7,7 +7,7 @@ function projectPath(...bits){
 }
 
 module.exports = {
-    httpPort: 8000,
+    httpPort: 8080,
     logLevel: "trace",
     staticDir: projectPath('static'),
     dbhost: 'localhost',
