@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
-import config from '../config'
+import config from '../../config'
 
 export default function InventoryList() {
   const columns = [

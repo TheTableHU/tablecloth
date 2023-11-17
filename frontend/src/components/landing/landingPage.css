@@ -1,0 +1,40 @@
+.card-link {
+    text-decoration: none;
+    color: inherit;
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: box-shadow 0.3s ease-in-out;
+  }
+  
+  .MuiCard-root {
+    width: 300px;
+    height: 300px;
+    background-color: #fff; /* Set background color of the card */
+    border: 1px solid #ddd; /* Add border for a subtle separation */
+    border-radius: 8px; /* Add border radius for rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add box shadow for a lifted effect */
+    background-color: transparent;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 5s ease-in-out; /* Combine transitions */
+  }
+  
+  .MuiCard-root:hover {
+    transform: scale(1.05); /* Add a slight scale effect on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase box shadow on hover */
+    background-color: lightblue;
+  }
+  
+  .cardContent {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Ensure the content takes the full height of the card */
+  }
+  
+  .MuiCard-root .MuiTypography-root {
+    font-size: 48px;
+  }
+  
