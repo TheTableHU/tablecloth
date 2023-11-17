@@ -1,16 +1,16 @@
-const path = require('path');
-const fs = require('fs');
-const crypto = require('crypto');
+const path = require('path')
+const fs = require('fs')
+const crypto = require('crypto')
 
-function projectPath(...bits){
-    return path.join(__dirname, '..', ...bits)
+function projectPath(...bits) {
+  return path.join(__dirname, '..', ...bits)
 }
 
 module.exports = {
-    httpPort: 8080,
-    logLevel: "trace",
-    staticDir: projectPath('static'),
-    dbhost: 'localhost',
-    dbname: "comp4310",
-    sessionSecret: "tablecloth"
+  httpPort: 8080,
+  logLevel: 'trace',
+  staticDir: projectPath('static'),
+  dbhost: 'localhost',
+  dbname: 'comp4310',
+  sessionSecret: 'tablecloth',
 }

@@ -8,13 +8,12 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "lint": "eslint src",
-    "prettify": "prettier --write \"src/**/*.js\"",
+    "prettify": "prettier --write \"**/*.js\"",
     "deploy": "npm run build && node backend/src/server.js"
   },
   "dependencies": {
     "express": "^4.17.1",
     "pg": "^8.6.0",
-    "axios": "^0.24.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },

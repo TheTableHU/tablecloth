@@ -2,16 +2,16 @@
 
 // This file contains the business logic for handling user-related operations.
 
-const inventoryModel = require('../models/inventoryModel');
+const inventoryModel = require('../models/inventoryModel')
 
 // Example function to get all users.
 function getInventory(req, res) {
-  const inventory = inventoryModel.getAllUsers();
-  res.json(inventory);
+  const inventory = inventoryModel.getAllUsers()
+  res.json(inventory)
 }
 
 // Exporting the functions to be used in routes.
 module.exports = {
-  getAllUsers,
+  getInventory,
   // ... other functions related to user operations
-};
+}
