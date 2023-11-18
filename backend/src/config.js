@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const path = require('path')
 const fs = require('fs')
 const crypto = require('crypto')
@@ -7,10 +9,14 @@ function projectPath(...bits) {
 }
 
 module.exports = {
-  httpPort: 8080,
+  httpPort: 8081,
   logLevel: 'trace',
   staticDir: projectPath('static'),
-  dbhost: 'localhost',
-  dbname: 'comp4310',
+  username: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  host: process.env.DB_HOST,
+  dialect: 'mysql',
+  dbPort: process.env.DB_PORT,
   sessionSecret: 'tablecloth',
 }
