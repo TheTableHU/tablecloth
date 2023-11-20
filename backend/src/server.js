@@ -3,6 +3,7 @@ const express = require('express')
 const morgan = require('morgan')
 const expressSession = require('express-session')
 const cors = require('cors')
+const sequelize = require('./db.js')
 
 const config = require('./config.js')
 //const db = require("./db.js");
@@ -28,6 +29,18 @@ app.use(
   })
 )
 
+// Database
+sequelize
+  .sync()
+  .then(() => {
+    console.log('Database synced successfully')
+  })
+  .catch(error => {
+    console.error('Error syncing database:', error)
+  })
+
+// Models
+
 //Features
 app.use('/api', inventoryRoutes)
 
@@ -41,9 +54,3 @@ app.use((req, res) => {
 })
 
 module.exports = app
-
-const server = http.createServer(app)
-
-server.listen(config.httpPort, () => {
-  logger.info('Server listening on port ' + config.httpPort)
-})

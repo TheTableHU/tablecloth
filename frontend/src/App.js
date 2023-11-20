@@ -1,12 +1,12 @@
-import React from 'react';
-import { Routes, Route, Outlet, useLocation, Link} from 'react-router-dom';
+import React from 'react'
+import { Routes, Route, Outlet, useLocation, Link } from 'react-router-dom'
 
-import LandingPage from './components/landing/landingPage.js';
-import InventoryList from './components/inventory/inventoryList.js';
-import Button from '@mui/material/Button'  // Import your Inventory component
+import LandingPage from './components/landing/landingPage.js'
+import InventoryList from './components/inventory/inventoryList.js'
+import Button from '@mui/material/Button' // Import your Inventory component
 
 function App() {
-  const location = useLocation();
+  const location = useLocation()
 
   return (
     <div>
@@ -27,4 +27,4 @@ function App() {
   )
 }
 
-export default App;
+export default App

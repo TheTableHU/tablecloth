@@ -1,30 +1,6 @@
-version: '3'
+version: '3.8'
 
 services:
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: backend
-    ports:
-      - "8081:8081"  # Adjust the port as needed
-    env_file:
-      - .env
-    depends_on:
-      - database  # Assuming you have a database service
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: frontend
-    ports:
-      - "8080:8080"  # Adjust the port as needed
-    env_file:
-      - .env
-    depends_on:
-      - backend
-
   database:
     image: mysql:latest
     container_name: database
@@ -34,6 +10,38 @@ services:
       - "3306:3306"
     volumes:
       - db:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./backend:/app:delegated  # Mount the local source code into the container
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - .env
+    depends_on:
+      - database
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    volumes:
+      - ./frontend:/app:delegated
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+    env_file:
+      - .env
+    depends_on:
+      - backend
 
 volumes:
   db:  # Define your named volume here

@@ -4,22 +4,7 @@ import Box from '@mui/material/Box'
 import config from '../../config'
 
 export default function InventoryList() {
-  const columns = [
-    { field: 'id', headerName: 'ID', width: 90 },
-    {
-      field: 'Item',
-      headerName: 'Item',
-      width: 150,
-      editable: false,
-    },
-    {
-      field: 'Quantity',
-      headerName: 'Quantity',
-      width: 200,
-      editable: true,
-    },
-  ]
-
+  const [columns, setColumns] = useState([])
   const [rows, setRows] = useState([])
 
   useEffect(() => {
@@ -29,13 +14,11 @@ export default function InventoryList() {
         const data = await response.json()
 
         if (data.success) {
-          const transformedRows = Object.keys(data.data).map((item, index) => ({
-            id: index + 1,
-            Item: item,
-            Quantity: data.data[item],
-          }))
+          // Assuming the API response includes a 'columns' property
+          const apiColumns = data.columns || []
+          setColumns(apiColumns)
 
-          setRows(transformedRows)
+          setRows(data.data)
         } else {
           console.error('Error fetching inventory:', data.error)
           // Set an empty array or handle the error accordingly
@@ -52,7 +35,7 @@ export default function InventoryList() {
   }, [])
 
   return (
-    <Box sx={{ height: 400, width: '100%' }}>
+    <Box sx={{ height: '54.5vw', width: '100vw' }}>
       <DataGrid rows={rows} columns={columns} pageSize={5} cellEditMode="cellClick" />
     </Box>
   )
