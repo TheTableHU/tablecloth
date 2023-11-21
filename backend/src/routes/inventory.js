@@ -8,6 +8,7 @@ const inventoryController = require('../controllers/inventoryController')
 
 // other routes related to inventory operations
 router.get('/inventory', inventoryController.getInventory)
+router.get('/checkout', inventoryController.getItemNames)
 
 // Exporting the router to be used in server.js.
 module.exports = router

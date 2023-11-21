@@ -20,7 +20,7 @@
   }
   
   .MuiCard-root:hover {
-    transform: scale(1.05); /* Add a slight scale effect on hover */
+    transform: scale(1.05); /* Adad a slight scale effect on hover */
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase box shadow on hover */
     background-color: lightblue;
   }
@@ -38,3 +38,7 @@
     font-size: 48px;
   }
   
+  .cardDisplay {
+    display: flex;
+    justify-content: center;
+  }

@@ -10,34 +10,44 @@ async function getInventory(req, res) {
     const columns = Object.keys(inventory[0].dataValues).map(key => ({
       field: key,
       headerName: key.charAt(0).toUpperCase() + key.slice(1), // Capitalize the first letter
-      width: 150, // Adjust the width as needed
+      width: 150,
       editable: false,
     }))
 
     columns.forEach(column => {
       switch (column.headerName) {
         case 'Item':
-          column.width = 400 // Adjust the width for the 'Quantity' field
+          column.width = 400
           break
         case 'UpdatedAt':
-          column.headerName = 'Last Updated' // Rename the 'UpdatedAt' field
+          column.headerName = 'Last Updated'
           break
         case 'Id':
-            column.headerName = 'ID' // Rename the 'id' field. Table will fail to load otherwise
-            break
+          column.headerName = 'ID'
+          break
         default:
           break
       }
     })
 
-    res.json({ success: true, columns: columns, data: inventory})
+    res.json({ success: true, columns: columns, data: inventory })
   } else {
-    res.json({ success: true, columns: [], data: []})
+    res.json({ success: true, columns: [], data: [] })
   }
 }
 
-// Exporting the functions to be used in routes.
+async function getItemNames(req, res) {
+  let items = await inventoryModel.getItemNames()
+  items.map(item => {
+    return (item.key = item.id)
+  })
+
+  if (Array.isArray(items) && items.length > 0) {
+    res.json({ success: true, data: items })
+  }
+}
+
 module.exports = {
   getInventory,
-  // ... other functions related to user operations
+  getItemNames,
 }

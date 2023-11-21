@@ -12,15 +12,19 @@
     "deploy": "npm run build && node backend/src/server.js"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.18",
+    "@mui/material": "^5.14.18",
     "express": "^4.17.1",
     "pg": "^8.6.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
-    "react-scripts": "4.0.3",
     "eslint": "^7.32.0",
-    "prettier": "^2.4.1"
+    "prettier": "^2.4.1",
+    "react-scripts": "4.0.3"
   },
   "engines": {
     "node": ">=14.17.0",
@@ -30,7 +34,11 @@
     "type": "git",
     "url": "https://github.com/yourusername/tablecloth.git"
   },
-  "keywords": ["SERN", "inventory", "user management"],
+  "keywords": [
+    "SERN",
+    "inventory",
+    "user management"
+  ],
   "author": "Your Name",
   "license": "MIT",
   "eslintConfig": {

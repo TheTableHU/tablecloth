@@ -1,7 +1,7 @@
 // inventoryModel.js
 
 const { DataTypes } = require('sequelize')
-const { parseISO, format, isValid } = require('date-fns');
+const { parseISO, format, isValid } = require('date-fns')
 const sequelize = require('../db.js') // Adjust the path based on your project structure
 
 const Inventory = sequelize.define(
@@ -33,11 +33,22 @@ const Inventory = sequelize.define(
   }
 )
 
-// Example function to get all users.
+// Get all items with all data
 async function getAllItems() {
   try {
     const items = await Inventory.findAll()
-    return formatDate(items);
+    return formatDate(items)
+  } catch (error) {
+    console.error('Error fetching items:', error)
+    throw error // You might want to handle errors in the controller
+  }
+}
+
+// Get all items with only the item name
+async function getItemNames() {
+  try {
+    const items = (await Inventory.findAll()).map(item => ({ id: item.id, item: item.item }))
+    return items
   } catch (error) {
     console.error('Error fetching items:', error)
     throw error // You might want to handle errors in the controller
@@ -46,25 +57,24 @@ async function getAllItems() {
 
 function formatDate(data) {
   data.forEach((item, index) => {
-    const updatedAt = item.updatedAt;
+    const updatedAt = item.updatedAt
 
-    const parsedDate = parseISO(updatedAt);
+    const parsedDate = parseISO(updatedAt)
 
     if (isValid(parsedDate)) {
-      item.setDataValue('updatedAt', format(parsedDate, 'MMMM dd, yyyy'));
-    } 
-    else {
-      console.log(`Invalid date at index ${index}:`, updatedAt);
-      item.updatedAt = 'Invalid Date';
+      item.setDataValue('updatedAt', format(parsedDate, 'MMMM dd, yyyy'))
+    } else {
+      console.log(`Invalid date at index ${index}:`, updatedAt)
+      item.updatedAt = 'Invalid Date'
     }
-  });
+  })
 
-  return data;
+  return data
 }
-
 
 // Exporting the functions to be used in controllers.
 module.exports = {
   Inventory,
   getAllItems,
+  getItemNames,
 }

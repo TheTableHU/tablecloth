@@ -1,0 +1,16 @@
+.MuiButton-root {
+    text-transform: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: bold;
+  }
+  
+  .MuiButton-containedPrimary {
+    background-color: #22526e;
+    color: #ffffff;
+  }
+  
+  .MuiButton-containedPrimary:hover {
+    background-color: #1d384f;
+  }
+  
