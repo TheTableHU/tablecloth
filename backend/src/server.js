@@ -17,6 +17,9 @@ const app = express()
 // Enable CORS for all routes
 app.use(cors())
 
+// Parse JSON bodies
+app.use(express.json())
+
 //Logging
 app.use(morgan(config.morganFormat, { stream: logger.httpStream }))
 

@@ -1,8 +1,8 @@
 // ToastWrapper.js
 
-import React from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React from 'react'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const ToastWrapper = () => {
   return (
@@ -14,7 +14,7 @@ const ToastWrapper = () => {
       closeOnClick
       rtl={false}
     />
-  );
-};
+  )
+}
 
-export { ToastWrapper, toast };
+export { ToastWrapper, toast }

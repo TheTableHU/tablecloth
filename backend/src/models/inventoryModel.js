@@ -55,6 +55,31 @@ async function getItemNames() {
   }
 }
 
+const checkout = async items => {
+  try {
+    for (const item of items) {
+      const existingItem = await Inventory.findByPk(item.id)
+
+      if (existingItem) {
+        const updatedQuantity = existingItem.quantity - item.checkoutQuantity
+
+        if (isNaN(updatedQuantity)) {
+          throw new Error(`Item is NaN. Changes not saved.`)
+        }
+
+        await existingItem.update({ quantity: updatedQuantity })
+      } else {
+        console.warn(`Item with ID ${item.id} not found in the inventory.`)
+      }
+    }
+
+    console.log('Inventory updated successfully.')
+  } catch (error) {
+    console.error('Error updating inventory: ', error)
+    throw error // You might want to handle errors in the controller
+  }
+}
+
 function formatDate(data) {
   data.forEach((item, index) => {
     const updatedAt = item.updatedAt
@@ -77,4 +102,5 @@ module.exports = {
   Inventory,
   getAllItems,
   getItemNames,
+  checkout,
 }

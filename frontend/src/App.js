@@ -2,7 +2,7 @@ import React from 'react'
 import { Routes, Route, Outlet, useLocation, Link } from 'react-router-dom'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import './shared.css'
 
 import LandingPage from './components/landing/landingPage.js'

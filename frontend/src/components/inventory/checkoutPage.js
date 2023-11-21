@@ -44,13 +44,11 @@ export default function CheckoutPage() {
   }, [])
 
   function addButton() {
-    if (!selectedItem){
-        toast.warning("Please select an item.")
-    }
-    else if (quantity <= 0){
-        toast.warning("Please select a valid quantity.")
-    }
-    else {
+    if (!selectedItem) {
+      toast.warning('Please select an item.')
+    } else if (quantity <= 0) {
+      toast.warning('Please select a valid quantity.')
+    } else {
       const selectedInventoryItem = receivedData.find(item => item.item === selectedItem)
 
       if (selectedInventoryItem) {
@@ -58,6 +56,7 @@ export default function CheckoutPage() {
           id: selectedInventoryItem.id, // Adjust based on your item structure
           primaryText: selectedItem,
           secondaryText: `Quantity: ${quantity}`,
+          checkoutQuantity: quantity,
         }
 
         setItems(prevItems => [...prevItems, newItem])
@@ -74,40 +73,35 @@ export default function CheckoutPage() {
   }
 
   function handleSubmit() {
-    if(items.length !== 0) {
-    fetch(config.host + '/api/submit', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ items: items }), // Send the items data in the request body
-    })
-      .then(response => response.json())
-      .then(data => {
-        // Handle the response if needed
-        console.log('Submit response:', data);
+    if (items.length !== 0) {
+      fetch(config.host + '/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ items }), // Simplify the object notation
       })
-      .catch(error => {
-        console.error('Error submitting data:', error);
-      });
+        .then(response => response.json())
+        .then(data => {
+          // Handle the response if needed
+          toast.success('Successfully submitted data.')
+          setItems([])
+        })
+        .catch(error => {
+          console.error('Error submitting data:', error)
+        })
+    } else {
+      toast.error('Please add items before submitting.')
+    }
   }
-  else{
-    toast.error('Please add items before submitting.');
-  }
-}
 
   return (
     <>
       <ToastWrapper />
-      <Box
-        component="form"
-        className="formContainer"
-        noValidate
-        autoComplete="off"
-      >
+      <Box component="form" className="formContainer" noValidate autoComplete="off">
         <Autocomplete
           id="itemSelect"
-          className='itemSelect'
+          className="itemSelect"
           options={receivedData}
           getOptionLabel={option => option.item}
           value={receivedData.find(option => option.item === selectedItem) || null}
@@ -125,7 +119,9 @@ export default function CheckoutPage() {
           onChange={e => setQuantity(e.target.value)}
         />
 
-        <Button variant="contained" className="addButton" onClick={() => addButton()}>Add Item</Button>
+        <Button variant="contained" className="addButton" onClick={() => addButton()}>
+          Add Item
+        </Button>
       </Box>
       <Box className="listContainer">
         <Grid item xs={12} md={6}>
@@ -133,8 +129,7 @@ export default function CheckoutPage() {
             <List>
               {items.map(
                 item =>
-                  item.id &&
-                  item.primaryText && (
+                  item.id && (
                     <ListItem
                       key={item.id}
                       secondaryAction={
@@ -156,8 +151,16 @@ export default function CheckoutPage() {
         </Grid>
       </Box>
       <div id="submitButtonContainer">
-      <Button variant="contained" className="submitButton" onClick={() => { handleSubmit(); }}>Submit</Button>
-        </div>
-      </>
+        <Button
+          variant="contained"
+          className="submitButton"
+          onClick={() => {
+            handleSubmit()
+          }}
+        >
+          Submit
+        </Button>
+      </div>
+    </>
   )
 }
