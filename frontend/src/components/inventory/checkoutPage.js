@@ -13,7 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import Button from '@mui/material/Button'
 import Autocomplete from '@mui/material/Autocomplete'
 
-import { ToastWrapper, toast } from '../../toastWrapper.js'
+import { ToastWrapper, toast } from '../../Wrappers.js'
 import './checkoutPage.css'
 
 export default function CheckoutPage() {

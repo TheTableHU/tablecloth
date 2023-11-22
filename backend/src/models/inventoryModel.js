@@ -97,6 +97,8 @@ function formatDate(data) {
   return data
 }
 
+sequelize.sync()
+
 // Exporting the functions to be used in controllers.
 module.exports = {
   Inventory,

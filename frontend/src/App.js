@@ -8,6 +8,7 @@ import './shared.css'
 import LandingPage from './components/landing/landingPage.js'
 import InventoryList from './components/inventory/inventoryList.js'
 import Checkout from './components/inventory/checkoutPage.js'
+import Checkin from './components/shopper/checkinPage.js'
 
 function App() {
   const location = useLocation()
@@ -27,6 +28,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/inventory" element={<InventoryList />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/checkin" element={<Checkin />} />
       </Routes>
 
       {/* The Outlet component renders the child components of the matched route */}

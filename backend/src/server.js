@@ -6,11 +6,7 @@ const cors = require('cors')
 const sequelize = require('./db.js')
 
 const config = require('./config.js')
-//const db = require("./db.js");
 const logger = require('./logger.js')
-
-//Include routes
-const inventoryRoutes = require('./routes/inventory.js')
 
 const app = express()
 
@@ -32,6 +28,14 @@ app.use(
   })
 )
 
+//Include routes
+const inventoryRoutes = require('./routes/inventory.js')
+const shopperRoutes = require('./routes/shopper.js')
+
+//Features
+app.use('/api', inventoryRoutes)
+app.use('/api', shopperRoutes)
+
 // Database
 sequelize
   .sync()
@@ -41,13 +45,6 @@ sequelize
   .catch(error => {
     console.error('Error syncing database:', error)
   })
-
-// Models
-
-//Features
-app.use('/api', inventoryRoutes)
-
-//Last effort to try to find a file to serve
 
 //Return Not Found
 app.use((req, res) => {

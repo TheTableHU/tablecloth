@@ -1,0 +1,13 @@
+.newShopperContainer {
+    position: relative;
+  }
+  
+  .verticalLine {
+    position: absolute;
+    height: 100%;
+    width: 1px;
+    background-color: #ccc; /* Adjust the color as needed */
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  

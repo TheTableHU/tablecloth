@@ -42,3 +42,16 @@
     display: flex;
     justify-content: center;
   }
+
+#landingImageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  #landingLogo {
+    width: 20%;
+    height: 20%;
+    object-fit: cover;
+  }
