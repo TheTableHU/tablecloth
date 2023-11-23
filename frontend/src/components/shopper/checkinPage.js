@@ -146,7 +146,7 @@ export default function CheckinPage() {
         <h1>New Shopper</h1>
         <div className="newShopperFormContainer">
           <FormControl fullWidth>
-            <HNumWrapper value={newHNum} onChange={(event) => handleHNumChange(event, 'new')} />
+            <HNumWrapper value={newHNum} onChange={event => handleHNumChange(event, 'new')} />
           </FormControl>
           <div className="formRow">
             <FormControl fullWidth>
@@ -298,20 +298,17 @@ export default function CheckinPage() {
               </RadioGroup>
             </FormControl>
           </div>
-          </div>
+        </div>
 
-          {(interestedInSNAP === 'Yes' || needHousingAssistance === "Yes" || needJobAssistance === "Yes")&& (
+        {(interestedInSNAP === 'Yes' ||
+          needHousingAssistance === 'Yes' ||
+          needJobAssistance === 'Yes') && (
           <div className="formRow">
             <FormControl component="fieldset" fullWidth>
-              <TextField
-                id="email"
-                label="Email"
-                value={email}
-                onChange={handleEmailChange}
-              />
+              <TextField id="email" label="Email" value={email} onChange={handleEmailChange} />
             </FormControl>
           </div>
-          )}
+        )}
 
         <div className="submitButtonContainer">
           <Button
@@ -332,7 +329,10 @@ export default function CheckinPage() {
       <div className="returningShopper">
         <h1>Returning Shopper</h1>
         <FormControl fullWidth>
-          <HNumWrapper value={returningHNum} onChange={(event) => handleHNumChange(event, 'returning')} />
+          <HNumWrapper
+            value={returningHNum}
+            onChange={event => handleHNumChange(event, 'returning')}
+          />
         </FormControl>
 
         <div className="submitButtonContainer">

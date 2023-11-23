@@ -46,36 +46,70 @@ async function getAllItems() {
 // Get all items with only the item name
 async function getItemNames() {
   try {
-    await sequelize.transaction(async (t) => {
-      const items = (await Inventory.findAll()).map(item => ({ id: item.id, item: item.item }), { transaction: t })
-      return items
+    const items = await sequelize.transaction(async t => {
+      const allItems = await Inventory.findAll({ transaction: t });
+      return allItems.map(item => ({ id: item.id, item: item.item }));
     });
+
+    return items;
   } catch (error) {
-    throw error
+    throw error;
   }
 }
 
-const checkout = async items => {
+async function checkout(items) {
+  const t = await sequelize.transaction();
+
   try {
     for (const item of items) {
-      const existingItem = await Inventory.findByPk(item.id)
+      const existingItem = await Inventory.findByPk(item.id, { transaction: t });
 
       if (existingItem) {
-        const updatedQuantity = existingItem.quantity - item.checkoutQuantity
+        const updatedQuantity = parseInt(existingItem.quantity) - parseInt(item.checkoutQuantity);
 
         if (isNaN(updatedQuantity)) {
-          throw new Error(`Item is NaN. Changes not saved.`)
+          throw new Error(`Item is NaN. Changes not saved.`);
         }
 
-        await existingItem.update({ quantity: updatedQuantity })
+        await existingItem.update({ quantity: updatedQuantity }, { transaction: t });
       } else {
-        console.warn(`Item with ID ${item.id} not found in the inventory.`)
+        console.warn(`Item with ID ${item.id} not found in the inventory.`);
       }
     }
 
-    console.log('Inventory updated successfully.')
+    await t.commit();
+    console.log('Inventory updated successfully.');
   } catch (error) {
-    throw error
+    await t.rollback();
+    throw error;
+  }
+}
+
+async function addShipment(items) {
+  const t = await sequelize.transaction();
+
+  try {
+    for (const item of items) {
+      const existingItem = await Inventory.findByPk(item.id, { transaction: t });
+
+      if (existingItem) {
+        const updatedQuantity = parseInt(existingItem.quantity) + parseInt(item.checkoutQuantity);
+
+        if (isNaN(updatedQuantity)) {
+          throw new Error(`Item is NaN. Changes not saved.`);
+        }
+
+        await existingItem.update({ quantity: updatedQuantity }, { transaction: t });
+      } else {
+        console.warn(`Item with ID ${item.id} not found in the inventory.`);
+      }
+    }
+
+    await t.commit();
+    console.log('Inventory updated successfully.');
+  } catch (error) {
+    await t.rollback();
+    throw error;
   }
 }
 
@@ -104,4 +138,5 @@ module.exports = {
   getAllItems,
   getItemNames,
   checkout,
+  addShipment,
 }

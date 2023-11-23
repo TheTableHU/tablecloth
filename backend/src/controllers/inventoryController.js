@@ -63,8 +63,25 @@ async function checkoutItems(req, res) {
   }
 }
 
+async function addShipmentItems(req, res) {
+  const { items } = req.body
+
+  if (Array.isArray(items) && items.length > 0) {
+    const shipmentResult = await inventoryModel.addShipment(items)
+
+    if (shipmentResult) {
+      res.json({ success: true })
+    } else {
+      res.json({ success: false })
+    }
+  } else {
+    res.json({ success: false })
+  }
+}
+
 module.exports = {
   getInventory,
   getItemNames,
   checkoutItems,
+  addShipmentItems,
 }

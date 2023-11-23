@@ -104,7 +104,7 @@ async function createShopper(shopper) {
     const shopperData = {
       hNumber: parseInt(formData.hNumber, 10),
       classification: formData.classification,
-      dateRegistered: new Date().toISOString().slice(0, 10),  
+      dateRegistered: new Date().toISOString().slice(0, 10),
       home: formData.home,
       gender: formData.gender,
       boxNumber: formData.box,
@@ -116,21 +116,21 @@ async function createShopper(shopper) {
       needHousing: formData.needHousingAssistance === 'true' ? 1 : 0,
       helpWithHousing: formData.needHousingAssistance === 'true' ? 1 : 0,
       snap: formData.interestedInSNAP === 'true' ? 1 : 0,
-      email: formData.email
-    };
+      email: formData.email,
+    }
 
     for (const key in shopperData) {
       if (shopperData.hasOwnProperty(key) && shopperData[key] === '') {
-        shopperData[key] = null;
+        shopperData[key] = null
       }
     }
 
     console.log('shopperData:', shopperData)
 
-    await sequelize.transaction(async (t) => {
-      const newShopper = await Shopper.create( shopperData, { transaction: t });
-      return newShopper;
-    });
+    await sequelize.transaction(async t => {
+      const newShopper = await Shopper.create(shopperData, { transaction: t })
+      return newShopper
+    })
   } catch (error) {
     console.log('Error creating shopper:', error)
     throw error

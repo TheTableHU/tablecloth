@@ -1,8 +1,8 @@
 import React from 'react'
 import { Routes, Route, Outlet, useLocation, Link as RouterLink } from 'react-router-dom'
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Link from '@mui/material/Link';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import Breadcrumbs from '@mui/material/Breadcrumbs'
+import Link from '@mui/material/Link'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import './shared.css'
 
 import LandingPage from './components/landing/landingPage.js'
@@ -18,41 +18,38 @@ function App() {
 
   return (
     <div>
-    {location.pathname !== '/' && (
-      <Breadcrumbs
-        separator={<NavigateNextIcon fontSize="small" />}
-        aria-label="breadcrumb"
-      >
-        <Link component={RouterLink} to="/" className="breadcrumbLink">
-          Home
-        </Link>
-        {location.pathname.includes('/inventory') && (
-          <Link component={RouterLink} to="/inventory" className="breadcrumbLink">
-            Inventory
+      {location.pathname !== '/' && (
+        <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+          <Link component={RouterLink} to="/" className="breadcrumbLink">
+            Home
           </Link>
-        )}
-        {location.pathname.includes('/inventory/list') && (
-          <Link component={RouterLink} to="/inventory/list" className="breadcrumbLink">
-            List
-          </Link>
-        )}
-        {location.pathname.includes('/inventory/shipment') && (
-          <Link component={RouterLink} to="/inventory/shipment" className="breadcrumbLink">
-            Shipment
-          </Link>
-        )}
-        {location.pathname.includes('/checkout') && (
-          <Link component={RouterLink} to="/checkout" className="breadcrumbLink">
-            Checkout
-          </Link>
-        )}
-        {location.pathname.includes('/checkin') && (
-          <Link component={RouterLink} to="/checkin" className="breadcrumbLink">
-            Checkin
-          </Link>
-        )}
-      </Breadcrumbs>
-    )}
+          {location.pathname.includes('/inventory') && (
+            <Link component={RouterLink} to="/inventory" className="breadcrumbLink">
+              Inventory
+            </Link>
+          )}
+          {location.pathname.includes('/inventory/list') && (
+            <Link component={RouterLink} to="/inventory/list" className="breadcrumbLink">
+              List
+            </Link>
+          )}
+          {location.pathname.includes('/inventory/shipment') && (
+            <Link component={RouterLink} to="/inventory/shipment" className="breadcrumbLink">
+              Shipment
+            </Link>
+          )}
+          {location.pathname.includes('/checkout') && (
+            <Link component={RouterLink} to="/checkout" className="breadcrumbLink">
+              Checkout
+            </Link>
+          )}
+          {location.pathname.includes('/checkin') && (
+            <Link component={RouterLink} to="/checkin" className="breadcrumbLink">
+              Checkin
+            </Link>
+          )}
+        </Breadcrumbs>
+      )}
       {/* Show the landing page only when no route is matched */}
       <Routes>
         <Route path="/" element={<LandingPage />} />

@@ -1,4 +1,4 @@
-require('express-async-errors');
+require('express-async-errors')
 const http = require('http')
 const express = require('express')
 const morgan = require('morgan')
@@ -46,21 +46,20 @@ sequelize
     console.error('Error syncing database:', error)
   })
 
-
 // Error handling
 app.use((err, req, res, next) => {
   if (err.name === 'SequelizeValidationError') {
     logger.error('Validation error:', err)
     const errors = err.errors.map(error => ({
       field: error.path,
-      message: error.message
-    }));
-    res.status(400).send('Validation errors: ' + JSON.stringify(errors));
+      message: error.message,
+    }))
+    res.status(400).send('Validation errors: ' + JSON.stringify(errors))
   } else {
-    logger.error('Unhandled error:', err);
-    res.status(500).send('Internal Server Error');
+    logger.error('Unhandled error:', err)
+    res.status(500).send('Internal Server Error')
   }
-});
+})
 //Return Not Found
 app.use((req, res, next) => {
   res.status(404)

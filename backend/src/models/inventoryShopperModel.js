@@ -26,7 +26,7 @@ const InventoryShopper = sequelize.define(
 //InventoryShopper.associate = (models) => {
 
 sequelize.sync().then(() => {
-    console.log('Table created successfully');
-  });
+  console.log('Table created successfully')
+})
 
 module.exports = InventoryShopper
