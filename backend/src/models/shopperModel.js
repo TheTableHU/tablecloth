@@ -84,7 +84,7 @@ async function getAllShoppers() {
   }
 }
 
-async function getSpecificShopper(hNumber) {
+async function checkinShopper(hNumber) {
   try {
     const shopper = await Shopper.findOne({
       where: {
@@ -99,11 +99,40 @@ async function getSpecificShopper(hNumber) {
 }
 
 async function createShopper(shopper) {
+  const formData = shopper.formData
   try {
-    const newShopper = await Shopper.create(shopper)
-    return formatDate(newShopper)
+    const shopperData = {
+      hNumber: parseInt(formData.hNumber, 10),
+      classification: formData.classification,
+      dateRegistered: new Date().toISOString().slice(0, 10),  
+      home: formData.home,
+      gender: formData.gender,
+      boxNumber: formData.box,
+      ethnicity: formData.ethnicity,
+      childrenUnderSixteen: formData.liveWithUnder16 === 'true' ? 1 : 0,
+      dietRestictions: formData.diet,
+      employed: formData.employed === 'true' ? 1 : 0,
+      helpFindingJob: formData.needJobAssistance === 'true' ? 1 : 0,
+      needHousing: formData.needHousingAssistance === 'true' ? 1 : 0,
+      helpWithHousing: formData.needHousingAssistance === 'true' ? 1 : 0,
+      snap: formData.interestedInSNAP === 'true' ? 1 : 0,
+      email: formData.email
+    };
+
+    for (const key in shopperData) {
+      if (shopperData.hasOwnProperty(key) && shopperData[key] === '') {
+        shopperData[key] = null;
+      }
+    }
+
+    console.log('shopperData:', shopperData)
+
+    await sequelize.transaction(async (t) => {
+      const newShopper = await Shopper.create( shopperData, { transaction: t });
+      return newShopper;
+    });
   } catch (error) {
-    console.error('Error creating shopper:', error)
+    console.log('Error creating shopper:', error)
     throw error
   }
 }
@@ -130,6 +159,6 @@ sequelize.sync()
 module.exports = {
   Shopper,
   getAllShoppers,
-  getSpecificShopper,
+  checkinShopper,
   createShopper,
 }

@@ -25,7 +25,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(config.host + '/api/checkout')
+        const response = await fetch(config.host + '/api/inventory/checkout')
         const data = await response.json()
 
         if (data.success) {
@@ -72,9 +72,9 @@ export default function CheckoutPage() {
     setItems(prevItems => prevItems.filter(item => item.id !== itemId))
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (items.length !== 0) {
-      fetch(config.host + '/api/checkout', {
+      await fetch(config.host + '/api/inventory/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

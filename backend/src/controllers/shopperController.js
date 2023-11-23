@@ -1,27 +1,36 @@
 // shopperController.js
 
-const shopperModel = require('../models/shopperModel')
+const shopperModel = require('../models/shopperModel');
 
 async function getAllShoppers(req, res) {
-  shopperModel.getAllShoppers().then(result => {
-    res.json({ success: true, data: result })
-  })
+  try {
+    const result = await shopperModel.getAllShoppers();
+    res.json({ success: true, data: result });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
 }
 
-async function getSpecificShopper(req, res) {
-  shopperModel.getSpecificShopper(req.params.hNumber).then(result => {
-    res.json({ success: true, data: result })
-  })
+async function checkinShopper(req, res) {
+  try {
+    const result = await shopperModel.checkinShopper(req.params.hNumber);
+    res.json({ success: true, data: result });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
 }
 
 async function createShopper(req, res) {
-  shopperModel.createShopper(req.body).then(result => {
-    res.json({ success: true, data: result })
-  })
+  try {
+    const result = await shopperModel.createShopper(req.body);
+    res.json({ success: true, data: result });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
 }
 
 module.exports = {
   getAllShoppers,
-  getSpecificShopper,
+  checkinShopper,
   createShopper,
-}
+};

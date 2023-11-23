@@ -39,19 +39,19 @@ async function getAllItems() {
     const items = await Inventory.findAll()
     return formatDate(items)
   } catch (error) {
-    console.error('Error fetching items:', error)
-    throw error // You might want to handle errors in the controller
+    throw error
   }
 }
 
 // Get all items with only the item name
 async function getItemNames() {
   try {
-    const items = (await Inventory.findAll()).map(item => ({ id: item.id, item: item.item }))
-    return items
+    await sequelize.transaction(async (t) => {
+      const items = (await Inventory.findAll()).map(item => ({ id: item.id, item: item.item }), { transaction: t })
+      return items
+    });
   } catch (error) {
-    console.error('Error fetching items:', error)
-    throw error // You might want to handle errors in the controller
+    throw error
   }
 }
 
@@ -75,8 +75,7 @@ const checkout = async items => {
 
     console.log('Inventory updated successfully.')
   } catch (error) {
-    console.error('Error updating inventory: ', error)
-    throw error // You might want to handle errors in the controller
+    throw error
   }
 }
 

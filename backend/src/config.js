@@ -11,6 +11,7 @@ function projectPath(...bits) {
 module.exports = {
   httpPort: 8081,
   logLevel: 'trace',
+  morganFormat: 'combined',
   staticDir: projectPath('static'),
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,

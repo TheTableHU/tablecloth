@@ -1,13 +1,52 @@
-.newShopperContainer {
-    position: relative;
-  }
-  
-  .verticalLine {
-    position: absolute;
-    height: 100%;
-    width: 1px;
-    background-color: #ccc; /* Adjust the color as needed */
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  
+.newShopper, .returningShopper {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+}
+
+.newShopper h1, .returningShopper h1 {
+  font-size: 2.5em;
+  margin: 0.67em 0;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.newShopperFormContainer, .returningShopperFormContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.formRow {
+  flex: 1 1 50%;
+  margin-top: 16px;
+}
+
+.questionText {
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.formRow > * {
+  margin-right: 16px;
+  margin-bottom: 8px;
+}
+
+/* Add margin between buttons */
+.newShopperButtons, .returningShopperButtons {
+  margin-top: 16px;
+}
+
+/* Style for submit button */
+.submitButton {
+  display: block; /* Make the button a block element to be on its own line */
+  margin-top: 16px; /* Add margin above the submit button */
+}
+
+.submitButtonContainer {
+  text-align: center;
+  margin-top: 16px;
+}
+
+#toggleFormContainer {
+  text-align: center;
+}

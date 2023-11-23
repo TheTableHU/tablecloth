@@ -1,12 +1,22 @@
-// shopper.js
+const express = require('express');
+const router = express.Router();
+const shopperController = require('../controllers/shopperController.js');
 
-const express = require('express')
-const router = express.Router()
-const shopperController = require('../controllers/shopperController.js')
+router.get('/', async (req, res) => {
+    await shopperController.getAllShoppers(req, res);
+});
 
-// other routes related to inventory operations
-router.get('/shopper', shopperController.getAllShoppers)
-router.get('/shopper/:id', shopperController.getSpecificShopper)
-router.post('/shopper', shopperController.createShopper)
+router.post('/checkin/:id', async (req, res) => {
+    await shopperController.checkinShopper(req, res);
+});
 
-module.exports = router
+router.post('/checkin', async (req, res) => {
+    await shopperController.createShopper(req, res);
+});
+
+// Catch-all error handler
+router.use((err, req, res, next) => {
+    next(err);
+  });
+
+module.exports = router;

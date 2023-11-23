@@ -18,10 +18,12 @@ services:
     container_name: backend
     ports:
       - "8081:8081"
+      - "9229:9229" 
     volumes:
-      - ./backend:/app:delegated  # Mount the local source code into the container
+      - ./backend:/app:delegated
     environment:
       - NODE_ENV=development
+      - DEBUG_PORT=9229 
     env_file:
       - .env
     depends_on:

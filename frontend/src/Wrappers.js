@@ -18,25 +18,18 @@ const ToastWrapper = () => {
   )
 }
 
-const HNumWrapper = () => {
-  const [inputHNum, setHNum] = useState('')
-
-  const handleHNumChange = event => {
-    const value = event.target.value.slice(0, 8) // Limit to one character
-    setHNum(value)
-  }
-
+const HNumWrapper = ({ value, onChange }) => {
   return (
     <TextField
       required
       label="H Number"
-      value={inputHNum}
-      onChange={handleHNumChange}
+      value={value}
+      onChange={onChange}
       InputProps={{
         type: 'number',
         inputMode: 'numeric',
         style: {
-          appearance: 'textfield', // For Chrome
+          appearance: 'textfield',
         },
         startAdornment: (
           <Typography variant="body1" color="textSecondary">
@@ -45,7 +38,7 @@ const HNumWrapper = () => {
         ),
       }}
     />
-  )
-}
+  );
+};
 
 export { ToastWrapper, toast, HNumWrapper }

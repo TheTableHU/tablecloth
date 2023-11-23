@@ -1,11 +1,22 @@
-// inventory.js
+const express = require('express');
+const router = express.Router();
+const inventoryController = require('../controllers/inventoryController');
 
-const express = require('express')
-const router = express.Router()
-const inventoryController = require('../controllers/inventoryController')
+router.get('/', async (req, res, next) => {
+    await inventoryController.getInventory(req, res);
+});
 
-router.get('/inventory', inventoryController.getInventory)
-router.get('/checkout', inventoryController.getItemNames)
-router.post('/checkout', inventoryController.checkoutItems)
+router.get('/checkout', async (req, res, next) => {
+    await inventoryController.getItemNames(req, res);
+});
 
-module.exports = router
+router.post('/checkout', async (req, res, next) => {
+    await inventoryController.checkoutItems(req, res);
+});
+
+// Catch-all error handler
+router.use((err, req, res, next) => {
+  next(err);
+});
+
+module.exports = router;

@@ -1,3 +1,4 @@
+require('express-async-errors');
 const http = require('http')
 const express = require('express')
 const morgan = require('morgan')
@@ -7,7 +8,6 @@ const sequelize = require('./db.js')
 
 const config = require('./config.js')
 const logger = require('./logger.js')
-
 const app = express()
 
 // Enable CORS for all routes
@@ -33,8 +33,8 @@ const inventoryRoutes = require('./routes/inventory.js')
 const shopperRoutes = require('./routes/shopper.js')
 
 //Features
-app.use('/api', inventoryRoutes)
-app.use('/api', shopperRoutes)
+app.use('/api/inventory', inventoryRoutes)
+app.use('/api/shopper', shopperRoutes)
 
 // Database
 sequelize
@@ -46,11 +46,27 @@ sequelize
     console.error('Error syncing database:', error)
   })
 
+
+// Error handling
+app.use((err, req, res, next) => {
+  if (err.name === 'SequelizeValidationError') {
+    logger.error('Validation error:', err)
+    const errors = err.errors.map(error => ({
+      field: error.path,
+      message: error.message
+    }));
+    res.status(400).send('Validation errors: ' + JSON.stringify(errors));
+  } else {
+    logger.error('Unhandled error:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
 //Return Not Found
-app.use((req, res) => {
+app.use((req, res, next) => {
   res.status(404)
   res.type('text/plain')
   res.send('Not found')
+  next()
 })
 
 module.exports = app
