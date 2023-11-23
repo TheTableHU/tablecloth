@@ -1,6 +1,7 @@
 // shopperController.js
 
 const shopperModel = require('../models/shopperModel');
+const inventoryShopperModel = require('../models/inventoryShopperModel');
 
 async function getAllShoppers(req, res) {
   try {

@@ -35,7 +35,7 @@ export default function InventoryList() {
   }, [])
 
   return (
-    <Box sx={{ height: '53.5vw', width: '100vw' }}>
+    <Box sx={{ height: '55vw', width: '100vw' }}>
       <DataGrid rows={rows} columns={columns} pageSize={5} cellEditMode="cellClick" />
     </Box>
   )

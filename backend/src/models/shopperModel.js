@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize')
 const { parseISO, format, isValid } = require('date-fns')
-const sequelize = require('../db.js') // Adjust the path based on your project structure
+const sequelize = require('../db.js')
 
 const Shopper = sequelize.define(
   'Shopper',

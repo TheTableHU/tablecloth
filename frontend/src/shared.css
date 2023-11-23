@@ -14,3 +14,10 @@
     background-color: #1d384f;
   }
   
+  #app > div > nav > ol > li > a {
+    font-size: 20px;
+  }
+
+  #app > div > nav > ol {
+    margin-left: 12px;
+  }
