@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as a base image
-FROM node:21
+FROM node:21 as development
 
 # Set the working directory in the container
 WORKDIR /app
@@ -12,8 +12,9 @@ RUN command -v yarn >/dev/null 2>&1 || { npm install -g yarn; }
 
 # Install application dependencies using Yarn
 RUN yarn install
+
 # Expose the port that your app runs on
 EXPOSE 8080
 
-# Command to run your application
-CMD ["npm", "start"]j;
+# Command for dev environment
+CMD ["npm", "start"];

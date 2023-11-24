@@ -32,8 +32,8 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
-    container_name: frontend
+      dockerfile: Dockerfile.dev
+    container_name: frontend-dev
     volumes:
       - ./frontend:/app:delegated
     ports:
@@ -46,4 +46,4 @@ services:
       - backend
 
 volumes:
-  db:  # Define your named volume here
+  db:

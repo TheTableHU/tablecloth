@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  database:
+    image: mysql:latest
+    container_name: database
+    env_file:
+      - .env
+    ports:
+      - "3306:3306"
+    volumes:
+      - db:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./backend:/app:delegated
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - .env
+    depends_on:
+      - database
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: frontend
+    volumes:
+      - ./frontend:/app:delegated
+    ports:
+      - "8080:80"
+    environment:
+      - PORT=80
+    env_file:
+      - .env
+    depends_on:
+      - backend
+
+volumes:
+  db:
