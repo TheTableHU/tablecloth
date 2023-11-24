@@ -10,6 +10,7 @@ import InventoryLandingPage from './components/landing/inventoryLandingPage.js'
 
 import InventoryList from './components/inventory/inventoryList.js'
 import Shipment from './components/inventory/shipmentPage.js'
+import AddItem from './components/inventory/addItemPage.js'
 import Checkout from './components/inventory/checkoutPage.js'
 import Checkin from './components/shopper/checkinPage.js'
 
@@ -38,14 +39,19 @@ function App() {
               Shipment
             </Link>
           )}
+                    {location.pathname.includes('/inventory/add') && (
+            <Link component={RouterLink} to="/inventory/add" className="breadcrumbLink">
+              Add Item
+            </Link>
+          )}
           {location.pathname.includes('/checkout') && (
             <Link component={RouterLink} to="/checkout" className="breadcrumbLink">
-              Checkout
+              Check-out
             </Link>
           )}
           {location.pathname.includes('/checkin') && (
             <Link component={RouterLink} to="/checkin" className="breadcrumbLink">
-              Checkin
+              Check-in
             </Link>
           )}
         </Breadcrumbs>
@@ -56,6 +62,7 @@ function App() {
         <Route path="/inventory" element={<InventoryLandingPage />} />
         <Route path="/inventory/list" element={<InventoryList />} />
         <Route path="/inventory/shipment" element={<Shipment />} />
+        <Route path="/inventory/add" element={<AddItem />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/checkin" element={<Checkin />} />
       </Routes>

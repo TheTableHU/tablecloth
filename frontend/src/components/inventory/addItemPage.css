@@ -1,0 +1,33 @@
+.addItem {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+  }
+  
+  .addItem h1 {
+    font-size: 2.5em;
+    margin: 0.67em 0;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .addItemFormContainer {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .formRow {
+    width: 50%; /* Make the form rows take up the full width */
+    margin-bottom: 16px; /* Add some spacing between form rows if needed */
+  }
+  
+  .submitButton {
+    display: block;
+    margin-top: 16px;
+  }
+  
+  .submitButtonContainer {
+    text-align: center;
+  }

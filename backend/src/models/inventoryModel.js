@@ -46,12 +46,8 @@ async function getAllItems() {
 // Get all items with only the item name
 async function getItemNames() {
   try {
-    const items = await sequelize.transaction(async t => {
-      const allItems = await Inventory.findAll({ transaction: t });
+      const allItems = await Inventory.findAll();
       return allItems.map(item => ({ id: item.id, item: item.item }));
-    });
-
-    return items;
   } catch (error) {
     throw error;
   }
@@ -113,6 +109,20 @@ async function addShipment(items) {
   }
 }
 
+async function addItem(item, quantity, category) {
+  try {
+    const newItem = await Inventory.create({
+      item,
+      quantity,
+      category,
+    })
+    return newItem
+  }
+  catch (error) {
+    throw error
+  }
+}
+
 function formatDate(data) {
   data.forEach((item, index) => {
     const updatedAt = item.updatedAt
@@ -139,4 +149,5 @@ module.exports = {
   getItemNames,
   checkout,
   addShipment,
+  addItem,
 }

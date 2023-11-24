@@ -18,6 +18,10 @@ router.post('/shipment', async (req, res, next) => {
   await inventoryController.addShipmentItems(req, res)
 })
 
+router.post('/additem', async (req, res, next) => {
+  await inventoryController.addItem(req, res)
+})
+
 // Catch-all error handler
 router.use((err, req, res, next) => {
   next(err)

@@ -15,6 +15,12 @@ export default function LandingPage() {
           </Card>
         </Link>
 
+                <Link to="/inventory/add" className="card-link">
+          <Card className="MuiCard-root" variant="outlined">
+            <Typography className="cardContent">Add Item</Typography>
+          </Card>
+        </Link>
+
         <Link to="/inventory/list" className="card-link">
           <Card className="MuiCard-root" variant="outlined">
             <Typography className="cardContent">List</Typography>
