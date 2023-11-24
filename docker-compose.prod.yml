@@ -32,8 +32,6 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.prod
     container_name: frontend
-    volumes:
-      - ./frontend:/app:delegated
     ports:
       - "8080:80"
     environment:
