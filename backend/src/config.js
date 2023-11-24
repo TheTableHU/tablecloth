@@ -1,8 +1,6 @@
 require('dotenv').config()
 
 const path = require('path')
-const fs = require('fs')
-const crypto = require('crypto')
 
 function projectPath(...bits) {
   return path.join(__dirname, '..', ...bits)
@@ -11,6 +9,7 @@ function projectPath(...bits) {
 module.exports = {
   httpPort: 8081,
   logLevel: 'trace',
+  dbLogging: false,
   morganFormat: 'combined',
   staticDir: projectPath('static'),
   username: process.env.DB_USER,

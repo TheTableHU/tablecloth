@@ -6,7 +6,11 @@ router.get('/', async (req, res) => {
   await shopperController.getAllShoppers(req, res)
 })
 
-router.post('/checkin/:id', async (req, res) => {
+router.get('/:hNumber', async (req, res) => {
+  await shopperController.getSpecificShopper(req, res)
+})
+
+router.post('/checkin/:hNumber', async (req, res) => {
   await shopperController.checkinShopper(req, res)
 })
 

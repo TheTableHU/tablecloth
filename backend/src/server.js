@@ -10,6 +10,10 @@ const config = require('./config.js')
 const logger = require('./logger.js')
 const app = express()
 
+// Import Routes
+const inventoryRoutes = require('./routes/inventory.js')
+const shopperRoutes = require('./routes/shopper.js')
+
 // Enable CORS for all routes
 app.use(cors())
 
@@ -28,11 +32,7 @@ app.use(
   })
 )
 
-//Include routes
-const inventoryRoutes = require('./routes/inventory.js')
-const shopperRoutes = require('./routes/shopper.js')
-
-//Features
+// Mount Routes
 app.use('/api/inventory', inventoryRoutes)
 app.use('/api/shopper', shopperRoutes)
 
@@ -40,10 +40,10 @@ app.use('/api/shopper', shopperRoutes)
 sequelize
   .sync()
   .then(() => {
-    console.log('Database synced successfully')
+    logger.info('Database synced successfully')
   })
   .catch(error => {
-    console.error('Error syncing database:', error)
+    logger.error('Error syncing database:', error)
   })
 
 // Error handling

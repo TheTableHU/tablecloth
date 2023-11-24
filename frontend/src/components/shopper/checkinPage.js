@@ -172,6 +172,7 @@ export default function CheckinPage() {
                 onChange={handleHomeChange}
                 label="Home"
                 helperText="State ABBR or Country"
+                autocomplete="off"
               />
             </FormControl>
           </div>
@@ -193,6 +194,7 @@ export default function CheckinPage() {
                 label="Box Number"
                 value={boxValue}
                 onChange={handleBoxChange}
+                autocomplete="off"
               />
             </FormControl>
           </div>
@@ -222,6 +224,7 @@ export default function CheckinPage() {
                 label="Dietary Restrictions"
                 value={dietValue}
                 onChange={handleDietChange}
+                autocomplete="off"
               />
             </FormControl>
           </div>
@@ -303,11 +306,9 @@ export default function CheckinPage() {
         {(interestedInSNAP === 'Yes' ||
           needHousingAssistance === 'Yes' ||
           needJobAssistance === 'Yes') && (
-          <div className="formRow">
             <FormControl component="fieldset" fullWidth>
-              <TextField id="email" label="Email" value={email} onChange={handleEmailChange} />
+              <TextField id="email" label="Email" value={email} autocomplete="off" onChange={handleEmailChange} />
             </FormControl>
-          </div>
         )}
 
         <div className="submitButtonContainer">

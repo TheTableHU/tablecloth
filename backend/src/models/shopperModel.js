@@ -1,6 +1,9 @@
 const { DataTypes } = require('sequelize')
 const { parseISO, format, isValid } = require('date-fns')
 const sequelize = require('../db.js')
+const logger = require('../logger.js')
+
+const { ShopperVisit } = require('./ShopperVisitModel.js')
 
 const Shopper = sequelize.define(
   'Shopper',
@@ -74,6 +77,7 @@ const Shopper = sequelize.define(
   }
 )
 
+// Get all shoppers with all data
 async function getAllShoppers() {
   try {
     const shoppers = await Shopper.findAll()
@@ -84,13 +88,19 @@ async function getAllShoppers() {
   }
 }
 
-async function checkinShopper(hNumber) {
+// Create a new entry in the ShopperVisit table
+async function getSpecificShopper(hNumber) {
   try {
     const shopper = await Shopper.findOne({
       where: {
         hNumber: hNumber,
       },
     })
+    if (!shopper) {
+      logger.error(`Shopper with hNumber ${hNumber} not found`)
+
+      throw new Error(`Shopper with hNumber ${hNumber} not found`)
+    }
     return formatDate(shopper)
   } catch (error) {
     console.error('Error fetching shopper:', error)
@@ -98,6 +108,7 @@ async function checkinShopper(hNumber) {
   }
 }
 
+// Create a new shopper
 async function createShopper(shopper) {
   const formData = shopper.formData
   try {
@@ -125,8 +136,6 @@ async function createShopper(shopper) {
       }
     }
 
-    console.log('shopperData:', shopperData)
-
     await sequelize.transaction(async t => {
       const newShopper = await Shopper.create(shopperData, { transaction: t })
       return newShopper
@@ -137,28 +146,26 @@ async function createShopper(shopper) {
   }
 }
 
+// Format date for better readability
 function formatDate(data) {
-  data.forEach((item, index) => {
-    const dateRegistered = item.dateRegistered
+    const dateRegistered = data.updatedAt
 
     const parsedDate = parseISO(dateRegistered)
 
     if (isValid(parsedDate)) {
-      item.setDataValue('dateRegistered', format(parsedDate, 'MMMM dd, yyyy'))
+      data.setDataValue('updatedAt', format(parsedDate, 'MMMM dd, yyyy'))
     } else {
-      console.log(`Invalid date at index ${index}:`, dateRegistered)
-      item.dateRegistered = 'Invalid Date'
+      logger.error(`Invalid date: `, dateRegistered)
     }
-  })
 
   return data
 }
 
-sequelize.sync()
+Shopper.hasMany(ShopperVisit, { foreignKey: 'itemId' });
 
 module.exports = {
   Shopper,
   getAllShoppers,
-  checkinShopper,
+  getSpecificShopper,
   createShopper,
 }

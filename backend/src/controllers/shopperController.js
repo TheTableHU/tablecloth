@@ -1,7 +1,7 @@
 // shopperController.js
 
 const shopperModel = require('../models/shopperModel')
-const inventoryShopperModel = require('../models/inventoryShopperModel')
+const shopperVisit = require('../models/ShopperVisitModel.js')
 
 async function getAllShoppers(req, res) {
   try {
@@ -14,7 +14,9 @@ async function getAllShoppers(req, res) {
 
 async function checkinShopper(req, res) {
   try {
-    const result = await shopperModel.checkinShopper(req.params.hNumber)
+    const Shopper = await shopperModel.getSpecificShopper(req.params.hNumber)
+    console.log(Shopper)
+    const result = await shopperVisit.createVisit(Shopper.hNumber)
     res.json({ success: true, data: result })
   } catch (error) {
     res.status(500).json({ success: false, error: error.message })

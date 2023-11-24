@@ -2,12 +2,11 @@
 
 const { DataTypes } = require('sequelize')
 const { parseISO, format, isValid } = require('date-fns')
-const sequelize = require('../db.js') // Adjust the path based on your project structure
+const sequelize = require('../db.js')
 
 const Inventory = sequelize.define(
   'inventory',
   {
-    // Define your fields here
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -53,6 +52,7 @@ async function getItemNames() {
   }
 }
 
+// Subtract the checkout quantity from the inventory quantity
 async function checkout(items) {
   const t = await sequelize.transaction();
 
@@ -81,6 +81,7 @@ async function checkout(items) {
   }
 }
 
+// Add the item quantity passed into the inventory quantity
 async function addShipment(items) {
   const t = await sequelize.transaction();
 
@@ -109,6 +110,7 @@ async function addShipment(items) {
   }
 }
 
+// Add a new item to the inventory
 async function addItem(item, quantity, category) {
   try {
     const newItem = await Inventory.create({
@@ -123,6 +125,7 @@ async function addItem(item, quantity, category) {
   }
 }
 
+// Format the date to be more readable
 function formatDate(data) {
   data.forEach((item, index) => {
     const updatedAt = item.updatedAt
@@ -139,8 +142,6 @@ function formatDate(data) {
 
   return data
 }
-
-sequelize.sync()
 
 // Exporting the functions to be used in controllers.
 module.exports = {
