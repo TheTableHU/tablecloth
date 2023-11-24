@@ -132,7 +132,11 @@ export default function CheckinPage() {
 
       if (response.ok) {
         toast.success('Shopper checked in successfully! Welcome back!')
-      } else {
+      }
+      else if(response.status === 400) {
+        toast.error("Shopper has already checked in for today.")
+        }
+       else {
         toast.error('Failed to check in shopper. Please try again.')
       }
     } catch (error) {

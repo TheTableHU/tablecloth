@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db.js');
+const logger = require('../logger.js')
 
 const ShopperVisit = sequelize.define(
   'shopperVisit',
@@ -10,7 +11,7 @@ const ShopperVisit = sequelize.define(
       primaryKey: true,
     },
     dateOfVisit: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
       primaryKey: true,
     },
@@ -23,17 +24,13 @@ const ShopperVisit = sequelize.define(
 
 // Makes a new entry logging when a shopper visits
 async function createVisit(hNumber){
-  try {
+
     const result = await ShopperVisit.create({
       hNumber: hNumber,
       dateOfVisit: Date.now(),
     });
     return result;
-  } 
-  catch (error) {
-    throw error;
   }
-}
 
 ShopperVisit.associate = (models) => {
   ShopperVisit.belongsTo(models.Shopper, { foreignKey: 'hNumber' });

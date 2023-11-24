@@ -2,6 +2,9 @@
 
 const shopperModel = require('../models/shopperModel')
 const shopperVisit = require('../models/ShopperVisitModel.js')
+const sequelize = require('../db.js');
+
+const logger = require('../logger.js')
 
 async function getAllShoppers(req, res) {
   try {
@@ -13,14 +16,20 @@ async function getAllShoppers(req, res) {
 }
 
 async function checkinShopper(req, res) {
-  try {
     const Shopper = await shopperModel.getSpecificShopper(req.params.hNumber)
-    console.log(Shopper)
+    try{
     const result = await shopperVisit.createVisit(Shopper.hNumber)
     res.json({ success: true, data: result })
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message })
-  }
+    }
+    catch (error) {
+      if (error instanceof sequelize.Sequelize.UniqueConstraintError) {
+        logger.info("Shopper already checked in today")
+        res.status(400).json({ success: false, error: "Shopper already checked in today" })
+      }
+      else{
+        res.status(500).json({ success: false, error: error.message })
+      }
+    }
 }
 
 async function createShopper(req, res) {

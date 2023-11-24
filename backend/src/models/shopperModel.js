@@ -83,7 +83,7 @@ async function getAllShoppers() {
     const shoppers = await Shopper.findAll()
     return formatDate(shoppers)
   } catch (error) {
-    console.error('Error fetching shoppers:', error)
+    logger.error('Error fetching shoppers:', error)
     throw error
   }
 }
@@ -103,7 +103,7 @@ async function getSpecificShopper(hNumber) {
     }
     return formatDate(shopper)
   } catch (error) {
-    console.error('Error fetching shopper:', error)
+    logger.error('Error fetching shopper:', error)
     throw error
   }
 }
@@ -138,27 +138,41 @@ async function createShopper(shopper) {
 
     await sequelize.transaction(async t => {
       const newShopper = await Shopper.create(shopperData, { transaction: t })
+      
+      logger.info(`Created shopper with hNumber ${newShopper.hNumber}`)
+
       return newShopper
     })
   } catch (error) {
-    console.log('Error creating shopper:', error)
+    logger.error('Error creating shopper:', error)
     throw error
   }
 }
 
 // Format date for better readability
-function formatDate(data) {
-    const dateRegistered = data.updatedAt
+async function formatDate(shopper) {
+  const dateRegistered = shopper.getDataValue('dateRegistered');
+  const updatedAt = shopper.getDataValue('updatedAt');
 
-    const parsedDate = parseISO(dateRegistered)
+  const parsedDateRegistered = parseAndFormatDate(dateRegistered);
 
-    if (isValid(parsedDate)) {
-      data.setDataValue('updatedAt', format(parsedDate, 'MMMM dd, yyyy'))
-    } else {
-      logger.error(`Invalid date: `, dateRegistered)
-    }
+  const parsedUpdatedAt = parseAndFormatDate(updatedAt);
 
-  return data
+  shopper.setDataValue('dateRegistered', parsedDateRegistered);
+  shopper.setDataValue('updatedAt', parsedUpdatedAt);
+
+  return shopper;
+}
+
+function parseAndFormatDate(dateString) {
+  const parsedDate = parseISO(dateString);
+
+  if (isValid(parsedDate)) {
+    return format(parsedDate, 'MMMM dd, yyyy');
+  } else {
+    logger.error(`Invalid date: `, dateString);
+    return dateString;
+  }
 }
 
 Shopper.hasMany(ShopperVisit, { foreignKey: 'itemId' });

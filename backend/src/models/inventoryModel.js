@@ -3,6 +3,7 @@
 const { DataTypes } = require('sequelize')
 const { parseISO, format, isValid } = require('date-fns')
 const sequelize = require('../db.js')
+const logger = require('../logger.js')
 
 const Inventory = sequelize.define(
   'inventory',
@@ -69,12 +70,12 @@ async function checkout(items) {
 
         await existingItem.update({ quantity: updatedQuantity }, { transaction: t });
       } else {
-        console.warn(`Item with ID ${item.id} not found in the inventory.`);
+        logger.error(`Item with ID ${item.id} not found in the inventory.`);
       }
     }
 
     await t.commit();
-    console.log('Inventory updated successfully.');
+    logger.info('Inventory updated successfully.');
   } catch (error) {
     await t.rollback();
     throw error;
@@ -98,12 +99,12 @@ async function addShipment(items) {
 
         await existingItem.update({ quantity: updatedQuantity }, { transaction: t });
       } else {
-        console.warn(`Item with ID ${item.id} not found in the inventory.`);
+        logger.warn(`Item with ID ${item.id} not found in the inventory.`);
       }
     }
 
     await t.commit();
-    console.log('Inventory updated successfully.');
+    logger.info('Inventory updated successfully.');
   } catch (error) {
     await t.rollback();
     throw error;
@@ -135,8 +136,7 @@ function formatDate(data) {
     if (isValid(parsedDate)) {
       item.setDataValue('updatedAt', format(parsedDate, 'MMMM dd, yyyy'))
     } else {
-      console.log(`Invalid date at index ${index}:`, updatedAt)
-      item.updatedAt = 'Invalid Date'
+      logger.error(`Invalid date at index ${index}:`, updatedAt)
     }
   })
 
