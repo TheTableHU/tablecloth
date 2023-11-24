@@ -1,5 +1,4 @@
 require('express-async-errors')
-const http = require('http')
 const express = require('express')
 const morgan = require('morgan')
 const expressSession = require('express-session')

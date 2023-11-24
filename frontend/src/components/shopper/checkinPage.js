@@ -132,11 +132,9 @@ export default function CheckinPage() {
 
       if (response.ok) {
         toast.success('Shopper checked in successfully! Welcome back!')
-      }
-      else if(response.status === 400) {
-        toast.error("Shopper has already checked in for today.")
-        }
-       else {
+      } else if (response.status === 400) {
+        toast.error('Shopper has already checked in for today.')
+      } else {
         toast.error('Failed to check in shopper. Please try again.')
       }
     } catch (error) {
@@ -310,9 +308,15 @@ export default function CheckinPage() {
         {(interestedInSNAP === 'Yes' ||
           needHousingAssistance === 'Yes' ||
           needJobAssistance === 'Yes') && (
-            <FormControl component="fieldset" fullWidth>
-              <TextField id="email" label="Email" value={email} autocomplete="off" onChange={handleEmailChange} />
-            </FormControl>
+          <FormControl component="fieldset" fullWidth>
+            <TextField
+              id="email"
+              label="Email"
+              value={email}
+              autocomplete="off"
+              onChange={handleEmailChange}
+            />
+          </FormControl>
         )}
 
         <div className="submitButtonContainer">

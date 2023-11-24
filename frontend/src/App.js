@@ -39,7 +39,7 @@ function App() {
               Shipment
             </Link>
           )}
-                    {location.pathname.includes('/inventory/add') && (
+          {location.pathname.includes('/inventory/add') && (
             <Link component={RouterLink} to="/inventory/add" className="breadcrumbLink">
               Add Item
             </Link>

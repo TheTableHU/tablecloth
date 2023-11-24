@@ -138,7 +138,7 @@ async function createShopper(shopper) {
 
     await sequelize.transaction(async t => {
       const newShopper = await Shopper.create(shopperData, { transaction: t })
-      
+
       logger.info(`Created shopper with hNumber ${newShopper.hNumber}`)
 
       return newShopper
@@ -151,31 +151,31 @@ async function createShopper(shopper) {
 
 // Format date for better readability
 async function formatDate(shopper) {
-  const dateRegistered = shopper.getDataValue('dateRegistered');
-  const updatedAt = shopper.getDataValue('updatedAt');
+  const dateRegistered = shopper.getDataValue('dateRegistered')
+  const updatedAt = shopper.getDataValue('updatedAt')
 
-  const parsedDateRegistered = parseAndFormatDate(dateRegistered);
+  const parsedDateRegistered = parseAndFormatDate(dateRegistered)
 
-  const parsedUpdatedAt = parseAndFormatDate(updatedAt);
+  const parsedUpdatedAt = parseAndFormatDate(updatedAt)
 
-  shopper.setDataValue('dateRegistered', parsedDateRegistered);
-  shopper.setDataValue('updatedAt', parsedUpdatedAt);
+  shopper.setDataValue('dateRegistered', parsedDateRegistered)
+  shopper.setDataValue('updatedAt', parsedUpdatedAt)
 
-  return shopper;
+  return shopper
 }
 
 function parseAndFormatDate(dateString) {
-  const parsedDate = parseISO(dateString);
+  const parsedDate = parseISO(dateString)
 
   if (isValid(parsedDate)) {
-    return format(parsedDate, 'MMMM dd, yyyy');
+    return format(parsedDate, 'MMMM dd, yyyy')
   } else {
-    logger.error(`Invalid date: `, dateString);
-    return dateString;
+    logger.error(`Invalid date: `, dateString)
+    return dateString
   }
 }
 
-Shopper.hasMany(ShopperVisit, { foreignKey: 'itemId' });
+Shopper.hasMany(ShopperVisit, { foreignKey: 'itemId' })
 
 module.exports = {
   Shopper,

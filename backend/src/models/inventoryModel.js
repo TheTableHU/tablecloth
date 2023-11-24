@@ -46,68 +46,68 @@ async function getAllItems() {
 // Get all items with only the item name
 async function getItemNames() {
   try {
-      const allItems = await Inventory.findAll();
-      return allItems.map(item => ({ id: item.id, item: item.item }));
+    const allItems = await Inventory.findAll()
+    return allItems.map(item => ({ id: item.id, item: item.item }))
   } catch (error) {
-    throw error;
+    throw error
   }
 }
 
 // Subtract the checkout quantity from the inventory quantity
 async function checkout(items) {
-  const t = await sequelize.transaction();
+  const t = await sequelize.transaction()
 
   try {
     for (const item of items) {
-      const existingItem = await Inventory.findByPk(item.id, { transaction: t });
+      const existingItem = await Inventory.findByPk(item.id, { transaction: t })
 
       if (existingItem) {
-        const updatedQuantity = parseInt(existingItem.quantity) - parseInt(item.checkoutQuantity);
+        const updatedQuantity = parseInt(existingItem.quantity) - parseInt(item.checkoutQuantity)
 
         if (isNaN(updatedQuantity)) {
-          throw new Error(`Item is NaN. Changes not saved.`);
+          throw new Error(`Item is NaN. Changes not saved.`)
         }
 
-        await existingItem.update({ quantity: updatedQuantity }, { transaction: t });
+        await existingItem.update({ quantity: updatedQuantity }, { transaction: t })
       } else {
-        logger.error(`Item with ID ${item.id} not found in the inventory.`);
+        logger.error(`Item with ID ${item.id} not found in the inventory.`)
       }
     }
 
-    await t.commit();
-    logger.info('Inventory updated successfully.');
+    await t.commit()
+    logger.info('Inventory updated successfully.')
   } catch (error) {
-    await t.rollback();
-    throw error;
+    await t.rollback()
+    throw error
   }
 }
 
 // Add the item quantity passed into the inventory quantity
 async function addShipment(items) {
-  const t = await sequelize.transaction();
+  const t = await sequelize.transaction()
 
   try {
     for (const item of items) {
-      const existingItem = await Inventory.findByPk(item.id, { transaction: t });
+      const existingItem = await Inventory.findByPk(item.id, { transaction: t })
 
       if (existingItem) {
-        const updatedQuantity = parseInt(existingItem.quantity) + parseInt(item.checkoutQuantity);
+        const updatedQuantity = parseInt(existingItem.quantity) + parseInt(item.checkoutQuantity)
 
         if (isNaN(updatedQuantity)) {
-          throw new Error(`Item is NaN. Changes not saved.`);
+          throw new Error(`Item is NaN. Changes not saved.`)
         }
 
-        await existingItem.update({ quantity: updatedQuantity }, { transaction: t });
+        await existingItem.update({ quantity: updatedQuantity }, { transaction: t })
       } else {
-        logger.warn(`Item with ID ${item.id} not found in the inventory.`);
+        logger.warn(`Item with ID ${item.id} not found in the inventory.`)
       }
     }
 
-    await t.commit();
-    logger.info('Inventory updated successfully.');
+    await t.commit()
+    logger.info('Inventory updated successfully.')
   } catch (error) {
-    await t.rollback();
-    throw error;
+    await t.rollback()
+    throw error
   }
 }
 
@@ -120,8 +120,7 @@ async function addItem(item, quantity, category) {
       category,
     })
     return newItem
-  }
-  catch (error) {
+  } catch (error) {
     throw error
   }
 }
