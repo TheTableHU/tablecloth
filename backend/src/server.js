@@ -1,7 +1,6 @@
 require('express-async-errors')
 const express = require('express')
 const morgan = require('morgan')
-const expressSession = require('express-session')
 const cors = require('cors')
 const sequelize = require('./db.js')
 
@@ -21,15 +20,6 @@ app.use(express.json())
 
 //Logging
 app.use(morgan(config.morganFormat, { stream: logger.httpStream }))
-
-//Session
-app.use(
-  expressSession({
-    secret: config.sessionSecret,
-    saveUninitialized: false,
-    resave: false,
-  })
-)
 
 // Mount Routes
 app.use('/api/inventory', inventoryRoutes)
@@ -59,6 +49,7 @@ app.use((err, req, res, next) => {
     res.status(500).send('Internal Server Error')
   }
 })
+
 //Return Not Found
 app.use((req, res, next) => {
   res.status(404)
