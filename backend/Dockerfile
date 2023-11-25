@@ -13,11 +13,11 @@ RUN command -v yarn >/dev/null 2>&1 || { npm install -g yarn; }
 # Install dependencies based on the environment
 RUN if [ "${NODE_ENV}" = "production" ]; then \
     yarn install --production; \
+    COPY . . \
     else \
     yarn install; \
 fi
 
-# Copy the scripts to the working directory
 COPY wait.sh /app/wait.sh
 COPY nodemon.json /app/nodemon.json
 
