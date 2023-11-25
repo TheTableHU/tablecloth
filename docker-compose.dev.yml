@@ -47,3 +47,6 @@ services:
 
 volumes:
   db:
+
+x-project:
+  name: tablecloth-dev

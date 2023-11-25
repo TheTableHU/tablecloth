@@ -11,7 +11,7 @@ COPY package*.json ./
 RUN command -v yarn >/dev/null 2>&1 || { npm install -g yarn; }
 
 # Install application dependencies using Yarn
-RUN yarn install
+RUN npm install
 
 # Expose the port that your app runs on
 EXPOSE 8080

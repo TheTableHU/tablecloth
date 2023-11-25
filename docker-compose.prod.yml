@@ -31,9 +31,11 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
-    container_name: frontend
+    container_name: frontend-prod
     ports:
       - "8080:80"
+    volumes:
+      - ./frontend:/app:delegated
     environment:
       - PORT=80
       - NODE_ENV=production
@@ -44,3 +46,6 @@ services:
 
 volumes:
   db:
+
+x-project:
+  name: tablecloth-prod
