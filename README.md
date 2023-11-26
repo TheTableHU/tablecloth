@@ -5,6 +5,7 @@ A management system built for The Table Food Pantry at Harding University
  - Shopper registration
  - Reports about demographics using The Table
 # Building
+*This was built using a UNIX environment. Please use WSL2 if attempting to run on Windows*
 ### You will need the following files
  - ``.env``
  - ``backup.tar.gz``(or similar docker volume backup file)
@@ -16,11 +17,7 @@ A management system built for The Table Food Pantry at Harding University
 3. Copy over the necessary files to the root of the project(``tablecloth``)
 		- "Cyberduck" is great if you are deploying to another server (https://cyberduck.io)
 4. Run ``cd tablecloth``
-5. Run:
-	- Windows
-   		- ``docker run --rm -v tablecloth_db:/data -v ${PWD}:/backup busybox tar xzf /backup/backup.tar.gz -C /data``
-	- Unix
-		- ``docker run --rm -v tablecloth_db:/data -v $(pwd):/backup busybox tar xzf /backup/backup.tar.gz -C /data``
+5. Run: ``docker run --rm -v tablecloth_db:/data -v $(pwd):/backup busybox tar xzf /backup/backup.tar.gz -C /data``
 6. Build the docker-compose image
 	- Dev (Will auto-reload changes but is slower)
 		- `docker-compose -f docker-compose.dev.yml up -d`
