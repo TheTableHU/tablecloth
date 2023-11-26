@@ -16,7 +16,6 @@
     "@mui/icons-material": "^5.14.18",
     "@mui/material": "^5.14.18",
     "express": "^4.17.1",
-    "express-async-errors": "^3.1.1",
     "pg": "^8.6.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
@@ -32,14 +31,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/tablecloth.git"
+    "url": "https://github.com/calebstclair/tablecloth.git"
   },
   "keywords": [
     "SERN",
     "inventory",
     "user management"
   ],
-  "author": "Your Name",
+  "author": "Caleb St Clair",
   "license": "MIT",
   "eslintConfig": {
     "extends": "react-app"

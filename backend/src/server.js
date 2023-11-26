@@ -1,4 +1,3 @@
-require('express-async-errors')
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
@@ -52,10 +51,10 @@ app.use((err, req, res, next) => {
 
 //Return Not Found
 app.use((req, res, next) => {
+  logger.info('Not found:', req.url)
   res.status(404)
   res.type('text/plain')
   res.send('Not found')
-  next()
 })
 
 module.exports = app

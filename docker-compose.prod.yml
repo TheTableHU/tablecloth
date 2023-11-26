@@ -3,7 +3,7 @@ version: '3.8'
 services:
   database:
     image: mysql:latest
-    container_name: database
+    container_name: database-prod
     env_file:
       - .env
     ports:
@@ -15,7 +15,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: backend
+    container_name: backend-prod
     ports:
       - "8081:8081"
     volumes:
