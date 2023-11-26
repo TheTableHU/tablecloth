@@ -9,6 +9,7 @@ export default function InventoryList() {
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log('Fetching inventory: ' + config.host + '/api/inventory')
       try {
         const response = await fetch(config.host + '/api/inventory')
         const data = await response.json()

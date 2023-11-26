@@ -1,9 +1,16 @@
 version: '3.8'
 
 services:
+  setup:
+    image: alpine:latest
+    volumes:
+      - ./get_host_ip.sh:./get_host_ip.sh
+      - ./.env:./.env
+    command: sh -c "chmod +x ./get_host_ip.sh && ./get_host_ip.sh"
+
   database:
     image: mysql:latest
-    container_name: database-prod
+    container_name: database
     env_file:
       - .env
     ports:
@@ -15,7 +22,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: backend-prod
+    container_name: backend
     ports:
       - "8081:8081"
     volumes:
@@ -31,7 +38,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
-    container_name: frontend-prod
+    container_name: frontend
     ports:
       - "8080:80"
     volumes:
