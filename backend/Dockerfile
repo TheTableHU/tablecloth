@@ -6,8 +6,8 @@ WORKDIR /app
 
 # Copy important files to the working directory
 COPY package*.json ./
-COPY wait.sh /app/wait.sh
-COPY nodemon.json /app/nodemon.json
+COPY wait.sh ./
+COPY nodemon.json ./
 
 # Install Yarn
 RUN apt-get update && apt-get install -y yarn

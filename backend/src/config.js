@@ -9,7 +9,7 @@ function projectPath(...bits) {
 module.exports = {
   httpPort: 8081,
   logLevel: 'trace',
-  dbLogging: false,
+  dbLogging: true,
   morganFormat: 'combined',
   staticDir: projectPath('static'),
   username: process.env.DB_USER,

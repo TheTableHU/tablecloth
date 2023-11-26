@@ -9,7 +9,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - db:/var/lib/mysql
+      - tablecloth_db:/var/lib/mysql
 
   backend:
     build:
@@ -45,7 +45,8 @@ services:
       - backend
 
 volumes:
-  db:
+  tablecloth_db:
+    external: true
 
 x-project:
   name: tablecloth-prod
