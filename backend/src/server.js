@@ -8,12 +8,12 @@ const config = require('./config.js')
 const logger = require('./logger.js')
 const app = express()
 
+// Enable CORS for all routes
+app.use(cors())
+
 // Import Routes
 const inventoryRoutes = require('./routes/inventory.js')
 const shopperRoutes = require('./routes/shopper.js')
-
-// Enable CORS for all routes
-app.use(cors())
 
 // Parse JSON bodies
 app.use(express.json())
