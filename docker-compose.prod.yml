@@ -1,13 +1,6 @@
 version: '3.8'
 
 services:
-  setup:
-    image: alpine:latest
-    volumes:
-      - ./get_host_ip.sh:./get_host_ip.sh
-      - ./.env:./.env
-    command: sh -c "chmod +x ./get_host_ip.sh && ./get_host_ip.sh"
-
   database:
     image: mysql:latest
     container_name: database
@@ -41,8 +34,8 @@ services:
     container_name: frontend
     ports:
       - "8080:80"
-    volumes:
-      - ./frontend:/app:delegated
+    #volumes:
+      #- ./frontend:/app:delegated
     environment:
       - PORT=80
       - NODE_ENV=production

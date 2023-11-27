@@ -7,9 +7,10 @@ export default function InventoryList() {
   const [columns, setColumns] = useState([])
   const [rows, setRows] = useState([])
 
+  console.log('Fetching inventory: ' + config.host + '/api/inventory')
+  
   useEffect(() => {
     const fetchData = async () => {
-      console.log('Fetching inventory: ' + config.host + '/api/inventory')
       try {
         const response = await fetch(config.host + '/api/inventory')
         const data = await response.json()

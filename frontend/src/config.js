@@ -1,4 +1,4 @@
-let host = process.env.BACKEND_HOST || 'http://localhost:8081'
+let host = process.env.BACKEND_HOST || "http://thetable.local:8081"
 
 module.exports = {
   host: host,
