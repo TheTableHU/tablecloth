@@ -18,6 +18,13 @@ async function getInventory(req, res) {
       switch (column.headerName) {
         case 'Item':
           column.width = 400
+          column.editable = true
+          break
+        case 'Quantity':
+          column.editable = true
+          break
+        case 'Category':
+          column.editable = true
           break
         case 'UpdatedAt':
           column.headerName = 'Last Updated'
@@ -95,10 +102,21 @@ async function addItem(req, res) {
   }
 }
 
+async function updateInventoryRow(req, res) {
+  const row = req.body.row
+
+  if (row.id) {
+    const result = await inventoryModel.updateInventoryRow(row)
+
+    res.json({ success: result ? true : false })
+  }
+}
+
 module.exports = {
   getInventory,
   getItemNames,
   checkoutItems,
   addShipmentItems,
   addItem,
+  updateInventoryRow,
 }

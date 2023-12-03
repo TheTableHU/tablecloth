@@ -125,6 +125,20 @@ async function addItem(item, quantity, category) {
   }
 }
 
+// Update an inventory row
+async function updateInventoryRow(row) {
+  try {
+    const [, updatedRows] = await Inventory.update(row, {
+      where: { id: row.id },
+      returning: true,
+    })
+
+    return updatedRows[0]
+  } catch (error) {
+    throw error
+  }
+}
+
 // Format the date to be more readable
 function formatDate(data) {
   data.forEach((item, index) => {
@@ -150,4 +164,5 @@ module.exports = {
   checkout,
   addShipment,
   addItem,
+  updateInventoryRow,
 }
