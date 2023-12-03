@@ -22,6 +22,10 @@ router.post('/additem', async (req, res, next) => {
   await inventoryController.addItem(req, res)
 })
 
+router.put('/', async (req, res, next) => {
+  await inventoryController.updateInventoryRow(req, res)
+})
+
 // Catch-all error handler
 router.use((err, req, res, next) => {
   next(err)
