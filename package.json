@@ -1,25 +1,13 @@
 {
   "name": "tablecloth",
   "version": "1.0.0",
-  "main": "backend/src/server.js",
   "scripts": {
     "lint": "eslint ./backend/src",
     "prettify": "prettier --write \"**/*.js\""
   },
-  "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.14.18",
-    "@mui/material": "^5.14.18",
-    "express": "^4.17.1",
-    "pg": "^8.6.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
-  },
   "devDependencies": {
     "eslint": "^7.32.0",
-    "prettier": "^2.4.1",
-    "react-scripts": "4.0.3"
+    "prettier": "^2.4.1"
   },
   "engines": {
     "node": ">=14.17.0",
@@ -30,13 +18,10 @@
     "url": "https://github.com/calebstclair/tablecloth.git"
   },
   "keywords": [
-    "SERN",
-    "inventory",
-    "user management"
+    "Harding",
+    "Inventory",
+    "User Management"
   ],
   "author": "Caleb St Clair",
-  "license": "MIT",
-  "eslintConfig": {
-    "extends": "react-app"
-  }
+  "license": "MIT"
 }

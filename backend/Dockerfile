@@ -13,7 +13,7 @@ COPY nodemon.json ./
 RUN apt-get update && apt-get install -y yarn
 
 # Install dependencies using Yarn
-RUN yarn install
+RUN yarn
 
 # Expose the port that your app runs on
 EXPOSE 8081

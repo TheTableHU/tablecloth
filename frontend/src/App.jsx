@@ -5,14 +5,14 @@ import Link from '@mui/material/Link'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import './shared.css'
 
-import LandingPage from './components/landing/landingPage.js'
-import InventoryLandingPage from './components/landing/inventoryLandingPage.js'
+import LandingPage from './components/landing/landingPage.jsx'
+import InventoryLandingPage from './components/landing/inventoryLandingPage.jsx'
 
-import InventoryList from './components/inventory/inventoryList.js'
-import Shipment from './components/inventory/shipmentPage.js'
-import AddItem from './components/inventory/addItemPage.js'
-import Checkout from './components/inventory/checkoutPage.js'
-import Checkin from './components/shopper/checkinPage.js'
+import InventoryList from './components/inventory/inventoryList.jsx'
+import Shipment from './components/inventory/shipmentPage.jsx'
+import AddItem from './components/inventory/addItemPage.jsx'
+import Checkout from './components/inventory/checkoutPage.jsx'
+import Checkin from './components/shopper/checkinPage.jsx'
 
 function App() {
   const location = useLocation()

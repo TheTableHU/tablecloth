@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import config from '../../config'
+import config from '../../config.jsx'
 
 import * as React from 'react'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 
-import { ToastWrapper, toast, ItemList, ItemForm } from '../../Wrappers.js'
+import { ToastWrapper, toast, ItemList, ItemForm } from '../../Wrappers.jsx'
 import './checkoutPage.css'
 
 export default function CheckoutPage() {

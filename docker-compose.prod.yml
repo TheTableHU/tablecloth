@@ -34,8 +34,6 @@ services:
     container_name: frontend
     ports:
       - "8080:80"
-    #volumes:
-      #- ./frontend:/app:delegated
     environment:
       - PORT=80
       - NODE_ENV=production
