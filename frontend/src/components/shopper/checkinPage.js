@@ -177,7 +177,7 @@ export default function CheckinPage() {
                 onChange={handleHomeChange}
                 label="Home"
                 helperText="State ABBR or Country"
-                autocomplete="off"
+                autoComplete="off"
               />
             </FormControl>
           </div>
@@ -199,7 +199,7 @@ export default function CheckinPage() {
                 label="Box Number"
                 value={boxValue}
                 onChange={handleBoxChange}
-                autocomplete="off"
+                autoComplete="off"
               />
             </FormControl>
           </div>
@@ -229,7 +229,7 @@ export default function CheckinPage() {
                 label="Dietary Restrictions"
                 value={dietValue}
                 onChange={handleDietChange}
-                autocomplete="off"
+                autoComplete="off"
               />
             </FormControl>
           </div>
@@ -316,7 +316,7 @@ export default function CheckinPage() {
               id="email"
               label="Email"
               value={email}
-              autocomplete="off"
+              autoComplete="off"
               onChange={handleEmailChange}
             />
           </FormControl>

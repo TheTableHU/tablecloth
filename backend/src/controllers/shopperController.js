@@ -36,6 +36,7 @@ async function createShopper(req, res) {
     const result = await shopperModel.createShopper(req.body)
     res.json({ success: true, data: result })
   } catch (error) {
+    logger.error(error)
     res.status(500).json({ success: false, error: error.message })
   }
 }

@@ -10,8 +10,8 @@ const ShopperVisit = sequelize.define(
       allowNull: false,
       primaryKey: true,
     },
-    dateOfVisit: {
-      type: DataTypes.DATEONLY,
+    visitTime: {
+      type: DataTypes.DATE,
       allowNull: false,
       primaryKey: true,
     },
@@ -19,6 +19,7 @@ const ShopperVisit = sequelize.define(
   {
     timestamps: true,
     createdAt: false,
+    timezone: 'America/Chicago',
   }
 )
 
