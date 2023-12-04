@@ -7,11 +7,8 @@ WORKDIR /app
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# Install Yarn
-RUN command -v yarn >/dev/null 2>&1 || { npm install -g yarn; }
-
 # Install application dependencies using Yarn
-RUN yarn install
+RUN yarn --network-timeout 1000000
 
 # Expose the port that your app runs on
 EXPOSE 8080

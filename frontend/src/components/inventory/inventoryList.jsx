@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
 import config from '../../config'
-import { ToastWrapper, toast } from '../../Wrappers.js'
+import { ToastWrapper, toast } from '../../Wrappers.jsx'
 
 export default function InventoryList() {
   const [columns, setColumns] = useState([])
