@@ -132,8 +132,11 @@ export default function CheckinPage() {
 
       if (response.ok) {
         toast.success('Shopper checked in successfully! Welcome back!')
+        setReturningHNum('')
       } else if (response.status === 400) {
-        toast.error('Shopper has already checked in for today.')
+        toast.error(
+          'Shopper has already been to The Table twice this week which is our limit. Please come again next week!'
+        )
       } else {
         toast.error('Failed to check in shopper. Please try again.')
       }
@@ -174,7 +177,7 @@ export default function CheckinPage() {
                 onChange={handleHomeChange}
                 label="Home"
                 helperText="State ABBR or Country"
-                autocomplete="off"
+                autoComplete="off"
               />
             </FormControl>
           </div>
@@ -196,7 +199,7 @@ export default function CheckinPage() {
                 label="Box Number"
                 value={boxValue}
                 onChange={handleBoxChange}
-                autocomplete="off"
+                autoComplete="off"
               />
             </FormControl>
           </div>
@@ -226,7 +229,7 @@ export default function CheckinPage() {
                 label="Dietary Restrictions"
                 value={dietValue}
                 onChange={handleDietChange}
-                autocomplete="off"
+                autoComplete="off"
               />
             </FormControl>
           </div>
@@ -313,7 +316,7 @@ export default function CheckinPage() {
               id="email"
               label="Email"
               value={email}
-              autocomplete="off"
+              autoComplete="off"
               onChange={handleEmailChange}
             />
           </FormControl>
