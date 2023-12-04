@@ -3,7 +3,7 @@ const { parseISO, format, isValid } = require('date-fns')
 const sequelize = require('../db.js')
 const logger = require('../logger.js')
 
-const { ShopperVisit } = require('./ShopperVisitModel.js')
+const ShopperVisit = require('./ShopperVisitModel.js')
 
 const Shopper = sequelize.define(
   'Shopper',
@@ -141,6 +141,8 @@ async function createShopper(shopper) {
 
       logger.info(`Created shopper with hNumber ${newShopper.hNumber}`)
 
+      ShopperVisit.createVisit(newShopper.hNumber)
+
       return newShopper
     })
   } catch (error) {
@@ -175,7 +177,7 @@ function parseAndFormatDate(dateString) {
   }
 }
 
-Shopper.hasMany(ShopperVisit, { foreignKey: 'itemId' })
+Shopper.hasMany(ShopperVisit.ShopperVisit, { foreignKey: 'itemId' })
 
 module.exports = {
   Shopper,

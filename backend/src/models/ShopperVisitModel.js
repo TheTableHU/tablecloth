@@ -9,8 +9,8 @@ const ShopperVisit = sequelize.define(
       allowNull: false,
       primaryKey: true,
     },
-    dateOfVisit: {
-      type: DataTypes.DATEONLY,
+    visitTime: {
+      type: DataTypes.DATE,
       allowNull: false,
       primaryKey: true,
     },
@@ -18,14 +18,26 @@ const ShopperVisit = sequelize.define(
   {
     timestamps: true,
     createdAt: false,
+    timezone: 'America/Chicago',
   }
 )
 
 // Makes a new entry logging when a shopper visits
 async function createVisit(hNumber) {
+  const centralTime = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Chicago',
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: false, // Use 24-hour format
+  }).format(new Date());
+
   const result = await ShopperVisit.create({
     hNumber: hNumber,
-    dateOfVisit: Date.now(),
+    visitTime: centralTime
   })
   return result
 }
