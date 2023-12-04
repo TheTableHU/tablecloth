@@ -12,11 +12,11 @@ import {
   Typography,
 } from '@mui/material'
 
-import config from '../../config.js'
+import config from '../../config.jsx'
 
 import { useState } from 'react'
 import './checkinPage.css'
-import { HNumWrapper, toast, ToastWrapper } from '../../Wrappers.js'
+import { HNumWrapper, toast, ToastWrapper } from '../../Wrappers.jsx'
 
 export default function CheckinPage() {
   const [returningHNum, setReturningHNum] = useState('')

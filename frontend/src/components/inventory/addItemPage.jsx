@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import config from '../../config'
+import config from '../../config.jsx'
 import './addItemPage.css'
 
 import * as React from 'react'
 
 import { TextField, Select, FormControl, MenuItem, InputLabel, Button } from '@mui/material'
 
-import { ToastWrapper, toast } from '../../Wrappers.js'
+import { ToastWrapper, toast } from '../../Wrappers.jsx'
 import './checkoutPage.css'
 
 export default function CheckoutPage() {
