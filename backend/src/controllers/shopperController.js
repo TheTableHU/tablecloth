@@ -18,15 +18,16 @@ async function getAllShoppers(req, res) {
 async function checkinShopper(req, res) {
   const Shopper = await shopperModel.getSpecificShopper(req.params.hNumber)
   try {
-    const result = await shopperVisit.createVisit(Shopper.hNumber)
-    res.json({ success: true, data: result })
-  } catch (error) {
-    if (error instanceof sequelize.Sequelize.UniqueConstraintError) {
-      logger.info('Shopper already checked in today')
-      res.status(400).json({ success: false, error: 'Shopper already checked in today' })
+    if (await shopperVisit.isShopperAtWeekLimit(Shopper.hNumber)) {
+      logger.info('Shopper has been twice this week')
+      res.status(400).json({ success: false, error: 'Shopper has been twice this week' })
     } else {
-      res.status(500).json({ success: false, error: error.message })
+      const result = await shopperVisit.createVisit(Shopper.hNumber)
+      res.json({ success: true, data: result })
     }
+  } catch (error) {
+    logger.error(error)
+    res.status(500).json({ success: false, error: error.message })
   }
 }
 
