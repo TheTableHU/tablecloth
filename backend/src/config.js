@@ -1,9 +1,9 @@
-require('dotenv').config()
+require('dotenv').config();
 
-const path = require('path')
+const path = require('path');
 
 function projectPath(...bits) {
-  return path.join(__dirname, '..', ...bits)
+  return path.join(__dirname, '..', ...bits);
 }
 
 module.exports = {
@@ -18,5 +18,4 @@ module.exports = {
   host: process.env.DB_HOST,
   dialect: 'mysql',
   dbPort: process.env.DB_PORT,
-  sessionSecret: 'tablecloth',
-}
+};

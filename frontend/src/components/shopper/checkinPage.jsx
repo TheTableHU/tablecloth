@@ -1,3 +1,9 @@
+import React from 'react';
+import config from '../../config.jsx';
+import { useState } from 'react';
+import './checkinPage.css';
+import { HNumWrapper, toast, ToastWrapper } from '../../Wrappers.jsx';
+
 import {
   TextField,
   Select,
@@ -10,80 +16,74 @@ import {
   Button,
   InputLabel,
   Typography,
-} from '@mui/material'
-
-import config from '../../config.jsx'
-
-import { useState } from 'react'
-import './checkinPage.css'
-import { HNumWrapper, toast, ToastWrapper } from '../../Wrappers.jsx'
+} from '@mui/material';
 
 export default function CheckinPage() {
-  const [returningHNum, setReturningHNum] = useState('')
-  const [newHNum, setNewHNum] = useState('')
-  const [liveWithUnder16, setLiveWithUnder16] = useState('')
-  const [employed, setEmployed] = useState('')
-  const [needJobAssistance, setNeedJobAssistance] = useState('')
-  const [needHousingAssistance, setNeedHousingAssistance] = useState('')
-  const [interestedInSNAP, setInterestedInSNAP] = useState('')
-  const [gender, setGender] = useState('')
-  const [ethnicity, setEthnicity] = useState('')
-  const [classification, setClassification] = useState('')
-  const [dietValue, setDietValue] = useState('')
-  const [homeValue, setHomeChange] = useState('')
-  const [boxValue, setBoxValue] = useState('')
-  const [email, setEmail] = useState('')
+  const [returningHNum, setReturningHNum] = useState('');
+  const [newHNum, setNewHNum] = useState('');
+  const [liveWithUnder16, setLiveWithUnder16] = useState('');
+  const [employed, setEmployed] = useState('');
+  const [needJobAssistance, setNeedJobAssistance] = useState('');
+  const [needHousingAssistance, setNeedHousingAssistance] = useState('');
+  const [interestedInSNAP, setInterestedInSNAP] = useState('');
+  const [gender, setGender] = useState('');
+  const [ethnicity, setEthnicity] = useState('');
+  const [classification, setClassification] = useState('');
+  const [dietValue, setDietValue] = useState('');
+  const [homeValue, setHomeChange] = useState('');
+  const [boxValue, setBoxValue] = useState('');
+  const [email, setEmail] = useState('');
 
-  const [displayNewShopperForm, setDisplayNewShopperForm] = useState(true)
+  const [displayNewShopperForm, setDisplayNewShopperForm] = useState(true);
 
   const handleHNumChange = (event, hNumType) => {
-    const value = event.target.value.slice(0, 8)
+    const value = event.target.value.slice(0, 8);
 
     if (hNumType === 'returning') {
-      setReturningHNum(value)
+      setReturningHNum(value);
     } else if (hNumType === 'new') {
-      setNewHNum(value)
+      setNewHNum(value);
     }
-  }
+  };
 
   function clearForm() {
-    setReturningHNum('')
-    setNewHNum('')
-    setLiveWithUnder16('')
-    setEmployed('')
-    setNeedJobAssistance('')
-    setNeedHousingAssistance('')
-    setInterestedInSNAP('')
-    setGender('')
-    setEthnicity('')
-    setClassification('')
-    setDietValue('')
-    setHomeChange('')
-    setBoxValue('')
-    setEmail('')
+    setReturningHNum('');
+    setNewHNum('');
+    setLiveWithUnder16('');
+    setEmployed('');
+    setNeedJobAssistance('');
+    setNeedHousingAssistance('');
+    setInterestedInSNAP('');
+    setGender('');
+    setEthnicity('');
+    setClassification('');
+    setDietValue('');
+    setHomeChange('');
+    setBoxValue('');
+    setEmail('');
   }
 
-  const handleHomeChange = event => {
-    setHomeChange(event.target.value)
-  }
+  const handleHomeChange = (event) => {
+    setHomeChange(event.target.value);
+  };
 
-  const handleBoxChange = event => {
-    setBoxValue(event.target.value)
-  }
+  const handleBoxChange = (event) => {
+    setBoxValue(event.target.value);
+  };
 
-  const handleDietChange = event => {
-    setDietValue(event.target.value)
-  }
+  const handleDietChange = (event) => {
+    setDietValue(event.target.value);
+  };
 
   const toggleFormDisplay = () => {
-    setDisplayNewShopperForm(!displayNewShopperForm)
-  }
+    setDisplayNewShopperForm(!displayNewShopperForm);
+  };
 
-  const handleEmailChange = event => {
-    setEmail(event.target.value)
-  }
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
 
-  async function handleNewShopperSubmit(event) {
+  async function handleNewShopperSubmit() {
     const formData = {
       hNumber: newHNum,
       liveWithUnder16: liveWithUnder16,
@@ -98,7 +98,7 @@ export default function CheckinPage() {
       home: homeValue,
       box: boxValue,
       email: email,
-    }
+    };
 
     try {
       const response = await fetch(`${config.host}/api/shopper/checkin/`, {
@@ -107,41 +107,41 @@ export default function CheckinPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ formData }),
-      })
+      });
 
       if (response.ok) {
-        toast.success('Shopper registered successfully! Welcome!')
-        clearForm()
+        toast.success('Shopper registered successfully! Welcome!');
+        clearForm();
       } else {
         // Handle non-successful responses
-        toast.error('Failed to register shopper. Please try again.')
+        toast.error('Failed to register shopper. Please try again.');
       }
     } catch (error) {
-      console.error('Error submitting form:', error)
+      console.error('Error submitting form:', error);
     }
   }
 
-  async function handleReturningShopperSubmit(event) {
+  async function handleReturningShopperSubmit() {
     try {
       const response = await fetch(`${config.host}/api/shopper/checkin/${returningHNum}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
 
       if (response.ok) {
-        toast.success('Shopper checked in successfully! Welcome back!')
-        setReturningHNum('')
+        toast.success('Shopper checked in successfully! Welcome back!');
+        setReturningHNum('');
       } else if (response.status === 400) {
         toast.error(
-          'Shopper has already been to The Table twice this week which is our limit. Please come again next week!'
-        )
+          'Shopper has already been to The Table twice this week which is our limit. Please come again next week!',
+        );
       } else {
-        toast.error('Failed to check in shopper. Please try again.')
+        toast.error('Failed to check in shopper. Please try again.');
       }
     } catch (error) {
-      console.error('Error submitting form:', error)
+      console.error('Error submitting form:', error);
     }
   }
 
@@ -151,7 +151,7 @@ export default function CheckinPage() {
         <h1>New Shopper</h1>
         <div className="newShopperFormContainer">
           <FormControl fullWidth>
-            <HNumWrapper value={newHNum} onChange={event => handleHNumChange(event, 'new')} />
+            <HNumWrapper value={newHNum} onChange={(event) => handleHNumChange(event, 'new')} />
           </FormControl>
           <div className="formRow">
             <FormControl fullWidth>
@@ -159,7 +159,7 @@ export default function CheckinPage() {
               <Select
                 value={classification}
                 labelId="classification"
-                onChange={e => setClassification(e.target.value)}
+                onChange={(e) => setClassification(e.target.value)}
               >
                 <MenuItem value="Undergraduate">Undergraduate</MenuItem>
                 <MenuItem value="Graduate">Graduate</MenuItem>
@@ -185,7 +185,7 @@ export default function CheckinPage() {
           <div className="formRow">
             <FormControl fullWidth>
               <InputLabel htmlFor="gender">Gender</InputLabel>
-              <Select value={gender} labelId="gender" onChange={e => setGender(e.target.value)}>
+              <Select value={gender} labelId="gender" onChange={(e) => setGender(e.target.value)}>
                 <MenuItem value="Male">Male</MenuItem>
                 <MenuItem value="Female">Female</MenuItem>
               </Select>
@@ -210,7 +210,7 @@ export default function CheckinPage() {
               <Select
                 labelId="ethnicity"
                 value={ethnicity}
-                onChange={e => setEthnicity(e.target.value)}
+                onChange={(e) => setEthnicity(e.target.value)}
               >
                 <MenuItem value="African American">African American</MenuItem>
                 <MenuItem value="Asian">Asian</MenuItem>
@@ -241,7 +241,7 @@ export default function CheckinPage() {
               </Typography>
               <RadioGroup
                 value={liveWithUnder16}
-                onChange={e => setLiveWithUnder16(e.target.value)}
+                onChange={(e) => setLiveWithUnder16(e.target.value)}
               >
                 <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                 <FormControlLabel value="No" control={<Radio />} label="No" />
@@ -254,7 +254,7 @@ export default function CheckinPage() {
               <Typography variant="subtitle1" className="questionText">
                 Are you employed?
               </Typography>
-              <RadioGroup value={employed} onChange={e => setEmployed(e.target.value)}>
+              <RadioGroup value={employed} onChange={(e) => setEmployed(e.target.value)}>
                 <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                 <FormControlLabel value="No" control={<Radio />} label="No" />
               </RadioGroup>
@@ -268,7 +268,7 @@ export default function CheckinPage() {
               </Typography>
               <RadioGroup
                 value={needJobAssistance}
-                onChange={e => setNeedJobAssistance(e.target.value)}
+                onChange={(e) => setNeedJobAssistance(e.target.value)}
               >
                 <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                 <FormControlLabel value="No" control={<Radio />} label="No" />
@@ -283,7 +283,7 @@ export default function CheckinPage() {
               </Typography>
               <RadioGroup
                 value={needHousingAssistance}
-                onChange={e => setNeedHousingAssistance(e.target.value)}
+                onChange={(e) => setNeedHousingAssistance(e.target.value)}
               >
                 <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                 <FormControlLabel value="No" control={<Radio />} label="No" />
@@ -299,7 +299,7 @@ export default function CheckinPage() {
               </Typography>
               <RadioGroup
                 value={interestedInSNAP}
-                onChange={e => setInterestedInSNAP(e.target.value)}
+                onChange={(e) => setInterestedInSNAP(e.target.value)}
               >
                 <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                 <FormControlLabel value="No" control={<Radio />} label="No" />
@@ -333,8 +333,8 @@ export default function CheckinPage() {
           </Button>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   function returningShopperForm() {
     return (
@@ -343,7 +343,7 @@ export default function CheckinPage() {
         <FormControl fullWidth>
           <HNumWrapper
             value={returningHNum}
-            onChange={event => handleHNumChange(event, 'returning')}
+            onChange={(event) => handleHNumChange(event, 'returning')}
           />
         </FormControl>
 
@@ -358,7 +358,7 @@ export default function CheckinPage() {
           </Button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -372,5 +372,5 @@ export default function CheckinPage() {
 
       {displayNewShopperForm ? newShopperForm() : returningShopperForm()}
     </Container>
-  )
+  );
 }

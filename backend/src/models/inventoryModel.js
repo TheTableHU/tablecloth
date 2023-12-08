@@ -1,9 +1,9 @@
 // inventoryModel.js
 
-const { DataTypes } = require('sequelize')
-const { parseISO, format, isValid } = require('date-fns')
-const sequelize = require('../db.js')
-const logger = require('../logger.js')
+const { DataTypes } = require('sequelize');
+const { parseISO, format, isValid } = require('date-fns');
+const sequelize = require('../db.js');
+const logger = require('../logger.js');
 
 const Inventory = sequelize.define(
   'inventory',
@@ -30,130 +30,114 @@ const Inventory = sequelize.define(
     tableName: 'inventory',
     timestamps: true,
     createdAt: false,
-  }
-)
+  },
+);
 
 // Get all items with all data
 async function getAllItems() {
-  try {
-    const items = await Inventory.findAll()
-    return formatDate(items)
-  } catch (error) {
-    throw error
-  }
+  const items = await Inventory.findAll();
+  return formatDate(items);
 }
 
 // Get all items with only the item name
 async function getItemNames() {
-  try {
-    const allItems = await Inventory.findAll()
-    return allItems.map(item => ({ id: item.id, item: item.item }))
-  } catch (error) {
-    throw error
-  }
+  const allItems = await Inventory.findAll();
+  return allItems.map((item) => ({ id: item.id, item: item.item }));
 }
 
 // Subtract the checkout quantity from the inventory quantity
 async function checkout(items) {
-  const t = await sequelize.transaction()
+  const t = await sequelize.transaction();
 
   try {
     for (const item of items) {
-      const existingItem = await Inventory.findByPk(item.id, { transaction: t })
+      const existingItem = await Inventory.findByPk(item.id, { transaction: t });
 
       if (existingItem) {
-        const updatedQuantity = parseInt(existingItem.quantity) - parseInt(item.checkoutQuantity)
+        const updatedQuantity = parseInt(existingItem.quantity) - parseInt(item.checkoutQuantity);
 
         if (isNaN(updatedQuantity)) {
-          throw new Error(`Item is NaN. Changes not saved.`)
+          throw new Error(`Item is NaN. Changes not saved.`);
         }
 
-        await existingItem.update({ quantity: updatedQuantity }, { transaction: t })
+        await existingItem.update({ quantity: updatedQuantity }, { transaction: t });
       } else {
-        logger.error(`Item with ID ${item.id} not found in the inventory.`)
+        logger.error(`Item with ID ${item.id} not found in the inventory.`);
       }
     }
 
-    await t.commit()
-    logger.info('Inventory updated successfully.')
+    await t.commit();
+    logger.info('Inventory updated successfully.');
   } catch (error) {
-    await t.rollback()
-    throw error
+    await t.rollback();
+    throw error;
   }
 }
 
 // Add the item quantity passed into the inventory quantity
 async function addShipment(items) {
-  const t = await sequelize.transaction()
+  const t = await sequelize.transaction();
 
   try {
     for (const item of items) {
-      const existingItem = await Inventory.findByPk(item.id, { transaction: t })
+      const existingItem = await Inventory.findByPk(item.id, { transaction: t });
 
       if (existingItem) {
-        const updatedQuantity = parseInt(existingItem.quantity) + parseInt(item.checkoutQuantity)
+        const updatedQuantity = parseInt(existingItem.quantity) + parseInt(item.checkoutQuantity);
 
         if (isNaN(updatedQuantity)) {
-          throw new Error(`Item is NaN. Changes not saved.`)
+          throw new Error(`Item is NaN. Changes not saved.`);
         }
 
-        await existingItem.update({ quantity: updatedQuantity }, { transaction: t })
+        await existingItem.update({ quantity: updatedQuantity }, { transaction: t });
       } else {
-        logger.warn(`Item with ID ${item.id} not found in the inventory.`)
+        logger.warn(`Item with ID ${item.id} not found in the inventory.`);
       }
     }
 
-    await t.commit()
-    logger.info('Inventory updated successfully.')
+    await t.commit();
+    logger.info('Inventory updated successfully.');
   } catch (error) {
-    await t.rollback()
-    throw error
+    await t.rollback();
+    throw error;
   }
 }
 
 // Add a new item to the inventory
 async function addItem(item, quantity, category) {
-  try {
-    const newItem = await Inventory.create({
-      item,
-      quantity,
-      category,
-    })
-    return newItem
-  } catch (error) {
-    throw error
-  }
+  const newItem = await Inventory.create({
+    item,
+    quantity,
+    category,
+  });
+  return newItem;
 }
 
 // Update an inventory row
 async function updateInventoryRow(row) {
-  try {
-    const [, updatedRows] = await Inventory.update(row, {
-      where: { id: row.id },
-      returning: true,
-    })
+  const [, updatedRows] = await Inventory.update(row, {
+    where: { id: row.id },
+    returning: true,
+  });
 
-    return updatedRows[0]
-  } catch (error) {
-    throw error
-  }
+  return updatedRows[0];
 }
 
 // Format the date to be more readable
 function formatDate(data) {
   data.forEach((item, index) => {
-    const updatedAt = item.updatedAt
+    const updatedAt = item.updatedAt;
 
-    const parsedDate = parseISO(updatedAt)
+    const parsedDate = parseISO(updatedAt);
 
     if (isValid(parsedDate)) {
-      item.setDataValue('updatedAt', format(parsedDate, 'MMMM dd, yyyy'))
+      item.setDataValue('updatedAt', format(parsedDate, 'MMMM dd, yyyy'));
     } else {
-      logger.error(`Invalid date at index ${index}:`, updatedAt)
+      logger.error(`Invalid date at index ${index}:`, updatedAt);
     }
-  })
+  });
 
-  return data
+  return data;
 }
 
 // Exporting the functions to be used in controllers.
@@ -165,4 +149,4 @@ module.exports = {
   addShipment,
   addItem,
   updateInventoryRow,
-}
+};

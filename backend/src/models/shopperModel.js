@@ -1,9 +1,9 @@
-const { DataTypes } = require('sequelize')
-const { parseISO, format, isValid } = require('date-fns')
-const sequelize = require('../db.js')
-const logger = require('../logger.js')
+const { DataTypes } = require('sequelize');
+const { parseISO, format, isValid } = require('date-fns');
+const sequelize = require('../db.js');
+const logger = require('../logger.js');
 
-const ShopperVisit = require('./ShopperVisitModel.js')
+const ShopperVisit = require('./ShopperVisitModel.js');
 
 const Shopper = sequelize.define(
   'Shopper',
@@ -74,17 +74,17 @@ const Shopper = sequelize.define(
     tableName: 'shoppers',
     timestamps: true,
     createdAt: false,
-  }
-)
+  },
+);
 
 // Get all shoppers with all data
 async function getAllShoppers() {
   try {
-    const shoppers = await Shopper.findAll()
-    return formatDate(shoppers)
+    const shoppers = await Shopper.findAll();
+    return formatDate(shoppers);
   } catch (error) {
-    logger.error('Error fetching shoppers:', error)
-    throw error
+    logger.error('Error fetching shoppers:', error);
+    throw error;
   }
 }
 
@@ -95,22 +95,22 @@ async function getSpecificShopper(hNumber) {
       where: {
         hNumber: hNumber,
       },
-    })
+    });
     if (!shopper) {
-      logger.error(`Shopper with hNumber ${hNumber} not found`)
+      logger.error(`Shopper with hNumber ${hNumber} not found`);
 
-      throw new Error(`Shopper with hNumber ${hNumber} not found`)
+      throw new Error(`Shopper with hNumber ${hNumber} not found`);
     }
-    return formatDate(shopper)
+    return formatDate(shopper);
   } catch (error) {
-    logger.error('Error fetching shopper:', error)
-    throw error
+    logger.error('Error fetching shopper:', error);
+    throw error;
   }
 }
 
 // Create a new shopper
 async function createShopper(shopper) {
-  const formData = shopper.formData
+  const formData = shopper.formData;
   try {
     const shopperData = {
       hNumber: parseInt(formData.hNumber, 10),
@@ -128,60 +128,60 @@ async function createShopper(shopper) {
       helpWithHousing: formData.needHousingAssistance === 'true' ? 1 : 0,
       snap: formData.interestedInSNAP === 'true' ? 1 : 0,
       email: formData.email,
-    }
+    };
 
     for (const key in shopperData) {
-      if (shopperData.hasOwnProperty(key) && shopperData[key] === '') {
-        shopperData[key] = null
+      if (Object.prototype.hasOwnProperty.call(shopperData, key) && shopperData[key] === '') {
+        shopperData[key] = null;
       }
     }
 
-    await sequelize.transaction(async t => {
-      const newShopper = await Shopper.create(shopperData, { transaction: t })
+    await sequelize.transaction(async (t) => {
+      const newShopper = await Shopper.create(shopperData, { transaction: t });
 
-      logger.info(`Created shopper with hNumber ${newShopper.hNumber}`)
+      logger.info(`Created shopper with hNumber ${newShopper.hNumber}`);
 
-      ShopperVisit.createVisit(newShopper.hNumber)
+      ShopperVisit.createVisit(newShopper.hNumber);
 
-      return newShopper
-    })
+      return newShopper;
+    });
   } catch (error) {
-    logger.error('Error creating shopper:', error)
-    throw error
+    logger.error('Error creating shopper:', error);
+    throw error;
   }
 }
 
 // Format date for better readability
 async function formatDate(shopper) {
-  const dateRegistered = shopper.getDataValue('dateRegistered')
-  const updatedAt = shopper.getDataValue('updatedAt')
+  const dateRegistered = shopper.getDataValue('dateRegistered');
+  const updatedAt = shopper.getDataValue('updatedAt');
 
-  const parsedDateRegistered = parseAndFormatDate(dateRegistered)
+  const parsedDateRegistered = parseAndFormatDate(dateRegistered);
 
-  const parsedUpdatedAt = parseAndFormatDate(updatedAt)
+  const parsedUpdatedAt = parseAndFormatDate(updatedAt);
 
-  shopper.setDataValue('dateRegistered', parsedDateRegistered)
-  shopper.setDataValue('updatedAt', parsedUpdatedAt)
+  shopper.setDataValue('dateRegistered', parsedDateRegistered);
+  shopper.setDataValue('updatedAt', parsedUpdatedAt);
 
-  return shopper
+  return shopper;
 }
 
 function parseAndFormatDate(dateString) {
-  const parsedDate = parseISO(dateString)
+  const parsedDate = parseISO(dateString);
 
   if (isValid(parsedDate)) {
-    return format(parsedDate, 'MMMM dd, yyyy')
+    return format(parsedDate, 'MMMM dd, yyyy');
   } else {
-    logger.error(`Invalid date: `, dateString)
-    return dateString
+    logger.error(`Invalid date: `, dateString);
+    return dateString;
   }
 }
 
-Shopper.hasMany(ShopperVisit.ShopperVisit, { foreignKey: 'itemId' })
+Shopper.hasMany(ShopperVisit.ShopperVisit, { foreignKey: 'itemId' });
 
 module.exports = {
   Shopper,
   getAllShoppers,
   getSpecificShopper,
   createShopper,
-}
+};

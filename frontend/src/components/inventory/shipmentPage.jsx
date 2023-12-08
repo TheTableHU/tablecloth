@@ -1,48 +1,48 @@
-import { useEffect, useState } from 'react'
-import config from '../../config.jsx'
+import React from 'react';
+import { useEffect, useState } from 'react';
+import config from '../../config.jsx';
 
-import * as React from 'react'
-import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
-import Button from '@mui/material/Button'
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 
-import { ToastWrapper, toast, ItemList, ItemForm } from '../../Wrappers.jsx'
-import './checkoutPage.css'
+import { ToastWrapper, toast, ItemList, ItemForm } from '../../Wrappers.jsx';
+import './checkoutPage.css';
 
 export default function CheckoutPage() {
-  const [receivedData, setReceivedData] = useState([])
-  const [selectedItem, setSelectedItem] = useState('')
-  const [quantity, setQuantity] = useState(1)
-  const [items, setItems] = useState([])
+  const [receivedData, setReceivedData] = useState([]);
+  const [selectedItem, setSelectedItem] = useState('');
+  const [quantity, setQuantity] = useState(1);
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(config.host + '/api/inventory/checkout')
-        const data = await response.json()
+        const response = await fetch(config.host + '/api/inventory/checkout');
+        const data = await response.json();
 
         if (data.success) {
-          setReceivedData(data.data)
+          setReceivedData(data.data);
         } else {
-          console.error('Error fetching inventory:', data.error)
+          console.error('Error fetching inventory:', data.error);
           // Set an empty array or handle the error accordingly
-          setReceivedData([])
+          setReceivedData([]);
         }
       } catch (error) {
-        setReceivedData([])
+        setReceivedData([]);
       }
-    }
+    };
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   function addButton() {
     if (!selectedItem) {
-      toast.warning('Please select an item.')
+      toast.warning('Please select an item.');
     } else if (quantity <= 0) {
-      toast.warning('Please select a valid quantity.')
+      toast.warning('Please select a valid quantity.');
     } else {
-      const selectedInventoryItem = receivedData.find(item => item.item === selectedItem)
+      const selectedInventoryItem = receivedData.find((item) => item.item === selectedItem);
 
       if (selectedInventoryItem) {
         const newItem = {
@@ -50,19 +50,19 @@ export default function CheckoutPage() {
           primaryText: selectedItem,
           secondaryText: `Quantity: ${quantity}`,
           checkoutQuantity: quantity,
-        }
+        };
 
-        setItems(prevItems => [...prevItems, newItem])
-        setSelectedItem('')
-        setQuantity(1)
+        setItems((prevItems) => [...prevItems, newItem]);
+        setSelectedItem('');
+        setQuantity(1);
       } else {
-        console.error()
+        console.error();
       }
     }
   }
 
   function deleteButton(itemId) {
-    setItems(prevItems => prevItems.filter(item => item.id !== itemId))
+    setItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
   }
 
   async function handleSubmit() {
@@ -74,17 +74,17 @@ export default function CheckoutPage() {
         },
         body: JSON.stringify({ items }), // Simplify the object notation
       })
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => response.json())
+        .then(() => {
           // Handle the response if needed
-          toast.success('Successfully submitted data.')
-          setItems([])
+          toast.success('Successfully submitted data.');
+          setItems([]);
         })
-        .catch(error => {
-          console.error('Error submitting data:', error)
-        })
+        .catch((error) => {
+          console.error('Error submitting data:', error);
+        });
     } else {
-      toast.error('Please add items before submitting.')
+      toast.error('Please add items before submitting.');
     }
   }
 
@@ -109,12 +109,12 @@ export default function CheckoutPage() {
           variant="contained"
           className="submitButton"
           onClick={() => {
-            handleSubmit()
+            handleSubmit();
           }}
         >
           Submit
         </Button>
       </div>
     </>
-  )
+  );
 }

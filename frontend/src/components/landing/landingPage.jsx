@@ -1,6 +1,7 @@
-import { Card, Typography } from '@mui/material'
-import { Link } from 'react-router-dom'
-import './landingPage.css'
+import React from 'react';
+import { Card, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+import './landingPage.css';
 
 export default function LandingPage() {
   return (
@@ -27,5 +28,5 @@ export default function LandingPage() {
         </Link>
       </div>
     </>
-  )
+  );
 }

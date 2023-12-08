@@ -15,5 +15,5 @@ module.exports = {
     });
 
     await queryInterface.renameColumn('shopperVisits', 'visitTime', 'dateOfVisit');
-  }
+  },
 };

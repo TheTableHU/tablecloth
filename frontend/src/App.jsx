@@ -1,21 +1,21 @@
-import React from 'react'
-import { Routes, Route, Outlet, useLocation, Link as RouterLink } from 'react-router-dom'
-import Breadcrumbs from '@mui/material/Breadcrumbs'
-import Link from '@mui/material/Link'
-import NavigateNextIcon from '@mui/icons-material/NavigateNext'
-import './shared.css'
+import React from 'react';
+import { Routes, Route, Outlet, useLocation, Link as RouterLink } from 'react-router-dom';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Link from '@mui/material/Link';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import './shared.css';
 
-import LandingPage from './components/landing/landingPage.jsx'
-import InventoryLandingPage from './components/landing/inventoryLandingPage.jsx'
+import LandingPage from './components/landing/landingPage.jsx';
+import InventoryLandingPage from './components/landing/inventoryLandingPage.jsx';
 
-import InventoryList from './components/inventory/inventoryList.jsx'
-import Shipment from './components/inventory/shipmentPage.jsx'
-import AddItem from './components/inventory/addItemPage.jsx'
-import Checkout from './components/inventory/checkoutPage.jsx'
-import Checkin from './components/shopper/checkinPage.jsx'
+import InventoryList from './components/inventory/inventoryList.jsx';
+import Shipment from './components/inventory/shipmentPage.jsx';
+import AddItem from './components/inventory/addItemPage.jsx';
+import Checkout from './components/inventory/checkoutPage.jsx';
+import Checkin from './components/shopper/checkinPage.jsx';
 
 function App() {
-  const location = useLocation()
+  const location = useLocation();
 
   return (
     <div>
@@ -70,7 +70,7 @@ function App() {
       {/* The Outlet component renders the child components of the matched route */}
       <Outlet />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

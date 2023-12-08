@@ -12,6 +12,8 @@ COPY nodemon.json ./
 # Install Yarn
 RUN apt-get update && apt-get install -y yarn
 
+COPY src ./src
+
 # Install dependencies using Yarn
 RUN yarn
 
