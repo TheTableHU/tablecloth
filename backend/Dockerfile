@@ -8,14 +8,16 @@ WORKDIR /app
 COPY package*.json ./
 COPY wait.sh ./
 COPY nodemon.json ./
+COPY config ./config
+COPY .sequelizerc ./
 
 # Install Yarn
 RUN apt-get update && apt-get install -y yarn
 
-COPY src ./src
-
 # Install dependencies using Yarn
 RUN yarn
+
+COPY src ./src
 
 # Expose the port that your app runs on
 EXPOSE 8081
