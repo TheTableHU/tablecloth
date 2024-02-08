@@ -56,7 +56,7 @@ module.exports = (sequelize, DataTypes) => {
   // Subtract the checkout quantity from the inventory quantity
   // Return the category name if a category is over the max quantity
   // Return null if no category is over the max quantity or if the checkout was
-  Inventory.checkout = async function (items) {
+  Inventory.checkout = async function (items, override) {
     const t = await sequelize.transaction();
 
     let itemsFromDb = await Inventory.findAll({
@@ -67,11 +67,13 @@ module.exports = (sequelize, DataTypes) => {
     logger.info(itemsFromDb);
 
     // Check if the category quantity is over the max
-    let categoryNameOverLimit = categoryOverLimit(itemsFromDb, items);
+    if (override != true) {
+      let categoryNameOverLimit = categoryOverLimit(itemsFromDb, items);
 
-    if (categoryNameOverLimit != null) {
-      logger.warn(`${categoryNameOverLimit} quantity is over the max.`);
-      return { status: 'CategoryOverLimit', category: categoryNameOverLimit };
+      if (categoryNameOverLimit != null) {
+        logger.warn(`${categoryNameOverLimit} quantity is over the max.`);
+        return { status: 'CategoryOverLimit', category: categoryNameOverLimit };
+      }
     }
 
     try {

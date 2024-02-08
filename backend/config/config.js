@@ -1,5 +1,3 @@
-const { Sequelize } = require('sequelize');
-
 module.exports = {
   dialect: 'mysql',
   migrationStorageTableName: 'sequelize_meta',

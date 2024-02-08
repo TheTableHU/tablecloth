@@ -64,22 +64,37 @@ export default function CheckoutPage() {
     setItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
   }
 
-  async function handleSubmit() {
+  // Submit the items to the backend
+  // If override is true, then the user has entered the correct password and the items will be submitted regardless of the limit
+  // If override is false, items will be submitted only if they are within the limit
+  async function handleSubmit(override) {
     if (items.length !== 0) {
       await fetch(config.host + '/api/inventory/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ items }),
+        body: JSON.stringify({ items, override }),
       })
         .then((response) => response.json())
         .then((data) => {
           if (data.success) {
             toast.success('Successfully submitted data.');
             setItems([]);
+            if (override) {
+              toast.success('Override successful!');
+            }
           } else if (data.category != null) {
-            toast.error('Uh oh! ' + data.category + ' is over the limit!');
+            toast.error(
+              <div>
+                Uh oh! {data.category} is over the limit!
+                <br />
+                <br />
+                <a href="#" onClick={handleOverride}>
+                  Override
+                </a>
+              </div>,
+            );
           }
         })
         .catch((error) => {
@@ -87,6 +102,16 @@ export default function CheckoutPage() {
         });
     } else {
       toast.error('Please add items before submitting.');
+    }
+  }
+
+  function handleOverride() {
+    const password = prompt('Please enter the password to override.');
+    // Correct password will be sent to user but this is just a deterrence for now
+    if (password === '0316') {
+      handleSubmit(true);
+    } else {
+      toast.error('Incorrect password.');
     }
   }
 
@@ -111,7 +136,7 @@ export default function CheckoutPage() {
           variant="contained"
           className="submitButton"
           onClick={() => {
-            handleSubmit();
+            handleSubmit(false);
           }}
         >
           Submit
