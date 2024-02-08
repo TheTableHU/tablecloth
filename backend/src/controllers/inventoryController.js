@@ -1,7 +1,6 @@
 // inventoryController.js
 
 const { models } = require('../models/index.js');
-const logger = require('../logger.js');
 
 const inventoryModel = models.Inventory;
 
@@ -66,7 +65,7 @@ async function checkoutItems(req, res) {
   const { items } = req.body;
 
   if (Array.isArray(items) && items.length > 0) {
-    const checkoutResult = await inventoryModel.checkout(items);
+    const checkoutResult = await inventoryModel.checkout(items, req.body.override);
 
     if (checkoutResult.status === 'success') {
       res.json({ success: true });
