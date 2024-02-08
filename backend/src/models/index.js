@@ -3,19 +3,12 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
-const process = require('process');
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
-const db = require('../db.js');
+const sequelize = require('../db.js');
+const logger = require('../logger.js');
+let db = {};
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
-
+// Read all model files dynamically
 fs.readdirSync(__dirname)
   .filter((file) => {
     return (
@@ -27,16 +20,33 @@ fs.readdirSync(__dirname)
   })
   .forEach((file) => {
     const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
+
+    try {
+      if (model && model.prototype instanceof Sequelize.Model) {
+        db[model.name] = model;
+      } else {
+        logger.error(`Model file ${file} does not export a valid model`);
+      }
+    } catch (error) {
+      logger.error(`Error loading model file ${file}: ${error.message}`);
+    }
   });
 
-Object.keys(db).forEach((modelName) => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
+// Define associations
+try {
+  Object.keys(db).forEach((modelName) => {
+    if (db[modelName].associate) {
+      db[modelName].associate(db);
+    }
+  });
+} catch (error) {
+  logger.error('Error associating models: ' + error.message);
+}
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+// Export the models individually
+const models = db;
 
-module.exports = db;
+module.exports = {
+  sequelize,
+  models,
+};

@@ -18,7 +18,7 @@ const ToastWrapper = () => {
   return (
     <ToastContainer
       style={{ fontSize: '18px', top: '60px', right: '10px', width: '300px' }}
-      autoClose={3000}
+      autoClose={5000}
       hideProgressBar={false}
       newestOnTop
       closeOnClick

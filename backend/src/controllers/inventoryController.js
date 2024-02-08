@@ -1,18 +1,29 @@
 // inventoryController.js
 
-const inventoryModel = require('../models/inventoryModel');
+const { models } = require('../models/index.js');
+const logger = require('../logger.js');
 
-// Example function to get all users.
+const inventoryModel = models.Inventory;
+
 async function getInventory(req, res) {
-  const inventory = await inventoryModel.getAllItems();
+  let inventory = await inventoryModel.getAllItems();
   if (Array.isArray(inventory) && inventory.length > 0) {
+    inventory = inventory.map((item) => {
+      if (item.dataValues.Category) {
+        item.dataValues.Category = item.dataValues.Category.name;
+      }
+      return item;
+    });
+
     // Get columns dynamically from the first item in the array
-    const columns = Object.keys(inventory[0].dataValues).map((key) => ({
+    let columns = Object.keys(inventory[0].dataValues).map((key) => ({
       field: key,
       headerName: key.charAt(0).toUpperCase() + key.slice(1), // Capitalize the first letter
       width: 150,
       editable: false,
     }));
+
+    columns = columns.filter((column) => column.field !== 'categoryId');
 
     columns.forEach((column) => {
       switch (column.headerName) {
@@ -21,9 +32,6 @@ async function getInventory(req, res) {
           column.editable = true;
           break;
         case 'Quantity':
-          column.editable = true;
-          break;
-        case 'Category':
           column.editable = true;
           break;
         case 'UpdatedAt':
@@ -60,8 +68,10 @@ async function checkoutItems(req, res) {
   if (Array.isArray(items) && items.length > 0) {
     const checkoutResult = await inventoryModel.checkout(items);
 
-    if (checkoutResult) {
+    if (checkoutResult.status === 'success') {
       res.json({ success: true });
+    } else if (checkoutResult.status === 'CategoryOverLimit') {
+      res.status(400).json({ success: false, category: checkoutResult.category });
     } else {
       res.json({ success: false });
     }

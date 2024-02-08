@@ -2,6 +2,8 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const sequelize = require('./db.js');
+const { Umzug, SequelizeStorage } = require('umzug');
+const { Sequelize } = require('sequelize');
 
 const config = require('./config.js');
 const logger = require('./logger.js');
@@ -25,14 +27,32 @@ app.use('/api/inventory', inventoryRoutes);
 app.use('/api/shopper', shopperRoutes);
 
 // Database
-sequelize
-  .sync()
-  .then(() => {
-    logger.info('Database synced successfully');
-  })
-  .catch((error) => {
-    logger.error('Error syncing database:', error);
+(async () => {
+  const unzug = new Umzug({
+    migrations: { glob: './src/migrations/*.js' },
+    context: { queryInterface: sequelize.getQueryInterface(), Sequelize },
+    storage: new SequelizeStorage({ sequelize }),
+    logger: console,
   });
+
+  // Run migrations
+  try {
+    await unzug.up();
+    logger.info('All migrations performed successfully');
+  } catch (error) {
+    logger.error('Error running migrations:', error);
+    process.exit(1);
+  }
+
+  // Sync models
+  try {
+    await sequelize.sync();
+    logger.info('Database synced successfully');
+  } catch (error) {
+    logger.error('Error syncing database:', error);
+    process.exit(1);
+  }
+})();
 
 // Error handling
 app.use((err, req, res) => {

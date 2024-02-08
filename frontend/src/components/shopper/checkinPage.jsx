@@ -109,11 +109,14 @@ export default function CheckinPage() {
         body: JSON.stringify({ formData }),
       });
 
-      if (response.ok) {
+      const data = await response.json();
+
+      if (data.success === true) {
         toast.success('Shopper registered successfully! Welcome!');
         clearForm();
+      } else if (data.error === 'ShopperAlreadyExists') {
+        toast.error('Shopper already registered. Please check in as a returning shopper.');
       } else {
-        // Handle non-successful responses
         toast.error('Failed to register shopper. Please try again.');
       }
     } catch (error) {
@@ -122,6 +125,8 @@ export default function CheckinPage() {
   }
 
   async function handleReturningShopperSubmit() {
+    // This shouldn't be a POST request, but it is for now
+    // At least the URL should not be /api/shopper/checkin/:hNumber
     try {
       const response = await fetch(`${config.host}/api/shopper/checkin/${returningHNum}`, {
         method: 'POST',
@@ -130,10 +135,16 @@ export default function CheckinPage() {
         },
       });
 
-      if (response.ok) {
+      let data = await response.json();
+
+      if (data.success === true) {
         toast.success('Shopper checked in successfully! Welcome back!');
         setReturningHNum('');
-      } else if (response.status === 400) {
+      } else if (data.error === 'ShopperNotFound') {
+        toast.error(
+          'Shopper not found. Either HNumber was entered incorrectly or shopper is not registered yet.',
+        );
+      } else if (data.error === 'ShopperBeenTwiceThisWeek') {
         toast.error(
           'Shopper has already been to The Table twice this week which is our limit. Please come again next week!',
         );
@@ -176,7 +187,7 @@ export default function CheckinPage() {
                 value={homeValue}
                 onChange={handleHomeChange}
                 label="Home"
-                helperText="State ABBR or Country"
+                helperText="Home State Abbreviation or Country"
                 autoComplete="off"
               />
             </FormControl>

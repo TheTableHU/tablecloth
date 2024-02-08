@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as a base image
-FROM node:21 as development
+FROM node:21
 
 # Set the working directory in the container
 WORKDIR /app
@@ -14,4 +14,4 @@ RUN yarn --network-timeout 1000000
 EXPOSE 8080
 
 # Command for dev environment
-CMD ["npm", "start"];
+CMD ["yarn", "start"];

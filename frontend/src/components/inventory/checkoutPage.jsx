@@ -45,7 +45,7 @@ export default function CheckoutPage() {
 
       if (selectedInventoryItem) {
         const newItem = {
-          id: selectedInventoryItem.id, // Adjust based on your item structure
+          id: selectedInventoryItem.id,
           primaryText: selectedItem,
           secondaryText: `Quantity: ${quantity}`,
           checkoutQuantity: quantity,
@@ -74,9 +74,13 @@ export default function CheckoutPage() {
         body: JSON.stringify({ items }),
       })
         .then((response) => response.json())
-        .then(() => {
-          toast.success('Successfully submitted data.');
-          setItems([]);
+        .then((data) => {
+          if (data.success) {
+            toast.success('Successfully submitted data.');
+            setItems([]);
+          } else if (data.category != null) {
+            toast.error('Uh oh! ' + data.category + ' is over the limit!');
+          }
         })
         .catch((error) => {
           console.error('Error submitting data:', error);

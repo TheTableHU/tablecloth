@@ -11,6 +11,7 @@ export default function CheckoutPage() {
   const [itemName, setItemName] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [allCategories, setAllCategories] = useState([]);
 
   function handleItemNameChange(e) {
     setItemName(e.target.value);
@@ -23,7 +24,8 @@ export default function CheckoutPage() {
         const data = await response.json();
 
         if (data.success) {
-          setCategories([...new Set(data.data.map((item) => item.category))]);
+          setCategories([...new Set(data.data.map((item) => item.Category.name))]);
+          setAllCategories([...new Set(data.data.map((item) => item.Category))]);
         } else {
           console.error('Error fetching inventory:', data.error);
           setCategories([]);
@@ -37,12 +39,16 @@ export default function CheckoutPage() {
   }, []);
 
   async function handleSubmit() {
+    let selectedCategoryId = allCategories.find(
+      (category) => category.name === selectedCategory,
+    ).id;
+
     await fetch(config.host + '/api/inventory/additem', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ item: itemName, quantity: quantity, category: selectedCategory }),
+      body: JSON.stringify({ item: itemName, quantity: quantity, category: selectedCategoryId }),
     })
       .then((response) => response.json())
       .then(() => {

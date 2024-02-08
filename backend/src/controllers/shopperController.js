@@ -1,7 +1,9 @@
 // shopperController.js
 
-const shopperModel = require('../models/shopperModel');
-const shopperVisit = require('../models/ShopperVisitModel.js');
+const { models } = require('../models/index.js');
+
+const shopperModel = models.Shopper;
+const shopperVisit = models.ShopperVisit;
 
 const logger = require('../logger.js');
 
@@ -16,10 +18,16 @@ async function getAllShoppers(req, res) {
 
 async function checkinShopper(req, res) {
   const Shopper = await shopperModel.getSpecificShopper(req.params.hNumber);
+
+  if (!Shopper) {
+    res.status(400).json({ success: false, error: 'ShopperNotFound' });
+    return;
+  }
+
   try {
     if (await shopperVisit.isShopperAtWeekLimit(Shopper.hNumber)) {
-      logger.info('Shopper has been twice this week');
-      res.status(400).json({ success: false, error: 'Shopper has been twice this week' });
+      logger.warn('Shopper has been twice this week');
+      res.status(400).json({ success: false, error: 'ShopperBeenTwiceThisWeek' });
     } else {
       const result = await shopperVisit.createVisit(Shopper.hNumber);
       res.json({ success: true, data: result });
@@ -33,7 +41,12 @@ async function checkinShopper(req, res) {
 async function createShopper(req, res) {
   try {
     const result = await shopperModel.createShopper(req.body);
-    res.json({ success: true, data: result });
+
+    if (result === null) {
+      res.status(400).json({ success: false, error: 'ShopperAlreadyExists' });
+    } else {
+      res.json({ success: true, data: result });
+    }
   } catch (error) {
     logger.error(error);
     res.status(500).json({ success: false, error: error.message });
