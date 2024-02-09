@@ -107,7 +107,7 @@ export default function CheckoutPage() {
 
   function handleOverride() {
     const password = prompt('Please enter the password to override.');
-    // Correct password will be sent to user but this is just a deterrence for now
+    // Correct password will be sent to local user but this is just a deterrence for now to non board members
     if (password === '0316') {
       handleSubmit(true);
     } else {

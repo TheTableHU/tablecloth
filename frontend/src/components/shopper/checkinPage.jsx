@@ -33,6 +33,7 @@ export default function CheckinPage() {
   const [homeValue, setHomeChange] = useState('');
   const [boxValue, setBoxValue] = useState('');
   const [email, setEmail] = useState('');
+  const [aboutUs, setAboutUs] = useState('');
 
   const [displayNewShopperForm, setDisplayNewShopperForm] = useState(true);
 
@@ -61,6 +62,7 @@ export default function CheckinPage() {
     setHomeChange('');
     setBoxValue('');
     setEmail('');
+    setAboutUs('');
   }
 
   const handleHomeChange = (event) => {
@@ -83,6 +85,10 @@ export default function CheckinPage() {
     setEmail(event.target.value);
   };
 
+  const handleAboutusChange = (event) => {
+    setAboutUs(event.target.value);
+  };
+
   async function handleNewShopperSubmit() {
     const formData = {
       hNumber: newHNum,
@@ -98,6 +104,7 @@ export default function CheckinPage() {
       home: homeValue,
       box: boxValue,
       email: email,
+      aboutUs: aboutUs,
     };
 
     try {
@@ -114,6 +121,8 @@ export default function CheckinPage() {
       if (data.success === true) {
         toast.success('Shopper registered successfully! Welcome!');
         clearForm();
+      } else if (data.error === 'InvalidHNumber') {
+        toast.error('Looks like an invalid HNumber. Please check and try again.');
       } else if (data.error === 'ShopperAlreadyExists') {
         toast.error('Shopper already registered. Please check in as a returning shopper.');
       } else {
@@ -319,19 +328,33 @@ export default function CheckinPage() {
           </div>
         </div>
 
-        {(interestedInSNAP === 'Yes' ||
-          needHousingAssistance === 'Yes' ||
-          needJobAssistance === 'Yes') && (
+        <div className="formFullWidthRow">
           <FormControl component="fieldset" fullWidth>
             <TextField
-              id="email"
-              label="Email"
-              value={email}
+              id="aboutUs"
+              label="How did you hear about us?"
+              value={aboutUs}
               autoComplete="off"
-              onChange={handleEmailChange}
+              onChange={handleAboutusChange}
             />
           </FormControl>
-        )}
+        </div>
+
+        <div className="formFullWidthRow">
+          {(interestedInSNAP === 'Yes' ||
+            needHousingAssistance === 'Yes' ||
+            needJobAssistance === 'Yes') && (
+            <FormControl component="fieldset" fullWidth>
+              <TextField
+                id="email"
+                label="Email"
+                value={email}
+                autoComplete="off"
+                onChange={handleEmailChange}
+              />
+            </FormControl>
+          )}
+        </div>
 
         <div className="submitButtonContainer">
           <Button

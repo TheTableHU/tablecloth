@@ -50,3 +50,7 @@
 #toggleFormContainer {
   text-align: center;
 }
+
+.formFullWidthRow{
+  margin-bottom: 20px;
+}

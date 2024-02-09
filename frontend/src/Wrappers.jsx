@@ -37,7 +37,7 @@ const HNumWrapper = ({ value, onChange }) => {
       value={value}
       onChange={onChange}
       InputProps={{
-        type: 'number',
+        type: 'text',
         inputMode: 'numeric',
         style: {
           appearance: 'textfield',
@@ -47,13 +47,16 @@ const HNumWrapper = ({ value, onChange }) => {
             H
           </Typography>
         ),
+        inputProps: {
+          pattern: '^[0-9]{8}$',
+        },
       }}
     />
   );
 };
 
 HNumWrapper.propTypes = {
-  value: PropTypes.any.isRequired,
+  value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
 
