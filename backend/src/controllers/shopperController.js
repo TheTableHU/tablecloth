@@ -39,6 +39,14 @@ async function checkinShopper(req, res) {
 }
 
 async function createShopper(req, res) {
+  if (
+    typeof req.body.formData.hNumber !== 'string' ||
+    !req.body.formData.hNumber.match(/^[0-9]{8}$/)
+  ) {
+    res.status(400).json({ success: false, error: 'InvalidHNumber' });
+    return;
+  }
+
   try {
     const result = await shopperModel.createShopper(req.body);
 

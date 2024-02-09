@@ -66,6 +66,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(45),
         allowNull: true,
       },
+      aboutUs: {
+        type: DataTypes.STRING(45),
+        allowNull: true,
+      },
     },
     {
       tableName: 'shoppers',
@@ -134,6 +138,7 @@ module.exports = (sequelize, DataTypes) => {
       helpWithHousing: formData.needHousingAssistance === 'true' ? 1 : 0,
       snap: formData.interestedInSNAP === 'true' ? 1 : 0,
       email: formData.email,
+      aboutUs: formData.aboutUs,
     };
 
     for (const key in shopperData) {
