@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
   // Associations
   Inventory.associate = function (models) {
     Inventory.belongsTo(models.Category, { foreignKey: 'categoryId' });
+    Inventory.hasMany(models.ExpirationDates, { foreignKey: 'itemId' });
   };
 
   // Methods
