@@ -5,7 +5,7 @@ const sequelize = require('./db.js');
 const { Umzug, SequelizeStorage } = require('umzug');
 const { Sequelize } = require('sequelize');
 const cron = require('node-cron');
-const cronTasks = require('./tasks/index.js')
+const cronTasks = require('./tasks/index.js');
 
 const config = require('./config.js');
 const logger = require('./logger.js');

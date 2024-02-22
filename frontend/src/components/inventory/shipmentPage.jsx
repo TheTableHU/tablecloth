@@ -25,7 +25,6 @@ export default function CheckoutPage() {
           setReceivedData(data.data);
         } else {
           console.error('Error fetching inventory:', data.error);
-          // Set an empty array or handle the error accordingly
           setReceivedData([]);
         }
       } catch (error) {
@@ -46,7 +45,7 @@ export default function CheckoutPage() {
 
       if (selectedInventoryItem) {
         const newItem = {
-          id: selectedInventoryItem.id, // Adjust based on your item structure
+          id: selectedInventoryItem.id,
           primaryText: selectedItem,
           secondaryText: `Quantity: ${quantity}`,
           checkoutQuantity: quantity,
@@ -72,11 +71,10 @@ export default function CheckoutPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ items }), // Simplify the object notation
+        body: JSON.stringify({ items }, true),
       })
         .then((response) => response.json())
         .then(() => {
-          // Handle the response if needed
           toast.success('Successfully submitted data.');
           setItems([]);
         })

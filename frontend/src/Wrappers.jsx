@@ -108,11 +108,12 @@ ItemForm.propTypes = {
 
 const ItemList = ({ items, deleteButton }) => {
   return (
-    <List>
+    <List className="itemListContainer">
       {items.map(
         (item) =>
           item.id && (
             <ListItem
+              className="listItem"
               key={item.id}
               secondaryAction={
                 <IconButton edge="end" aria-label="delete" onClick={() => deleteButton(item.id)}>

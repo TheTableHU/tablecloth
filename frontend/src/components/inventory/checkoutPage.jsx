@@ -24,7 +24,6 @@ export default function CheckoutPage() {
           setReceivedData(data.data);
         } else {
           console.error('Error fetching inventory:', data.error);
-          // Set an empty array or handle the error accordingly
           setReceivedData([]);
         }
       } catch (error) {
@@ -126,10 +125,8 @@ export default function CheckoutPage() {
         setQuantity={setQuantity}
         addButton={addButton}
       />
-      <Box className="listContainer">
-        <Grid item xs={12} md={6}>
-          <ItemList items={items} deleteButton={deleteButton} />
-        </Grid>
+      <Box>
+        <ItemList items={items} deleteButton={deleteButton} />
       </Box>
       <div id="submitButtonContainer">
         <Button

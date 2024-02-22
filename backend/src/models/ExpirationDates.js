@@ -44,57 +44,59 @@ module.exports = (sequelize, DataTypes) => {
 
   // Methods
 
-    // Get all expiration dates
-    ExpirationDates.getAllExpirationDates = async function () {
-        const allExpirationDates = await ExpirationDates.findAll({
-        include: [this.sequelize.models.Inventory],
-        });
-        return allExpirationDates;
-    };
+  // Get all expiration dates
+  ExpirationDates.getAllExpirationDates = async function () {
+    const allExpirationDates = await ExpirationDates.findAll({
+      include: [this.sequelize.models.Inventory],
+    });
+    return allExpirationDates;
+  };
 
-    // Get all expiration dates that are within two weeks of today
-    ExpirationDates.getTwoWeeksExpirationDates = async function () {
-        const twoWeeksExpirationDates = await ExpirationDates.findAll({
-            where: {
-                date: {
-                    [Op.between]: [new Date(), new Date(new Date().getTime() + 12096e5)],
-                },
-                notificationSent: false,
-            },
-            include: [this.sequelize.models.Inventory],
-        });
+  // Get all expiration dates that are within two weeks of today
+  ExpirationDates.getTwoWeeksExpirationDates = async function () {
+    const twoWeeksExpirationDates = await ExpirationDates.findAll({
+      where: {
+        date: {
+          [Op.between]: [new Date(), new Date(new Date().getTime() + 12096e5)],
+        },
+        notificationSent: false,
+      },
+      include: [this.sequelize.models.Inventory],
+    });
 
-        return twoWeeksExpirationDates;
-    };
+    return twoWeeksExpirationDates;
+  };
 
-    // Update the notificationSent column to true
-    ExpirationDates.updateNotificationSent = async function (ids) {
-      const transaction = await sequelize.transaction();
-  
-      logger.info(`Updating notificationSent for IDs: ${ids}`);
-      try {
-          const validIds = ids.filter(id => id != null);
-  
-          await Promise.all(validIds.map(async id => {
-              const expirationDate = await ExpirationDates.findByPk(id, { transaction });
+  // Update the notificationSent column to true
+  ExpirationDates.updateNotificationSent = async function (ids) {
+    const transaction = await sequelize.transaction();
 
-              logger.info(`ExpirationDate: ${expirationDate}`);
+    logger.info(`Updating notificationSent for IDs: ${ids}`);
+    try {
+      const validIds = ids.filter((id) => id != null);
 
-              if (expirationDate) {
-                  expirationDate.notificationSent = true;
-                  logger.info(`ExpirationDate found for ID: ${id}`);
-                  await expirationDate.save({ transaction });
-              } else {
-                  logger.warn(`No ExpirationDate found for ID: ${id}`);
-              }
-          }));
-  
-          logger.info('NotificationSent updated successfully');
-          await transaction.commit();
-      } catch (error) {
-          await transaction.rollback();
-          throw error;
-      }
+      await Promise.all(
+        validIds.map(async (id) => {
+          const expirationDate = await ExpirationDates.findByPk(id, { transaction });
+
+          logger.info(`ExpirationDate: ${expirationDate}`);
+
+          if (expirationDate) {
+            expirationDate.notificationSent = true;
+            logger.info(`ExpirationDate found for ID: ${id}`);
+            await expirationDate.save({ transaction });
+          } else {
+            logger.warn(`No ExpirationDate found for ID: ${id}`);
+          }
+        }),
+      );
+
+      logger.info('NotificationSent updated successfully');
+      await transaction.commit();
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
   };
 
   return ExpirationDates;
