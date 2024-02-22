@@ -11,7 +11,6 @@ export default function CheckoutPage() {
   const [itemName, setItemName] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [allCategories, setAllCategories] = useState([]);
 
   function handleItemNameChange(e) {
     setItemName(e.target.value);
@@ -24,10 +23,19 @@ export default function CheckoutPage() {
         const data = await response.json();
 
         if (data.success) {
-          setCategories([...new Set(data.data.map((item) => item.Category.name))]);
-          setAllCategories([...new Set(data.data.map((item) => item.Category))]);
+          let uniqueCategories = [];
+
+          data.data.forEach((item) => {
+            const category = { id: item.categoryId, name: item.Category };
+
+            if (!uniqueCategories.some((c) => c.id === category.id)) {
+              uniqueCategories.push(category);
+            }
+          });
+
+          setCategories(uniqueCategories);
         } else {
-          console.error('Error fetching inventory:', data.error);
+          console.error('Error fetching inventory:');
           setCategories([]);
         }
       } catch (error) {
@@ -39,27 +47,26 @@ export default function CheckoutPage() {
   }, []);
 
   async function handleSubmit() {
-    let selectedCategoryId = allCategories.find(
-      (category) => category.name === selectedCategory,
-    ).id;
+    let selectedCategoryId = categories.find((category) => category.name === selectedCategory).id;
 
-    await fetch(config.host + '/api/inventory/additem', {
+    let response = await fetch(config.host + '/api/inventory/additem', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ item: itemName, quantity: quantity, category: selectedCategoryId }),
-    })
-      .then((response) => response.json())
-      .then(() => {
-        toast.success('Successfully submitted data.');
-        setItemName('');
-        setQuantity(1);
-        setSelectedCategory('');
-      })
-      .catch((error) => {
-        console.error('Error submitting data:', error);
-      });
+    });
+
+    let data = await response.json();
+
+    if (data.success) {
+      toast.success('Successfully submitted data.');
+      setItemName('');
+      setQuantity(1);
+      setSelectedCategory('');
+    } else {
+      toast.error('Error submitting data.');
+    }
   }
 
   return (
@@ -101,8 +108,8 @@ export default function CheckoutPage() {
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
               {categories.map((category, index) => (
-                <MenuItem key={index} value={category}>
-                  {category}
+                <MenuItem key={index} value={category.name}>
+                  {category.name}
                 </MenuItem>
               ))}
             </Select>

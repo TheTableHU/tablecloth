@@ -138,13 +138,19 @@ module.exports = (sequelize, DataTypes) => {
 
   // Add a new item to the inventory
   // Return the new item
+  // Returns null otherwise
   Inventory.addItem = async function (item, quantity, categoryId) {
     const newItem = await Inventory.create({
       item,
       quantity,
       categoryId,
     });
-    return newItem;
+
+    if (newItem) {
+      return newItem;
+    } else {
+      return null;
+    }
   };
 
   // Update an inventory row
