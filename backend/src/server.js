@@ -4,7 +4,6 @@ const cors = require('cors');
 const sequelize = require('./db.js');
 const { Umzug, SequelizeStorage } = require('umzug');
 const { Sequelize } = require('sequelize');
-const cron = require('node-cron');
 const cronTasks = require('./tasks/index.js');
 
 const config = require('./config.js');
@@ -57,10 +56,7 @@ app.use('/api/shopper', shopperRoutes);
 })();
 
 // Set up cron jobs
-cron.schedule('0 10 * * 1-5', async () => {
-  logger.info('Running daily cron job');
-  cronTasks.sendExpirationEmails();
-});
+cronTasks();
 
 // Error handling
 app.use((err, req, res) => {

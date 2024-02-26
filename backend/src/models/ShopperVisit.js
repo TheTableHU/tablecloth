@@ -75,5 +75,30 @@ module.exports = (sequelize, DataTypes) => {
     return visitCount >= 2;
   };
 
+  // Get the total number of shopper visits this week
+  ShopperVisit.shopperVisitsThisWeek = async function () {
+    const currentDate = new Date();
+
+    // Calculate the start of the current week (Sunday)
+    const startOfWeek = new Date(currentDate);
+    startOfWeek.setHours(0, 0, 0, 0);
+    startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+
+    // Calculate the end of the current week (Saturday)
+    const endOfWeek = new Date(currentDate);
+    endOfWeek.setHours(23, 59, 59, 999);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+    const visitCount = await ShopperVisit.count({
+      where: {
+        visitTime: {
+          [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+        },
+      },
+    });
+
+    return visitCount;
+  };
+
   return ShopperVisit;
 };

@@ -1,5 +1,6 @@
 const { parseISO, format, isValid } = require('date-fns');
 const logger = require('../logger.js');
+const { Op } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   const Shopper = sequelize.define(
@@ -165,6 +166,25 @@ module.exports = (sequelize, DataTypes) => {
       return newShopper;
     } catch (error) {
       logger.error('Error creating shopper:', error);
+      return null;
+    }
+  };
+
+  // Finds all shoppers registered within the last week
+  // Returns an int representing the number of new shoppers
+  Shopper.newShoppersThisWeek = async function () {
+    try {
+      const count = await Shopper.count({
+        where: {
+          dateRegistered: {
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+          },
+        },
+      });
+      
+      return count;
+    } catch (error) {
+      logger.error('Error fetching shoppers this week:', error);
       return null;
     }
   };
