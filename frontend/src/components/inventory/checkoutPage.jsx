@@ -2,7 +2,6 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import config from '../../config.jsx';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 
 import { ToastWrapper, toast, ItemList, ItemForm } from '../../Wrappers.jsx';
