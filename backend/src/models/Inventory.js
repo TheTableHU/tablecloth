@@ -79,8 +79,7 @@ module.exports = (sequelize, DataTypes) => {
 
     try {
       for (const item of items) {
-        // Don't need to hit db again
-        const existingItem = await Inventory.findByPk(item.id, { transaction: t });
+        let existingItem = itemsFromDb.find((dbItem) => dbItem.id === item.id);
 
         if (existingItem) {
           const updatedQuantity = parseInt(existingItem.quantity) - parseInt(item.checkoutQuantity);
@@ -154,14 +153,24 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   // Update an inventory row
-  // Return the updated row
+  // Return the updated row or null if the row is invalid
   Inventory.updateInventoryRow = async function (row) {
-    const [, updatedRows] = await Inventory.update(row, {
-      where: { id: row.id },
-      returning: true,
-    });
+    try {
+      if (row && row.id != null) {
+        const [, updatedRows] = await Inventory.update(row, {
+          where: { id: row.id },
+          returning: true,
+        });
 
-    return updatedRows[0];
+        return updatedRows[0];
+      } else {
+        logger.error('Invalid row:', row);
+      }
+    } catch (error) {
+      logger.error('Error updating inventory row:', error);
+    }
+
+    return null;
   };
 
   // Format the date to be more readable

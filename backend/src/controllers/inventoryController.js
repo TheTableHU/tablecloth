@@ -117,7 +117,7 @@ async function updateInventoryRow(req, res) {
   if (row.id) {
     const result = await inventoryModel.updateInventoryRow(row);
 
-    res.json({ success: result ? true : false });
+    res.json({ success: result !== null ? true : false });
   }
 }
 

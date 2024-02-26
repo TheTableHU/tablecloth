@@ -38,6 +38,8 @@ export default function InventoryList() {
     };
   }, []);
 
+  // Send updated row to the server
+  // Return true if successful, false otherwise
   const sendUpdatedRow = async (row) => {
     try {
       const response = await fetch(`${config.host}/api/inventory`, {
@@ -48,21 +50,32 @@ export default function InventoryList() {
         body: JSON.stringify({ row }),
       });
 
-      if (response.ok) {
+      const data = await response.json();
+
+      if (data.success) {
         toast.success('Your changes were saved successfully!');
+        return true;
       } else {
         toast.error('Something went wrong saving your changes');
+        return false;
       }
     } catch (error) {
       toast.error('Error saving your changes');
+      return false;
     }
   };
 
   const handleRowUpdate = async (newRow, oldRow) => {
     if (!areObjectsEqual(newRow, oldRow)) {
-      sendUpdatedRow(newRow);
-      newRow.updatedAt = 'Today';
-      return newRow;
+      const result = await sendUpdatedRow(newRow);
+
+      if (result) {
+        newRow.updatedAt = 'Today';
+
+        return newRow;
+      } else {
+        return oldRow;
+      }
     } else {
       return oldRow;
     }
