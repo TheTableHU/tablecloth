@@ -394,7 +394,7 @@ export default function CheckinPage() {
               label="Share how The Table has helped you!"
               value={howAreWeHelping}
               autoComplete="off"
-              helperText="Please only fill out once"
+              helperText="Please only fill out once (otherwise leave blank)"
               onChange={handleHowAreWeHelpingChange}
             />
           </FormControl>
