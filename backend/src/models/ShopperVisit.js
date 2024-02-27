@@ -1,4 +1,5 @@
 const { Op } = require('sequelize');
+const { logger } = require('../mailer');
 
 module.exports = (sequelize, DataTypes) => {
   const ShopperVisit = sequelize.define(
@@ -13,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: false,
         primaryKey: true,
+      },
+      howAreWeHelping: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
     },
     {
@@ -29,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   // Makes a new entry logging when a shopper visits
-  ShopperVisit.createVisit = async function (hNumber) {
+  ShopperVisit.createVisit = async function (hNumber, howAreWeHelping) {
     const centralTime = new Intl.DateTimeFormat('en-US', {
       timeZone: 'America/Chicago',
       year: 'numeric',
@@ -41,11 +46,18 @@ module.exports = (sequelize, DataTypes) => {
       hour12: false, // Use 24-hour format
     }).format(new Date());
 
-    const result = await ShopperVisit.create({
-      hNumber: hNumber,
-      visitTime: centralTime,
-    });
-    return result;
+    try {
+      const result = await ShopperVisit.create({
+        hNumber: hNumber,
+        visitTime: centralTime,
+        howAreWeHelping: howAreWeHelping || null,
+      });
+
+      return result;
+    } catch (error) {
+      logger.error(error);
+      return null;
+    }
   };
 
   // Checks if shopper has been in the past two weeks

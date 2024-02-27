@@ -54,3 +54,7 @@
 .formFullWidthRow{
   margin-bottom: 20px;
 }
+
+.formFullWidthRowBottom {
+  margin-top: 20px;
+}

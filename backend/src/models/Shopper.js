@@ -181,7 +181,7 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       });
-      
+
       return count;
     } catch (error) {
       logger.error('Error fetching shoppers this week:', error);

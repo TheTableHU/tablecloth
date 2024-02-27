@@ -18,6 +18,7 @@ async function getAllShoppers(req, res) {
 
 async function checkinShopper(req, res) {
   const Shopper = await shopperModel.getSpecificShopper(req.params.hNumber);
+  const howAreWeHelping = req.body.howAreWeHelping;
 
   if (!Shopper) {
     res.status(400).json({ success: false, error: 'ShopperNotFound' });
@@ -29,7 +30,7 @@ async function checkinShopper(req, res) {
       logger.warn('Shopper has been twice this week');
       res.status(400).json({ success: false, error: 'ShopperBeenTwiceThisWeek' });
     } else {
-      const result = await shopperVisit.createVisit(Shopper.hNumber);
+      const result = await shopperVisit.createVisit(Shopper.hNumber, howAreWeHelping);
       res.json({ success: true, data: result });
     }
   } catch (error) {
@@ -40,7 +41,7 @@ async function checkinShopper(req, res) {
 
 async function createShopper(req, res) {
   if (
-    typeof req.body.formData.hNumber !== 'string' ||
+    typeof req.body.formData?.hNumber !== 'string' ||
     !req.body.formData.hNumber.match(/^[0-9]{8}$/)
   ) {
     res.status(400).json({ success: false, error: 'InvalidHNumber' });

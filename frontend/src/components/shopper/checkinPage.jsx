@@ -34,6 +34,7 @@ export default function CheckinPage() {
   const [boxValue, setBoxValue] = useState('');
   const [email, setEmail] = useState('');
   const [aboutUs, setAboutUs] = useState('');
+  const [howAreWeHelping, setHowAreWeHelping] = useState('');
 
   const [displayNewShopperForm, setDisplayNewShopperForm] = useState(true);
 
@@ -63,6 +64,7 @@ export default function CheckinPage() {
     setBoxValue('');
     setEmail('');
     setAboutUs('');
+    setHowAreWeHelping('');
   }
 
   const handleHomeChange = (event) => {
@@ -87,6 +89,10 @@ export default function CheckinPage() {
 
   const handleAboutusChange = (event) => {
     setAboutUs(event.target.value);
+  };
+
+  const handleHowAreWeHelpingChange = (event) => {
+    setHowAreWeHelping(event.target.value);
   };
 
   async function handleNewShopperSubmit() {
@@ -134,14 +140,13 @@ export default function CheckinPage() {
   }
 
   async function handleReturningShopperSubmit() {
-    // This shouldn't be a POST request, but it is for now
-    // At least the URL should not be /api/shopper/checkin/:hNumber
     try {
       const response = await fetch(`${config.host}/api/shopper/checkin/${returningHNum}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ howAreWeHelping }),
       });
 
       let data = await response.json();
@@ -149,6 +154,7 @@ export default function CheckinPage() {
       if (data.success === true) {
         toast.success('Shopper checked in successfully! Welcome back!');
         setReturningHNum('');
+        setHowAreWeHelping('');
       } else if (data.error === 'ShopperNotFound') {
         toast.error(
           'Shopper not found. Either HNumber was entered incorrectly or shopper is not registered yet.',
@@ -380,6 +386,19 @@ export default function CheckinPage() {
             onChange={(event) => handleHNumChange(event, 'returning')}
           />
         </FormControl>
+
+        <div className="formFullWidthRowBottom">
+          <FormControl component="fieldset" fullWidth>
+            <TextField
+              id="howAreWeHelping"
+              label="Share how The Table has helped you!"
+              value={howAreWeHelping}
+              autoComplete="off"
+              helperText="Please only fill out once"
+              onChange={handleHowAreWeHelpingChange}
+            />
+          </FormControl>
+        </div>
 
         <div className="submitButtonContainer">
           <Button
