@@ -197,7 +197,12 @@ module.exports = (sequelize, DataTypes) => {
     const categoryQuantities = {};
 
     const itemsMap = items.reduce((map, item) => {
-      map[item.id] = item.checkoutQuantity;
+      if (!map[item.id]) {
+        map[item.id] = 0;
+      }
+
+      map[item.id] += parseInt(item.checkoutQuantity) || 0;
+
       return map;
     }, {});
 
