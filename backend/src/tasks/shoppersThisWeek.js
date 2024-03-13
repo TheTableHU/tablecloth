@@ -1,5 +1,7 @@
 const mailer = require('../mailer.js');
 const { models } = require('../models/index.js');
+const logger = require('../logger.js');
+
 const Shopper = models.Shopper;
 const ShopperVisits = models.ShopperVisit;
 
@@ -12,6 +14,11 @@ async function shoppersThisWeek() {
 
   // Get the number of shoppers overall
   const totalShoppers = await ShopperVisits.count();
+
+  if (newShoppers === 0 && totalVisits === 0) {
+    logger.info('No new shoppers or visits this week. Skipping email');
+    return;
+  }
 
   // Send emails here
   await mailer.sendMail({

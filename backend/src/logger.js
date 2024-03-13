@@ -1,5 +1,6 @@
 const winston = require('winston');
 const { MESSAGE } = require('triple-beam');
+const moment = require('moment-timezone');
 
 const config = require('./config');
 
@@ -49,6 +50,9 @@ const logger = winston.createLogger({
   levels,
   level: config.logLevel,
   format: winston.format.combine(
+    winston.format.timestamp({
+      format: () => moment().tz("America/Chicago").format('MM-DD HH:mm:ss')
+    }),
     traceErrors(),
     toJsonString(),
     winston.format.cli({ levels, colors }),

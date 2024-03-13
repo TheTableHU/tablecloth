@@ -1,5 +1,5 @@
 const { Op } = require('sequelize');
-const { logger } = require('../mailer');
+const logger = require('../logger');
 
 module.exports = (sequelize, DataTypes) => {
   const ShopperVisit = sequelize.define(
@@ -52,6 +52,8 @@ module.exports = (sequelize, DataTypes) => {
         visitTime: centralTime,
         howAreWeHelping: howAreWeHelping || null,
       });
+
+      logger.info(`Shopper ${hNumber} visited at ${centralTime}`)
 
       return result;
     } catch (error) {

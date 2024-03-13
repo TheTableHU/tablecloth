@@ -1,14 +1,28 @@
 const express = require('express');
-const morgan = require('morgan');
 const cors = require('cors');
-const sequelize = require('./db.js');
 const { Umzug, SequelizeStorage } = require('umzug');
 const { Sequelize } = require('sequelize');
-const cronTasks = require('./tasks/index.js');
+const moment = require('moment-timezone');
 
-const config = require('./config.js');
+const sequelize = require('./db.js');
+const cronTasks = require('./tasks/index.js');
 const logger = require('./logger.js');
+
 const app = express();
+
+//Logging - this event will run once the request is done
+app.use((req, res, next) => {
+  res.on('finish', () => {
+    const timestamp = moment().tz("America/Chicago").format('M/D/YYYY, HH:mm:ss');
+    const { method, originalUrl } = req;
+    const { statusCode } = res;
+
+    const message = `${timestamp} ${method} ${originalUrl} ${statusCode}`;
+
+    logger.http(message)
+  });
+  next();
+});
 
 // Enable CORS for all routes
 app.use(cors());
@@ -19,9 +33,6 @@ const shopperRoutes = require('./routes/shopper.js');
 
 // Parse JSON bodies
 app.use(express.json());
-
-//Logging
-app.use(morgan(config.morganFormat, { stream: logger.httpStream }));
 
 // Mount Routes
 app.use('/api/inventory', inventoryRoutes);
