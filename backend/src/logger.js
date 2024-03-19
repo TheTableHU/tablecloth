@@ -51,7 +51,7 @@ const logger = winston.createLogger({
   level: config.logLevel,
   format: winston.format.combine(
     winston.format.timestamp({
-      format: () => moment().tz("America/Chicago").format('MM-DD HH:mm:ss')
+      format: () => moment().tz('America/Chicago').format('MM-DD HH:mm:ss'),
     }),
     traceErrors(),
     toJsonString(),

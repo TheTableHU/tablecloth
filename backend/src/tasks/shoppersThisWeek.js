@@ -23,7 +23,7 @@ async function shoppersThisWeek() {
   // Send emails here
   await mailer.sendMail({
     from: process.env.EMAIL,
-    to: 'thetable@harding.edu',
+    to: process.env.NODE_ENV === 'production' ? process.env.PROD_EMAIL : process.env.TEST_EMAIL,
     subject: 'Weekly Shopper Report',
     text: `New shoppers this week: ${newShoppers}\nTotal visits this week: ${totalVisits}\nTotal amount of visits overall: ${totalShoppers}`,
     html: `<p>New shoppers this week: ${newShoppers}<br>Total visits this week: ${totalVisits}<br>Total amount of visits overall: ${totalShoppers}</p>`,

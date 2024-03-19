@@ -13,13 +13,13 @@ const app = express();
 //Logging - this event will run once the request is done
 app.use((req, res, next) => {
   res.on('finish', () => {
-    const timestamp = moment().tz("America/Chicago").format('M/D/YYYY, HH:mm:ss');
+    const timestamp = moment().tz('America/Chicago').format('M/D/YYYY, HH:mm:ss');
     const { method, originalUrl } = req;
     const { statusCode } = res;
 
     const message = `${timestamp} ${method} ${originalUrl} ${statusCode}`;
 
-    logger.http(message)
+    logger.http(message);
   });
   next();
 });

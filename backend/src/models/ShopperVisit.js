@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
         howAreWeHelping: howAreWeHelping || null,
       });
 
-      logger.info(`Shopper ${hNumber} visited at ${centralTime}`)
+      logger.info(`Shopper ${hNumber} visited at ${centralTime}`);
 
       return result;
     } catch (error) {

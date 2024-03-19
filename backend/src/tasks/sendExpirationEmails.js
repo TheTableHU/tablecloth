@@ -27,7 +27,7 @@ async function sendExpirationEmails() {
   // Send emails here
   await mailer.sendMail({
     from: process.env.EMAIL,
-    to: 'thetable@harding.edu',
+    to: process.env.NODE_ENV === 'production' ? process.env.PROD_EMAIL : process.env.TEST_EMAIL,
     subject: 'Items are about to expire!',
     text: `The following items are about to expire:\n${itemNamesAndDates}`,
     html: `<p>The following items are about to expire:<br>${itemNamesAndDates.replace(
