@@ -52,12 +52,12 @@ module.exports = (sequelize, DataTypes) => {
     return allExpirationDates;
   };
 
-  // Get all expiration dates that are within two weeks of today
+  // Get all expiration dates that are within 20 days of today
   ExpirationDates.getTwoWeeksExpirationDates = async function () {
     const twoWeeksExpirationDates = await ExpirationDates.findAll({
       where: {
         date: {
-          [Op.between]: [new Date(), new Date(new Date().getTime() + 12096e5)],
+          [Op.between]: [new Date(), new Date(new Date().getTime() + (20 * 24 * 60 * 60 * 1000))],
         },
         notificationSent: false,
       },
