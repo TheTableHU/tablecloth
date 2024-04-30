@@ -12,8 +12,11 @@ COPY nodemon.json ./
 COPY config ./config
 COPY .sequelizerc ./
 
-# Install Yarn
-RUN apt-get update && apt-get install -y yarn
+# Install Yarn and dos2unix
+RUN apt-get update && apt-get install -y yarn dos2unix
+
+# Convert line endings of wait.sh to LF
+RUN dos2unix wait.sh
 
 # Install dependencies using Yarn
 RUN yarn --network-timeout 1000000
