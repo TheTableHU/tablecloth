@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
   Inventory.associate = function (models) {
     Inventory.belongsTo(models.Category, { foreignKey: 'categoryId' });
     Inventory.hasMany(models.ExpirationDates, { foreignKey: 'itemId' });
-    Inventory.belongsTo(models.InventorySnapshot, { foreignKey: 'itemId' })
+    Inventory.hasMany(models.InventorySnapshot, { foreignKey: 'itemId' })
   };
 
   // Methods

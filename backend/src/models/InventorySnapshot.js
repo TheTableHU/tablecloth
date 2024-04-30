@@ -25,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
       itemId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: 'inventory',
+          key: 'id',
+        },
       },
     },
       {
@@ -36,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
   
     // Associations
     InventorySnapshot.associate = function (models) {
-        InventorySnapshot.hasMany(models.Inventory, { foreignKey: 'itemId' });
+        InventorySnapshot.belongsTo(models.Inventory, { foreignKey: 'itemId' });
     };
   
     // Methods

@@ -35,6 +35,7 @@ services:
     environment:
       - PORT=80
       - NODE_ENV=production
+      - VITE_BACKEND_HOST=http://tablecloth.local:8081
     env_file:
       - .env
     depends_on:
