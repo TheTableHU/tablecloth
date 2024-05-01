@@ -1,13 +1,14 @@
 // InventorySnapshot.js
 
 module.exports = (sequelize, DataTypes) => {
-    const InventorySnapshot = sequelize.define(
-      'InventorySnapshot',
-      {
+  const InventorySnapshot = sequelize.define(
+    'InventorySnapshot',
+    {
       id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
+        type: DataTypes.INTEGER,
+        allowNull: false,
         primaryKey: true,
+        autoIncrement: true,
       },
       dateOfSnapshot: {
         type: DataTypes.DATE,
@@ -31,20 +32,19 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
     },
-      {
-        tableName: 'InventorySnapshot',
-        timestamps: true,
-        createdAt: false,
-      },
-    );
-  
-    // Associations
-    InventorySnapshot.associate = function (models) {
-        InventorySnapshot.belongsTo(models.Inventory, { foreignKey: 'itemId' });
-    };
-  
-    // Methods
-  
-    return InventorySnapshot;
+    {
+      tableName: 'InventorySnapshot',
+      timestamps: false,
+      createdAt: false,
+    },
+  );
+
+  // Associations
+  InventorySnapshot.associate = function (models) {
+    InventorySnapshot.belongsTo(models.Inventory, { foreignKey: 'itemId' });
   };
-  
+
+  // Methods
+
+  return InventorySnapshot;
+};

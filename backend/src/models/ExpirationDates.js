@@ -57,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
     const twoWeeksExpirationDates = await ExpirationDates.findAll({
       where: {
         date: {
-          [Op.between]: [new Date(), new Date(new Date().getTime() + (20 * 24 * 60 * 60 * 1000))],
+          [Op.between]: [new Date(), new Date(new Date().getTime() + 20 * 24 * 60 * 60 * 1000)],
         },
         notificationSent: false,
       },

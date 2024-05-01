@@ -4,9 +4,10 @@ module.exports = {
   up: async ({ context: { queryInterface, Sequelize } }) => {
     await queryInterface.createTable('inventory_snapshot', {
       id: {
-        type: Sequelize.DataTypes.UUID,
-        defaultValue: Sequelize.DataTypes.UUIDV4,
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
         primaryKey: true,
+        autoIncrement: true,
       },
       dateOfSnapshot: {
         type: Sequelize.DataTypes.DATE,
@@ -24,6 +25,10 @@ module.exports = {
       itemId: {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: 'inventory',
+          key: 'id',
+        },
       },
     });
   },
