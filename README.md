@@ -8,8 +8,8 @@ A management system built for The Table Food Pantry at Harding University
 
 ## Building
 
-*This image was built using a UNIX environment. Please use WSL2 if attempting to build the image on Windows*
-*WSL2 allows you to run Linux commands and tools directly within the Windows environment*
+- *This image was built using a UNIX environment. Please use WSL2 if attempting to build the image on Windows*
+- *WSL2 allows you to run Linux commands and tools directly within the Windows environment*
 
 ### You will need the following files
 
