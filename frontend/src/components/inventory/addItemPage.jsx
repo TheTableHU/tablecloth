@@ -26,11 +26,8 @@ export default function CheckoutPage() {
           let uniqueCategories = [];
 
           data.data.forEach((item) => {
-            const category = { id: item.categoryId, name: item.Category };
-
-            if (!uniqueCategories.some((c) => c.id === category.id)) {
+            const category = { id: item.id, name: item.name };
               uniqueCategories.push(category);
-            }
           });
 
           setCategories(uniqueCategories);
