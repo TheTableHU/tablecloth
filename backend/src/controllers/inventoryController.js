@@ -3,7 +3,18 @@
 const { models } = require('../models/index.js');
 
 const inventoryModel = models.Inventory;
+const categoryModel = models.Category;
 
+async function getAllCategories(req, res) { 
+  let categories = await categoryModel.getAllCategories();
+  categories.map((category) => {
+    return (category.key = category.id);
+  });
+
+  if (Array.isArray(categories) && categories.length > 0) {
+    res.json({ success: true, data: categories });
+  }   
+}
 async function getInventory(req, res) {
   let inventory = await inventoryModel.getAllItems();
   if (Array.isArray(inventory) && inventory.length > 0) {
@@ -128,4 +139,5 @@ module.exports = {
   addShipmentItems,
   addItem,
   updateInventoryRow,
+  getAllCategories
 };
