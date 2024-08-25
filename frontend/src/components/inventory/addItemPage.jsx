@@ -19,7 +19,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(config.host + '/api/inventory');
+        const response = await fetch(config.host + '/api/inventory/getCategories');
         const data = await response.json();
 
         if (data.success) {
