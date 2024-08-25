@@ -6,7 +6,14 @@ const inventoryModel = models.Inventory;
 const categoryModel = models.Category;
 
 async function getAllCategories(req, res) { 
-  res.json({message: "Got here"})
+  let categories = await categoryModel.getAllCategories();
+  categories.map((category) => {
+    return (category.key = category.id);
+  });
+
+  if (Array.isArray(categories) && categories.length > 0) {
+    res.json({ success: true, data: categories });
+  }   
 }
 async function getInventory(req, res) {
   let inventory = await inventoryModel.getAllItems();
