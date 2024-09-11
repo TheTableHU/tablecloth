@@ -22,7 +22,13 @@
   .quantityInput {
     width: 100px;
   }
-  
+  .barcodeInput{
+    width: auto;
+  }
+
+  .buttonInput{
+    width: auto;
+  }
   .addButton {
     margin-top: 16px;
   }

@@ -28,7 +28,12 @@ router.put('/', async (req, res) => {
 router.get('/getCategories', async (req, res) => {
   await inventoryController.getAllCategories(req, res);
 });
-
+router.post('/addCategory', async (req, res) => {
+  await inventoryController.addCategory(req, res)
+});
+router.get('/barcodeInfo/:upc', async (req, res) => {
+  await inventoryController.getBarcodeInfo(req, res);
+});
 // Catch-all error handler
 router.use((err, req, res, next) => {
   next(err);

@@ -1,11 +1,11 @@
 // inventoryController.js
 
 const { models } = require('../models/index.js');
-
+const axios = require('axios');
 const inventoryModel = models.Inventory;
 const categoryModel = models.Category;
 
-async function getAllCategories(req, res) { 
+async function getAllCategories(req, res) {
   let categories = await categoryModel.getAllCategories();
   categories.map((category) => {
     return (category.key = category.id);
@@ -13,7 +13,7 @@ async function getAllCategories(req, res) {
 
   if (Array.isArray(categories) && categories.length > 0) {
     res.json({ success: true, data: categories });
-  }   
+  }
 }
 async function getInventory(req, res) {
   let inventory = await inventoryModel.getAllItems();
@@ -122,6 +122,22 @@ async function addItem(req, res) {
   }
 }
 
+async function addCategory(req, res) {
+  const { item, maxQuantity } = req.body;
+
+  if (item && maxQuantity) {
+    const addResult = await categoryModel.addCategory(item, maxQuantity);
+
+    if (addResult) {
+      res.json({ success: true })
+    } else {
+      res.json({ success: false })
+    }
+  } else {
+    res.json({ sucess: false })
+  }
+}
+
 async function updateInventoryRow(req, res) {
   const row = req.body.row;
 
@@ -132,12 +148,25 @@ async function updateInventoryRow(req, res) {
   }
 }
 
+async function getBarcodeInfo(req, res){
+  const upc = req.params.upc
+  try {
+    const response = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${upc}`);
+    let responseData = await response.json();
+    res.json(responseData);
+  } catch (error) {
+    res.status(500).send(error.toString());
+  }
+}
+
 module.exports = {
+  getBarcodeInfo,
   getInventory,
   getItemNames,
   checkoutItems,
   addShipmentItems,
   addItem,
   updateInventoryRow,
-  getAllCategories
+  getAllCategories,
+  addCategory
 };

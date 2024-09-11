@@ -22,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       tableName: 'categories',
       timestamps: true,
-      createdAt: false,
     },
   );
 
@@ -37,6 +36,20 @@ module.exports = (sequelize, DataTypes) => {
   Category.getAllCategories = async function () {
     return await Category.findAll();
   };
+
+  Category.addCategory = async function (name, maxQuantity) {
+    const newCat = await Category.create({
+      name,
+      maxQuantity,
+      createdAt: new Date()
+    });
+
+    if (newCat) {
+      return newCat;
+    } else {
+      return null;
+    }
+  }
 
   return Category;
 };
