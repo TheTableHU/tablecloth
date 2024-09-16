@@ -71,12 +71,17 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(45),
         allowNull: true,
       },
+      internationalStudent: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
     },
     {
       tableName: 'shoppers',
       timestamps: true,
       createdAt: false,
     },
+
   );
 
   // Associations
@@ -140,6 +145,8 @@ module.exports = (sequelize, DataTypes) => {
       snap: formData.interestedInSNAP === 'true' ? 1 : 0,
       email: formData.email,
       aboutUs: formData.aboutUs,
+      internationalStudent: formData.internationalStudent === 'true' ? 1 : 0,
+
     };
 
     for (const key in shopperData) {

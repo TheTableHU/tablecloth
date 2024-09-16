@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   database:
-    image: mysql:latest
+    image: mysql:8.2.0
     container_name: database
     env_file:
       - .env
@@ -39,7 +39,7 @@ services:
       - ./frontend:/app:delegated
       - node_modules_frontend:/app/node_modules
     environment:
-      - VITE_BACKEND_HOST=http://localhost:8081
+      - VITE_BACKEND_HOST=http://10.231.2.243:8081
     ports:
       - "8080:5173"
     env_file:

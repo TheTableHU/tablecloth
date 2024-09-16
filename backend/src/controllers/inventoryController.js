@@ -107,16 +107,26 @@ async function addShipmentItems(req, res) {
 }
 
 async function addItem(req, res) {
-  const { item, quantity, category } = req.body;
+  const { item, quantity, category, barcode, imageLink} = req.body;
 
   if (item && quantity && category) {
-    const addResult = await inventoryModel.addItem(item, quantity, category);
+    const existingRecord = await inventoryModel.findOne({
+      where: {
+        barcode: barcode,
+      },
+    });
+    if(existingRecord){
+      res.json({message: "Barcode/Item already exists"})
+    }else{
+
+    const addResult = await inventoryModel.addItem(item, quantity, category, barcode, imageLink);
 
     if (addResult) {
       res.json({ success: true });
     } else {
       res.json({ success: false });
     }
+  }
   } else {
     res.json({ success: false });
   }

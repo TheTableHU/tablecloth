@@ -106,25 +106,48 @@ ItemForm.propTypes = {
   addButton: PropTypes.func.isRequired,
 };
 
-const ItemList = ({ items, deleteButton }) => {
+const ItemList = ({ items, deleteButton, updateQuantity }) => {
   return (
     <List className="itemListContainer">
-      {items.map(
-        (item) =>
-          item.id && (
-            <ListItem
-              className="listItem"
-              key={item.id}
-              secondaryAction={
-                <IconButton edge="end" aria-label="delete" onClick={() => deleteButton(item.id)}>
-                  <DeleteIcon />
-                </IconButton>
-              }
-            >
-              <ListItemText primary={item.primaryText} secondary={item.secondaryText} />
-            </ListItem>
-          ),
-      )}
+      {items.map((item) => (
+        <ListItem key={item.id} className="listItem">
+          {/* Display image if imageLink exists */}
+          {item.imageLink && (
+            <Box
+              component="img"
+              src={item.imageLink}
+              sx={{
+                width: '50px',
+                height: '50px',
+                objectFit: 'cover',
+                marginRight: '10px',
+                borderRadius: '4px',
+              }}
+            />
+          )}
+
+          {/* Item details (name, quantity) */}
+          <Box display="flex" flexDirection="column" flexGrow={1}>
+            <ListItemText primary={item.primaryText} />
+            
+            {/* Quantity input field */}
+            <TextField
+              size="small"
+              type="number"
+              value={item.checkoutQuantity}
+              label="Quantity"
+              onChange={(e) => updateQuantity(item.id, parseInt(e.target.value, 10))}
+              inputProps={{ min: 1 }}
+              sx={{ width: '80px', marginTop: '8px' }}
+            />
+          </Box>
+
+          {/* Delete item button */}
+          <IconButton edge="end" aria-label="delete" onClick={() => deleteButton(item.id)}>
+            <DeleteIcon />
+          </IconButton>
+        </ListItem>
+      ))}
     </List>
   );
 };
@@ -132,6 +155,6 @@ const ItemList = ({ items, deleteButton }) => {
 ItemList.propTypes = {
   items: PropTypes.array.isRequired,
   deleteButton: PropTypes.func.isRequired,
+  updateQuantity: PropTypes.func.isRequired,
 };
-
 export { ToastWrapper, toast, HNumWrapper, ItemForm, ItemList };

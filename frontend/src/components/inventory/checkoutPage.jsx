@@ -1,10 +1,12 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import config from '../../config.jsx';
-import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid'; 
 import Button from '@mui/material/Button';
-
+import Box from '@mui/material/Box';
 import { ToastWrapper, toast, ItemList, ItemForm } from '../../Wrappers.jsx';
+import TextField from '@mui/material/TextField';
+import Fab from '@mui/material/Fab';
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import './checkoutPage.css';
 
 export default function CheckoutPage() {
@@ -12,6 +14,7 @@ export default function CheckoutPage() {
   const [selectedItem, setSelectedItem] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [items, setItems] = useState([]);
+  const [barcode, setBarcode] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,6 +35,45 @@ export default function CheckoutPage() {
 
     fetchData();
   }, []);
+  function updateQuantity(itemId, newQuantity) {
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === itemId
+          ? { ...item, checkoutQuantity: newQuantity, secondaryText: `Quantity: ${newQuantity}` }
+          : item,
+      ),
+    );
+  }
+
+  function addItem(itemId, itemName, quantityToAdd = 1) {
+    const existingItem = items.find((item) => item.id === itemId);
+
+    if (existingItem) {
+      
+      setItems((prevItems) =>
+        prevItems.map((item) =>
+          item.id === itemId
+            ? {
+                ...item,
+                checkoutQuantity: item.checkoutQuantity + quantityToAdd,
+                secondaryText: `Quantity: ${item.checkoutQuantity + quantityToAdd}`,
+              }
+            : item,
+        ),
+      );
+    } else {
+      const newItemData = receivedData.find((item) => item.id === itemId);
+
+      const newItem = {
+        id: itemId,
+        primaryText: itemName,
+        secondaryText: `Quantity: ${quantityToAdd}`,
+        checkoutQuantity: quantityToAdd,
+        imageLink: newItemData?.imageLink || null
+      };
+      setItems((prevItems) => [...prevItems, newItem]);
+    }
+  }
 
   function addButton() {
     if (!selectedItem) {
@@ -42,18 +84,26 @@ export default function CheckoutPage() {
       const selectedInventoryItem = receivedData.find((item) => item.item === selectedItem);
 
       if (selectedInventoryItem) {
-        const newItem = {
-          id: selectedInventoryItem.id,
-          primaryText: selectedItem,
-          secondaryText: `Quantity: ${quantity}`,
-          checkoutQuantity: quantity,
-        };
-
-        setItems((prevItems) => [...prevItems, newItem]);
+        addItem(selectedInventoryItem.id, selectedItem, quantity);
         setSelectedItem('');
         setQuantity(1);
       } else {
-        console.error();
+        console.error('Selected item not found in inventory.');
+        
+      }
+    }
+  }
+
+  function handleBarcodeSubmit() {
+    if (barcode) {
+      const scannedItem = receivedData.find((item) => item.barcode == barcode);
+
+      if (scannedItem) {
+        addItem(scannedItem.id, scannedItem.item);
+        setBarcode('');
+      } else {
+        toast.error('Item with this barcode not found.');
+        setBarcode('');
       }
     }
   }
@@ -62,9 +112,6 @@ export default function CheckoutPage() {
     setItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
   }
 
-  // Submit the items to the backend
-  // If override is true, then the user has entered the correct password and the items will be submitted regardless of the limit
-  // If override is false, items will be submitted only if they are within the limit
   async function handleSubmit(override) {
     if (items.length !== 0) {
       await fetch(config.host + '/api/inventory/checkout', {
@@ -105,7 +152,6 @@ export default function CheckoutPage() {
 
   function handleOverride() {
     const password = prompt('Please enter the password to override.');
-    // Correct password will be sent to local user but this is just a deterrence for now to non board members
     if (password === '0316') {
       handleSubmit(true);
     } else {
@@ -116,28 +162,52 @@ export default function CheckoutPage() {
   return (
     <>
       <ToastWrapper />
-      <ItemForm
-        receivedData={receivedData}
-        selectedItem={selectedItem}
-        setSelectedItem={setSelectedItem}
-        quantity={quantity}
-        setQuantity={setQuantity}
-        addButton={addButton}
-      />
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs={12} sm={4}>
+          <TextField
+            style={{
+              left: '10px'
+            }}
+            id="barcodeInput"
+            label="Scan Barcode"
+            value={barcode}
+            onChange={(e) => setBarcode(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleBarcodeSubmit()}
+            autoFocus
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={12} sm={8}>
+          <ItemForm
+            receivedData={receivedData}
+            selectedItem={selectedItem}
+            setSelectedItem={setSelectedItem}
+            quantity={quantity}
+            setQuantity={setQuantity}
+            addButton={addButton}
+          />
+        </Grid>
+      </Grid>
       <Box>
-        <ItemList items={items} deleteButton={deleteButton} />
+        <ItemList items={items} deleteButton={deleteButton} updateQuantity={updateQuantity} />
       </Box>
-      <div id="submitButtonContainer">
-        <Button
-          variant="contained"
-          className="submitButton"
-          onClick={() => {
-            handleSubmit(false);
-          }}
-        >
-          Submit
-        </Button>
-      </div>
+      <Fab
+        color="secondary"
+        variant="extended"
+        aria-label="checkout"
+        onClick={() => handleSubmit(false)}
+        sx={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          fontSize: '20px',
+          padding: '16px 32px',
+          minWidth: '160px',
+        }}
+      >
+        <ShoppingCartCheckoutIcon sx={{ mr: 1, fontSize: '30px' }} />
+        Checkout
+      </Fab>
     </>
   );
 }

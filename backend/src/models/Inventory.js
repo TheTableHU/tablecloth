@@ -2,6 +2,7 @@
 
 const { parseISO, format, isValid } = require('date-fns');
 const logger = require('../logger.js');
+const { TEXT } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   const Inventory = sequelize.define(
@@ -24,6 +25,16 @@ module.exports = (sequelize, DataTypes) => {
       categoryId: {
         type: DataTypes.INTEGER,
       },
+      barcode:{
+        type: DataTypes.STRING,
+        allowNull: true
+
+      },
+      imageLink:{
+        type: DataTypes.STRING,
+        allowNull: true
+
+      }
     },
     {
       tableName: 'inventory',
@@ -52,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
   // Get all items with only the item name
   Inventory.getItemNames = async function () {
     const allItems = await Inventory.findAll();
-    return allItems.map((item) => ({ id: item.id, item: item.item }));
+    return allItems.map((item) => ({ id: item.id, item: item.item, barcode: item.barcode, imageLink: item.imageLink}));
   };
 
   // Subtract the checkout quantity from the inventory quantity
@@ -139,11 +150,13 @@ module.exports = (sequelize, DataTypes) => {
   // Add a new item to the inventory
   // Return the new item
   // Returns null otherwise
-  Inventory.addItem = async function (item, quantity, categoryId) {
+  Inventory.addItem = async function (item, quantity, categoryId, barcode, imageLink) {
     const newItem = await Inventory.create({
       item,
       quantity,
       categoryId,
+      barcode, 
+      imageLink
     });
 
     if (newItem) {

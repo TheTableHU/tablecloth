@@ -25,6 +25,8 @@ export default function CheckinPage() {
   const [employed, setEmployed] = useState('');
   const [needJobAssistance, setNeedJobAssistance] = useState('');
   const [needHousingAssistance, setNeedHousingAssistance] = useState('');
+  const [internationalStudent, setInternationalStudent] = useState('');
+
   const [interestedInSNAP, setInterestedInSNAP] = useState('');
   const [gender, setGender] = useState('');
   const [ethnicity, setEthnicity] = useState('');
@@ -55,6 +57,7 @@ export default function CheckinPage() {
     setEmployed('');
     setNeedJobAssistance('');
     setNeedHousingAssistance('');
+    setInternationalStudent('');
     setInterestedInSNAP('');
     setGender('');
     setEthnicity('');
@@ -111,6 +114,7 @@ export default function CheckinPage() {
       box: boxValue,
       email: email,
       aboutUs: aboutUs,
+      internationalStudent: internationalStudent,
     };
 
     try {
@@ -310,6 +314,21 @@ export default function CheckinPage() {
               <RadioGroup
                 value={needHousingAssistance}
                 onChange={(e) => setNeedHousingAssistance(e.target.value)}
+              >
+                <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                <FormControlLabel value="No" control={<Radio />} label="No" />
+              </RadioGroup>
+            </FormControl>
+          </div>
+
+          <div className="formRow">
+            <FormControl component="fieldset">
+              <Typography variant="subtitle1" className="questionText">
+                Are you an International Student?
+              </Typography>
+              <RadioGroup
+                value={internationalStudent}
+                onChange={(e) => setInternationalStudent(e.target.value)}
               >
                 <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                 <FormControlLabel value="No" control={<Radio />} label="No" />

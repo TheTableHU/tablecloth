@@ -10,7 +10,7 @@ const logger = require('./logger.js');
 
 const app = express();
 
-//Logging - this event will run once the request is done
+// Logging - this event will run once the request is done
 app.use((req, res, next) => {
   res.on('finish', () => {
     const timestamp = moment().tz('America/Chicago').format('M/D/YYYY, HH:mm:ss');
@@ -40,8 +40,8 @@ app.use('/api/shopper', shopperRoutes);
 
 // Database
 (async () => {
-  const unzug = new Umzug({
-    migrations: { glob: './src/migrations/*.js' },
+  const umzug = new Umzug({
+    migrations: { glob: './src/migrations/*.js' }, // Fixed typo here
     context: { queryInterface: sequelize.getQueryInterface(), Sequelize },
     storage: new SequelizeStorage({ sequelize }),
     logger: console,
@@ -49,7 +49,7 @@ app.use('/api/shopper', shopperRoutes);
 
   // Run migrations
   try {
-    await unzug.up();
+    await umzug.up();  // Fixed typo here
     logger.info('All migrations performed successfully');
   } catch (error) {
     logger.error('Error running migrations:', error);
@@ -70,7 +70,7 @@ app.use('/api/shopper', shopperRoutes);
 cronTasks();
 
 // Error handling
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {  // Added 'next' for error handling middleware
   if (err.name === 'SequelizeValidationError') {
     logger.error('Validation error:', err);
     const errors = err.errors.map((error) => ({
@@ -84,7 +84,7 @@ app.use((err, req, res) => {
   }
 });
 
-//Return Not Found
+// Return Not Found
 app.use((req, res) => {
   logger.info('Not found:', req.url);
   res.status(404);

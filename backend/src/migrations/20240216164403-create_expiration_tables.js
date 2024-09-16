@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  up: async ({ context: { queryInterface, Sequelize } }) => {
+  up: async (queryInterface, Sequelize ) => {
     await queryInterface.createTable('expiration_dates', {
       id: {
         type: Sequelize.INTEGER,
@@ -29,7 +29,7 @@ module.exports = {
     });
   },
 
-  down: async ({ context: { queryInterface, Sequelize } }) => {
+  down: async (queryInterface, Sequelize) => {
     queryInterface.dropTable('expiration_dates');
   },
 };
