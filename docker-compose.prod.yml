@@ -10,6 +10,7 @@ services:
       - "3306:3306"
     volumes:
       - tablecloth_db:/var/lib/mysql
+    restart: always  # Automatically restart on crash
 
   backend:
     build:
@@ -24,6 +25,7 @@ services:
       - .env
     depends_on:
       - database
+    restart: always  # Automatically restart on crash
 
   frontend:
     build:
@@ -35,11 +37,12 @@ services:
     environment:
       - PORT=80
       - NODE_ENV=production
-      - VITE_BACKEND_HOST=http://tablecloth.local:8081
+      - VITE_BACKEND_HOST=http://10.31.1.134:8081
     env_file:
       - .env
     depends_on:
       - backend
+    restart: always  # Automatically restart on crash
 
   metabase:
     build:
@@ -52,6 +55,7 @@ services:
       - MB_DB_FILE=/metabase-data/metabase.db
     volumes:
       - metabase-data-volume:/metabase-data
+    restart: always  # Automatically restart on crash
 
 volumes:
   tablecloth_db:

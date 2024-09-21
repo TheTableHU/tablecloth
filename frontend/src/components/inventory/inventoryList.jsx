@@ -14,7 +14,10 @@ export default function InventoryList() {
       const data = await response.json();
 
       if (data.success) {
-        const apiColumns = data.columns || [];
+        const apiColumns = (data.columns || []).map(col => ({
+          ...col,
+          editable: true 
+        }));
         setColumns(apiColumns);
         setRows(data.data);
       } else {
@@ -31,7 +34,7 @@ export default function InventoryList() {
     fetchInventory();
 
     // Update every hour
-    const intervalId = setInterval(fetchInventory, 3600000);
+    const intervalId = setInterval(fetchInventory, 450000);
 
     return () => {
       clearInterval(intervalId);

@@ -163,8 +163,25 @@ async function getBarcodeInfo(req, res){
   try {
     const response = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${upc}`);
     let responseData = await response.json();
-    res.json(responseData);
+    
+
+    if(responseData.total == 0 || response.status == 400 || response.status == 404 || response.status == 429 || response.status == 500){
+      const url = 'https://barcodes1.p.rapidapi.com/?query=' + upc;
+      const options = {
+        method: 'GET',
+        headers: {
+          'x-rapidapi-key': '9169cc35f2msh92d1887d5abd026p145a17jsn7abf25c891e3',
+          'x-rapidapi-host': 'barcodes1.p.rapidapi.com'
+         }
+      };
+	  const response = await fetch(url, options);
+	  const result = await response.json();
+    res.json({apiData: result, apiUsed: 2});
+    }else if(response.ok){
+      res.json({apiData: responseData, apiUsed: 1});
+    }
   } catch (error) {
+
     res.status(500).send(error.toString());
   }
 }
