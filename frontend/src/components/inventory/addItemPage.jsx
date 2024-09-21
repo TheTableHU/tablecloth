@@ -83,16 +83,38 @@ export default function CheckoutPage() {
     setItemImage(null);
     let response = await fetch(config.host + '/api/inventory/barcodeInfo/' + itemBarcode);
     let data = await response.json();
+    console.log(data);
+    if(response.status == 500){
+      toast.error('Barcode info not found. Please enter data manually.');
+    }else{
+    if(data.apiUsed == 1){
+    data = data.apiData;
     let itemsAPI = data.items;
     let images;
-    if (itemsAPI.length > 0) images = itemsAPI[0].images;
+    if (itemsAPI.length > 0){ 
+      images = itemsAPI[0].images;
     if (images.length > 0) {
       setItemImage(images[0]);
-      console.log(images[0]);
     }
     if (data.total > 0) {
       setItemName([itemsAPI[0].title]);
     }
+  }else{
+    toast.error('Barcode info not found. Please enter data manually.');
+  }
+  }else if(data.apiUsed == 2){
+    data = data.apiData.product;
+    if(data){
+      setItemName([data.title]);
+      if(data.images && data.images.length > 0){
+      setItemImage(data.images[0]);
+      }
+    }else{
+      toast.error('Barcode info not found. Please enter data manually.');
+    }
+  }
+    }
+
   }
 
   async function handleSubmit() {

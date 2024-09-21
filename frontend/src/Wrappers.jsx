@@ -112,7 +112,7 @@ const ItemList = ({ items, deleteButton, updateQuantity }) => {
       {items.map((item) => (
         <ListItem key={item.id} className="listItem">
           {/* Display image if imageLink exists */}
-          {item.imageLink && (
+          {item.imageLink && item.imageLink !== 'null' && item.imageLink !== null && (
             <Box
               component="img"
               src={item.imageLink}
