@@ -16,7 +16,13 @@ import RequireLogin from './components/login/login.jsx';
 import { ApiContext, useNewApi } from '../api.js';
 import Logout from './components/login/logout.jsx';
 import ProtectedRoute from './ProtectedRoutes.jsx';
+import UserSidebar from './components/login/sidebar.jsx';
+import { styled } from '@mui/system';
 
+// Main content wrapper with margin to accommodate the sidebar
+const ContentWrapper = styled('div')({
+  marginLeft: '100px', // Shifts content to accommodate the collapsed sidebar width
+});
 
 function App() {
   const location = useLocation();
@@ -26,71 +32,76 @@ function App() {
     <ApiContext.Provider value={api}> {/* Wrap the app in ApiContext.Provider */}
       <RequireLogin> {/* Protect your routes with RequireLogin */}
         <div>
-          {location.pathname !== '/' && (
-            <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-              <Link component={RouterLink} to="/" className="breadcrumbLink">
-                Home
-              </Link>
-              {location.pathname.includes('/inventory') && (
-                <ProtectedRoute allowedRoles={['admin', 'worker']}>
-                <Link component={RouterLink} to="/inventory" className="breadcrumbLink">
-                  Inventory
+          {/* Render the sidebar only if the route is not /login */}
+          {location.pathname !== '/login' && <UserSidebar userName={api.name} />}
+          
+          {/* Content Wrapper to shift based on sidebar */}
+          <ContentWrapper>
+            {location.pathname !== '/' && (
+              <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+                <Link component={RouterLink} to="/" className="breadcrumbLink">
+                  Home
                 </Link>
-                </ProtectedRoute>
-              )}
-              {location.pathname.includes('/inventory/list') && (
-                <ProtectedRoute allowedRoles={['admin', 'worker']}>
-                <Link component={RouterLink} to="/inventory/list" className="breadcrumbLink">
-                  List
-                </Link>
-                </ProtectedRoute>
-              )}
-              {location.pathname.includes('/inventory/shipment') && (
-                <ProtectedRoute allowedRoles={['admin', 'worker']}>
-                <Link component={RouterLink} to="/inventory/shipment" className="breadcrumbLink">
-                  Shipment
-                </Link>
-                </ProtectedRoute>
-              )}
-              {location.pathname.includes('/inventory/add') && (
-                <ProtectedRoute allowedRoles={['admin', 'worker']}>
-                <Link component={RouterLink} to="/inventory/add" className="breadcrumbLink">
-                  Add Item
-                </Link>
-                </ProtectedRoute>
-              )}
-              {location.pathname.includes('/checkout') && (
-                <Link component={RouterLink} to="/checkout" className="breadcrumbLink">
-                  Check-out
-                </Link>
-              )}
-              {location.pathname.includes('/checkin') && (
-                <Link component={RouterLink} to="/checkin" className="breadcrumbLink">
-                  Check-in
-                </Link>
-              )}
-              {location.pathname.includes('/logout') && (
-                <Link component={RouterLink} to="/logout" className="breadcrumbLink">
-                  Logout
-                </Link>
-              )}
-            </Breadcrumbs>
-          )}
-          {/* Show the landing page only when no route is matched */}
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/inventory" element={<InventoryLandingPage />} />
-            <Route path="/inventory/list" element={<InventoryList />} />
-            <Route path="/inventory/shipment" element={<Shipment />} />
-            <Route path="/inventory/add" element={<AddItem />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/checkin" element={<Checkin />} />
-            <Route path="/logout" element={<Logout />} />
-  
-          </Routes>
+                {location.pathname.includes('/inventory') && (
+                  <ProtectedRoute allowedRoles={['admin', 'worker']}>
+                    <Link component={RouterLink} to="/inventory" className="breadcrumbLink">
+                      Inventory
+                    </Link>
+                  </ProtectedRoute>
+                )}
+                {location.pathname.includes('/inventory/list') && (
+                  <ProtectedRoute allowedRoles={['admin', 'worker']}>
+                    <Link component={RouterLink} to="/inventory/list" className="breadcrumbLink">
+                      List
+                    </Link>
+                  </ProtectedRoute>
+                )}
+                {location.pathname.includes('/inventory/shipment') && (
+                  <ProtectedRoute allowedRoles={['admin', 'worker']}>
+                    <Link component={RouterLink} to="/inventory/shipment" className="breadcrumbLink">
+                      Shipment
+                    </Link>
+                  </ProtectedRoute>
+                )}
+                {location.pathname.includes('/inventory/add') && (
+                  <ProtectedRoute allowedRoles={['admin', 'worker']}>
+                    <Link component={RouterLink} to="/inventory/add" className="breadcrumbLink">
+                      Add Item
+                    </Link>
+                  </ProtectedRoute>
+                )}
+                {location.pathname.includes('/checkout') && (
+                  <Link component={RouterLink} to="/checkout" className="breadcrumbLink">
+                    Check-out
+                  </Link>
+                )}
+                {location.pathname.includes('/checkin') && (
+                  <Link component={RouterLink} to="/checkin" className="breadcrumbLink">
+                    Check-in
+                  </Link>
+                )}
+                {location.pathname.includes('/logout') && (
+                  <Link component={RouterLink} to="/logout" className="breadcrumbLink">
+                    Logout
+                  </Link>
+                )}
+              </Breadcrumbs>
+            )}
 
-          {/* The Outlet component renders the child components of the matched route */}
-          <Outlet />
+            {/* Routes and Outlet for rendering child components */}
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/inventory" element={<InventoryLandingPage />} />
+              <Route path="/inventory/list" element={<InventoryList />} />
+              <Route path="/inventory/shipment" element={<Shipment />} />
+              <Route path="/inventory/add" element={<AddItem />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/checkin" element={<Checkin />} />
+              <Route path="/logout" element={<Logout />} />
+            </Routes>
+
+            <Outlet />
+          </ContentWrapper>
         </div>
       </RequireLogin>
     </ApiContext.Provider>
