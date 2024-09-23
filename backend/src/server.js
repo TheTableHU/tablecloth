@@ -52,14 +52,14 @@ app.use('/api/login', loginRoutes );
     logger: console,
   });
 
-  // Run migrations
-  try {
-    await umzug.up();  // Fixed typo here
-    logger.info('All migrations performed successfully');
-  } catch (error) {
-    logger.error('Error running migrations:', error);
-    process.exit(1);
-  }
+  // // Run migrations
+  // try {
+  //   await umzug.up();  // Fixed typo here
+  //   logger.info('All migrations performed successfully');
+  // } catch (error) {
+  //   logger.error('Error running migrations:', error);
+  //   process.exit(1);
+  // }
 
   // Sync models
   try {

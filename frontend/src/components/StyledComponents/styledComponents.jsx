@@ -1,6 +1,5 @@
 import { styled } from '@mui/system';
 import Button from '@mui/joy/Button';
-import PageBkg from '../login/Assets/PageBkg.svg'; // Adjust the path as needed
 
 // Styled components
 export const BackgroundContainer = styled('div')({
@@ -9,7 +8,7 @@ export const BackgroundContainer = styled('div')({
         rgba(0, 0, 0, 0.1),
         rgba(0, 0, 0, 0.5)
       ), 
-      url(${PageBkg})`,
+      url(/PageBkg.svg)`,
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
