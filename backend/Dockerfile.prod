@@ -10,6 +10,7 @@ COPY wait.sh ./
 COPY nodemon.json ./
 COPY config ./config
 COPY .sequelizerc ./
+COPY keys ./keys
 
 # Install Yarn
 RUN apt-get update && apt-get install -y yarn

@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   
 let privateKey;
 try {
-  privateKey = fs.readFileSync(path.join(__dirname, '../../keys/tablecloth_private.pem'), 'utf8');
+   privateKey = fs.readFileSync(path.join(__dirname, '../../keys/tablecloth_private.pem'), 'utf8');
 } catch (error) {
   logger.error(`Failed to read private key: ${error.message}`);
 }

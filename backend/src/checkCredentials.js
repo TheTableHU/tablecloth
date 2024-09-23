@@ -10,6 +10,30 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 const { publicDecrypt } = require('crypto');
 
+
+async function requireVolunteerPermissions(req, res, next){
+    if(res.locals.role == 'user' || res.locals.role == 'worker' || res.locals.role == "admin"){
+      next();
+    }else{
+      res.status(401).json({message: 'You do not have enough permissions to access this resource.'})
+    }
+  }
+  async function requireAdminPermissions(req, res, next){
+    if(res.locals.role == "admin"){
+      next();
+    }else{
+      res.status(401).json({message: 'You do not have enough permissions to access this resource.'})
+    }
+  }
+  async function requireWorkerPermissions(req, res, next){
+    if( res.locals.role == 'worker' || res.locals.role == "admin"){
+      next();
+    }else{
+      res.status(401).json({message: 'You do not have enough permissions to access this resource.'})
+    }
+  }
+
+
 async function checkCredentials(req, res, next) {
 
     const authorizationHeader = req.get('Authorization') || '';
@@ -54,9 +78,9 @@ async function login(req, res){
     let hNumber = body.hNumber;
     let pin = body.pin;
     let tokenResponse = await Users.login(hNumber, pin);
-    if(tokenResponse == 401){
+    if(tokenResponse.status == 401){
         res.status(401).json({message: 'Incorrect PIN'});
-    }else if(tokenResponse == 404){
+    }else if(tokenResponse.status == 404){
         res.status(404).json({message: "User not found"});    
     }else{
         res.status(200).json({token: tokenResponse.token, data: tokenResponse.data});
@@ -68,5 +92,8 @@ async function login(req, res){
 
 module.exports = {
     checkCredentials,
-    login
+    login,
+    requireVolunteerPermissions,
+    requireWorkerPermissions,
+    requireAdminPermissions
 }

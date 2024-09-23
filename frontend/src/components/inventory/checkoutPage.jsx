@@ -21,7 +21,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await Api.getCheckoutItems();
+        const response = await api.getCheckoutItems();
         const data = await response.json();
 
         if (data.success) {

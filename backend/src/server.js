@@ -33,14 +33,14 @@ app.use(cors());
 const inventoryRoutes = require('./routes/inventory.js');
 const shopperRoutes = require('./routes/shopper.js');
 const loginRoutes = require("./routes/login.js");
-const { checkCredentials } = require('./checkCredentials.js');
+const { checkCredentials, requireVolunteerPermissions, requireWorkerPermissions } = require('./checkCredentials.js');
 
 // Parse JSON bodies
 app.use(express.json());
 
 // Mount Routes
-app.use('/api/inventory', checkCredentials,inventoryRoutes);
-app.use('/api/shopper', checkCredentials, shopperRoutes);
+app.use('/api/inventory', checkCredentials, requireWorkerPermissions ,inventoryRoutes);
+app.use('/api/shopper', checkCredentials, requireVolunteerPermissions, shopperRoutes);
 app.use('/api/login', loginRoutes );
 
 // Database

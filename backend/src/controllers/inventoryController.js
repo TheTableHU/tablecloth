@@ -5,6 +5,8 @@ const axios = require('axios');
 const inventoryModel = models.Inventory;
 const categoryModel = models.Category;
 
+
+
 async function getAllCategories(req, res) {
   let categories = await categoryModel.getAllCategories();
   categories.map((category) => {

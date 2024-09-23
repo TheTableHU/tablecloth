@@ -88,12 +88,7 @@ export class Api {
         hNumber: hNumber, pin: pin
       })
     });
-    if (response.status == 200) {
-      let responseJSON = await response.json();
-      return await responseJSON;
-    } else {
-      return response.status;
-    }
+    return response;
   }
   async addCategory(categoryName, maxItems){
     let response = await fetch(config.host + '/api/inventory/addCategory', {
