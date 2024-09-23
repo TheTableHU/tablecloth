@@ -39,7 +39,7 @@ function App() {
                 </ProtectedRoute>
               )}
               {location.pathname.includes('/inventory/list') && (
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={['admin', 'worker']}>
                 <Link component={RouterLink} to="/inventory/list" className="breadcrumbLink">
                   List
                 </Link>
