@@ -6,7 +6,7 @@ router.get('/', async (req, res) => {
   await inventoryController.getInventory(req, res);
 });
 
-router.get('/checkout', async (req, res) => {
+router.get('/checkout/', async (req, res) => {
   await inventoryController.getItemNames(req, res);
 });
 

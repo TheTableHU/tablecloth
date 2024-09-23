@@ -14,4 +14,4 @@ RUN yarn --network-timeout 1000000
 EXPOSE 8080
 
 # Command for dev environment
-CMD ["yarn", "start"];
+CMD ["yarn", "start"]

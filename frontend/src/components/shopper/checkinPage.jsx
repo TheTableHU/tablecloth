@@ -17,8 +17,10 @@ import {
   InputLabel,
   Typography,
 } from '@mui/material';
+import { useNewApi } from '../../../api.js';
 
 export default function CheckinPage() {
+  const api = useNewApi();
   const [returningHNum, setReturningHNum] = useState('');
   const [newHNum, setNewHNum] = useState('');
   const [liveWithUnder16, setLiveWithUnder16] = useState('');
@@ -118,13 +120,7 @@ export default function CheckinPage() {
     };
 
     try {
-      const response = await fetch(`${config.host}/api/shopper/checkin/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ formData }),
-      });
+      const response = await api.addNewShopper(formData);
 
       const data = await response.json();
 
@@ -145,14 +141,7 @@ export default function CheckinPage() {
 
   async function handleReturningShopperSubmit() {
     try {
-      const response = await fetch(`${config.host}/api/shopper/checkin/${returningHNum}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ howAreWeHelping }),
-      });
-
+      const response = await api.returningShopper(howAreWeHelping);
       let data = await response.json();
 
       if (data.success === true) {

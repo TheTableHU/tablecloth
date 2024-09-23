@@ -24,19 +24,24 @@ app.use((req, res, next) => {
   next();
 });
 
+
+
 // Enable CORS for all routes
 app.use(cors());
 
 // Import Routes
 const inventoryRoutes = require('./routes/inventory.js');
 const shopperRoutes = require('./routes/shopper.js');
+const loginRoutes = require("./routes/login.js");
+const { checkCredentials } = require('./checkCredentials.js');
 
 // Parse JSON bodies
 app.use(express.json());
 
 // Mount Routes
-app.use('/api/inventory', inventoryRoutes);
-app.use('/api/shopper', shopperRoutes);
+app.use('/api/inventory', checkCredentials,inventoryRoutes);
+app.use('/api/shopper', checkCredentials, shopperRoutes);
+app.use('/api/login', loginRoutes );
 
 // Database
 (async () => {

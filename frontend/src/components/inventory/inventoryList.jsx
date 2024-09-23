@@ -3,14 +3,17 @@ import { DataGrid } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import config from '../../config';
 import { ToastWrapper, toast } from '../../Wrappers.jsx';
+import { useNewApi } from '../../../api.js';
+
 
 export default function InventoryList() {
+  const api = useNewApi();
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
 
   const fetchInventory = async () => {
     try {
-      const response = await fetch(config.host + '/api/inventory');
+      const response = await api.fetchInventory();
       const data = await response.json();
 
       if (data.success) {
@@ -45,14 +48,7 @@ export default function InventoryList() {
   // Return true if successful, false otherwise
   const sendUpdatedRow = async (row) => {
     try {
-      const response = await fetch(`${config.host}/api/inventory`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ row }),
-      });
-
+      const response = await api.updateInventory(row);
       const data = await response.json();
 
       if (data.success) {

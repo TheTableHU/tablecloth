@@ -8,8 +8,10 @@ import TextField from '@mui/material/TextField';
 import Fab from '@mui/material/Fab';
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import './checkoutPage.css';
+import { useNewApi } from '../../../api.js';
 
 export default function CheckoutPage() {
+  const api = useNewApi();
   const [receivedData, setReceivedData] = useState([]);
   const [selectedItem, setSelectedItem] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -19,7 +21,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(config.host + '/api/inventory/checkout');
+        const response = await Api.getCheckoutItems();
         const data = await response.json();
 
         if (data.success) {
@@ -114,13 +116,7 @@ export default function CheckoutPage() {
 
   async function handleSubmit(override) {
     if (items.length !== 0) {
-      await fetch(config.host + '/api/inventory/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ items, override }),
-      })
+      await api.submitCheckout(items, override)
         .then((response) => response.json())
         .then((data) => {
           if (data.success) {

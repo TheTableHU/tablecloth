@@ -7,8 +7,10 @@ import Box from '@mui/material/Box';
 import { TextField, Select, FormControl, MenuItem, InputLabel, Button } from '@mui/material';
 import { ToastWrapper, toast } from '../../Wrappers.jsx';
 import SearchIcon from '@mui/icons-material/Search';
+import { useApi } from '../../../api.js';
 
 export default function CheckoutPage() {
+  const api = useApi()
   const [categories, setCategories] = useState([]);
   const [itemName, setItemName] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -31,14 +33,7 @@ export default function CheckoutPage() {
 
   const handleAddCategory = async (e) => {
     e.preventDefault();
-    let response = await fetch(config.host + '/api/inventory/addCategory', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ item: categoryName, maxQuantity: maxItems }),
-    });
-
+    let response = await api.addCategory(categoryName, maxItems);
     let data = await response.json();
 
     if (data.success) {
@@ -55,7 +50,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(config.host + '/api/inventory/getCategories');
+        const response = await api.getCategories();
         const data = await response.json();
 
         if (data.success) {
@@ -81,7 +76,7 @@ export default function CheckoutPage() {
 
   async function handleBarcodeLookup() {
     setItemImage(null);
-    let response = await fetch(config.host + '/api/inventory/barcodeInfo/' + itemBarcode);
+    let response = await api.barcodeLookup(itemBarcode);
     let data = await response.json();
     console.log(data);
     if(response.status == 500){
@@ -119,21 +114,7 @@ export default function CheckoutPage() {
 
   async function handleSubmit() {
     let selectedCategoryId = categories.find((category) => category.name === selectedCategory).id;
-    let response = await fetch(config.host + '/api/inventory/additem', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-
-      body: JSON.stringify({
-        item: String(itemName),
-        quantity: quantity,
-        category: selectedCategoryId,
-        barcode: String(itemBarcode),
-        imageLink: String(itemImage),
-      }),
-    });
-
+    let response = await api.addItem(itemName,quantity, selectedCategoryId,itemBarcode,itemImage);
     let data = await response.json();
     if (data.success) {
       toast.success('Successfully submitted data.');
@@ -144,7 +125,6 @@ export default function CheckoutPage() {
       setItemImage(null);
     } else {
       let message = data.message || 'Error submitting form';
-      toast.error(message);
       setItemName('');
       setQuantity(1);
       setSelectedCategory('');
