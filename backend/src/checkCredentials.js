@@ -41,7 +41,6 @@ async function checkCredentials(req, res, next) {
     let role = 'user';
     let payload = null;
     publicKey = fs.readFileSync(path.join(__dirname, '../keys/tablecloth_public.pem'), 'utf8');
-    logger.info(publicKey)
     if (match) {
         const token = match[1];
         try {
@@ -83,7 +82,6 @@ async function login(req, res){
     }else if(tokenResponse.status == 404){
         res.status(404).json({message: "User not found"});    
     }else{
-      logger.info(tokenResponse.token);
         res.status(200).json({token: tokenResponse.token, data: tokenResponse.data});
     }
 

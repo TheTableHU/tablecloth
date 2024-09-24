@@ -190,7 +190,7 @@ export class Api {
     });
     return response;
   }
-  async returningShopper(howAreWeHelping){
+  async returningShopper(howAreWeHelping, returningHNum){
     let response = await fetch(`${config.host}/api/shopper/checkin/${returningHNum}`, {
       method: 'POST',
       headers: {
@@ -246,6 +246,42 @@ export class Api {
         hNumber
       })
     })
+    return response;
+  }
+  async updateUser(name, hNumber, role, email){
+    let response = await fetch(config.host + '/api/users',{
+      method: 'PUT',
+      headers:{
+        'Authorization': 'Bearer ' + this.token, 
+        'Content-Type': 'application/json',
+      },
+      body:JSON.stringify({
+        row:{
+          name,
+          hNumber,
+          role,
+          email
+        }
+      })
+    }
+    )
+    return response;
+  }
+  async addUser(name, hNumber, role, email){
+    let response = await fetch(config.host + '/api/users',{
+      method: 'POST',
+      headers:{
+        'Authorization': 'Bearer ' + this.token, 
+        'Content-Type': 'application/json',
+      },
+      body:JSON.stringify({
+          name,
+          hNumber,
+          role,
+          email
+      })
+    }
+    )
     return response;
   }
 }

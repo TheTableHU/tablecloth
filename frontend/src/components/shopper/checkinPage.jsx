@@ -141,7 +141,7 @@ export default function CheckinPage() {
 
   async function handleReturningShopperSubmit() {
     try {
-      const response = await api.returningShopper(howAreWeHelping);
+      const response = await api.returningShopper(howAreWeHelping, returningHNum);
       let data = await response.json();
 
       if (data.success === true) {

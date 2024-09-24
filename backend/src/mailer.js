@@ -1,28 +1,29 @@
 const nodemailer = require('nodemailer');
-const hbs = require('nodemailer-express-handlebars');
-const path = require('path');
+const path = require('path'); // Add path module
 
-// Configure the mail transport
-let mailer = nodemailer.createTransport({
-  service: 'Zoho',
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-});
+async function createMailer() {
+  const { default: hbs } = await import('nodemailer-express-handlebars');
 
-// Set up Handlebars as the template engine for nodemailer
-const handlebarOptions = {
-  viewEngine: {
+  let mailer = nodemailer.createTransport({
+    service: 'Zoho',
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
+
+  mailer.use('compile', hbs({
+    viewEngine: {
+      extName: '.hbs',
+      partialsDir: path.resolve(__dirname, 'views'), // Use absolute path
+      layoutsDir: path.resolve(__dirname, 'views'),  // Use absolute path
+      defaultLayout: 'email',
+    },
+    viewPath: path.resolve(__dirname, 'views'),  // Use absolute path
     extName: '.hbs',
-    partialsDir: path.resolve('./templates/'),
-    defaultLayout: false,
-  },
-  viewPath: path.resolve('./templates/'),
-  extName: '.hbs',
-};
+  }));
 
-// Use the Handlebars plugin
-mailer.use('compile', hbs(handlebarOptions));
+  return mailer;
+}
 
-module.exports = mailer;
+module.exports = createMailer();

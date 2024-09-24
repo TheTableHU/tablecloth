@@ -37,7 +37,6 @@ export function Login() {
       document.getElementById(`pin-0`).focus();
     }
   }, [showPINInput]);
-
   const handleHNumberSubmit = async (e) => {
     e.preventDefault();
     setShowPINInput(true); // Show PIN input after valid H-Number

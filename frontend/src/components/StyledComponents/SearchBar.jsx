@@ -10,7 +10,7 @@ const SearchContainer = styled('div')(({ theme }) => ({
   borderRadius: '30px',
   backgroundColor: '#F4F7FE',
   width: '350px', // Set the width to 350px
-  boxShadow: '14px 17px 40px 4px rgba(112, 144, 176, 0.08)'
+  boxShadow: '14px 17px 40px 4px rgba(112, 144, 176, 0.08)',
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -28,19 +28,24 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   paddingLeft: `calc(1em + ${theme.spacing(4)})`,
   width: '100%',
   [theme.breakpoints.up('md')]: {
-    width: '20ch',
+    width: '40ch',
   },
 }));
 
 // Search component
-export const Search = ({ placeholder }) => (
+export const Search = ({ placeholder, search, setSearch }) => (
   <SearchContainer>
     <SearchIconWrapper>
       <SearchIcon />
     </SearchIconWrapper>
     <StyledInputBase
+      autoFocus
       placeholder={placeholder}
       inputProps={{ 'aria-label': 'search' }}
+      value={search}
+      onChange={(e) => {
+        setSearch(e.target.value);
+      }}
     />
   </SearchContainer>
 );

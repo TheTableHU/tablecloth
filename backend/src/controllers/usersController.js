@@ -1,13 +1,14 @@
 const path = require('path');
 const logger = require('../logger.js');
-const mailer = require('../mailer.js');
 const { models } = require('../models/index.js');
 const usersModel = models.Users;
 const bcrypt = require('bcrypt');
 
 const fs = require('fs');
+const mailerPromise = require('../mailer.js');
 
 async function addUser(req, res) {
+    const mailer = await mailerPromise;
     const { name, hNumber, email, role } = req.body;
 
     // Validate required fields
@@ -24,6 +25,7 @@ async function addUser(req, res) {
     const hashedPin = await bcrypt.hash(randomPIN, 10);
 
     try {
+
         const newUser = await usersModel.create({
             name,
             email,
@@ -45,12 +47,13 @@ async function addUser(req, res) {
             }
         });
 
-        return res.status(200).json({ message: "User created successfully with ID: " + newUser.id + " and PIN: " + randomPIN });
+        return res.status(200).json({ message: "User created successfully with ID: " + newUser.id});
     } catch (error) {
         logger.error('Error while creating user:', error);
         return res.status(500).json({ message: "Error while creating user" });
     }
 }
+
 
 async function getUsers(req, res) {
     try {
@@ -132,6 +135,7 @@ async function deleteUser(req, res) {
 }
 
 async function resetPIN(req, res) {
+    const mailer = await mailerPromise;
     const { hNumber } = req.body;
 
     // Validate required field
@@ -153,17 +157,19 @@ async function resetPIN(req, res) {
 
         const updatedUser = await usersModel.findOne({ where: { hNumber } });
 
-        await mailer.sendMail({
+         await mailer.sendMail({
             from: process.env.EMAIL,
             to: updatedUser.email,
-            subject: 'New PIN for TheTableHU',
-            text: `Hey! An administrator requested a new PIN for your account.
-            Please log in by scanning your Harding ID and then entering your PIN: ${randomPIN}.`,
-            html: `<p>Hey! An administrator requested a new PIN for your account.
-            Please log in by scanning your Harding ID and then entering your PIN: ${randomPIN}.</p>`,
+            subject: 'New PIN for TheTableHU!',
+            template: 'reset_pin',  // name of your Handlebars template
+            context: {  // Variables for the template
+                name: updatedUser.name,
+                PIN: randomPIN,
+            }
         });
 
-        return res.status(200).json({ message: 'PIN successfully changed to ' + randomPIN, success: true });
+
+        return res.status(200).json({ message: 'PIN successfully changed'});
     } catch (error) {
         logger.error('Error resetting PIN:', error);
         return res.status(500).json({ message: 'Could not reset PIN: ' + error.message });
