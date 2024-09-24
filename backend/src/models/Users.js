@@ -84,6 +84,7 @@ try {
 
     try {
       const token = await jwt.sign(payload, secretKey, options);
+      logger.info(token);
       return token;
     } catch (error) {
       logger.error(`Token generation failed: ${error.message}`);
