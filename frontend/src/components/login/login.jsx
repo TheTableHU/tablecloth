@@ -3,7 +3,7 @@ import { styled } from '@mui/system';
 import Sheet from '@mui/joy/Sheet';
 import CssBaseline from '@mui/joy/CssBaseline';
 import Button from '@mui/joy/Button';
-import ColoredLogo from './Assets/ColoredLogo.png'; // Adjust the path as needed
+import ColoredLogo from './Assets/ColoredLogo.png'; 
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -13,10 +13,12 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { Typography } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ToastWrapper } from '../../Wrappers.jsx';
 
 export default function RequireLogin({ children }) {
   const api = useApi();
   if (api.loggedIn && api.isTokenExpired == false) {
+    
     return <>{children}</>
   }
   else {
@@ -28,10 +30,9 @@ export default function RequireLogin({ children }) {
 export function Login() {
   const api = useApi();
   const [hNumber, setHNumber] = useState('');
-  const [PIN, setPIN] = useState(Array(4).fill('')); // Array to store PIN digits
+  const [PIN, setPIN] = useState(Array(4).fill('')); 
   const [showPINInput, setShowPINInput] = useState(false);
 
-  // Autofocus the first PIN input when the PIN input shows up
   useEffect(() => {
     if (showPINInput) {
       document.getElementById(`pin-0`).focus();
@@ -39,32 +40,30 @@ export function Login() {
   }, [showPINInput]);
   const handleHNumberSubmit = async (e) => {
     e.preventDefault();
-    setShowPINInput(true); // Show PIN input after valid H-Number
+    setShowPINInput(true); 
   };
 
   const handlePINChange = (e, index) => {
     const { value } = e.target;
 
-    if (/^\d$/.test(value)) { // Only accept digits
+    if (/^\d$/.test(value)) { 
       const newPIN = [...PIN];
       newPIN[index] = value;
       setPIN(newPIN);
 
-      // Move focus to the next input box if not the last
+     
       if (index < 3) {
         document.getElementById(`pin-${index + 1}`).focus();
       }
 
-      // Automatically log in after the 4th digit
       if (index === 3) {
         handlePINSubmit(newPIN.join(''));
       }
-    } else if (e.key === 'Backspace' || e.key === 'Delete') { // Allow deletion
+    } else if (e.key === 'Backspace' || e.key === 'Delete') { 
       const newPIN = [...PIN];
       newPIN[index] = '';
       setPIN(newPIN);
 
-      // Move focus to the previous input box if not the first
       if (index > 0) {
         document.getElementById(`pin-${index - 1}`).focus();
       }
@@ -88,6 +87,7 @@ export function Login() {
       } else {
         let responseJSON = await response.json();
         await api.setToken(responseJSON);
+
       }
     } catch (error) {
       console.error('Error during login', error);

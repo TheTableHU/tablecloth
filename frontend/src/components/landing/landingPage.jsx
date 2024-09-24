@@ -3,11 +3,13 @@ import { Card, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import './landingPage.css';
 import { useApi } from '../../../api';
+import { toast, ToastContainer } from 'react-toastify';
 
 export default function LandingPage() {
   const api = useApi();
   return (
     <>
+    
       <div id="landingImageContainer">
         <img src="/logo512.png" alt="The Table logo" id="landingLogo"></img>
       </div>
