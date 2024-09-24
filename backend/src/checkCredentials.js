@@ -83,6 +83,7 @@ async function login(req, res){
     }else if(tokenResponse.status == 404){
         res.status(404).json({message: "User not found"});    
     }else{
+      logger.info(tokenResponse.token);
         res.status(200).json({token: tokenResponse.token, data: tokenResponse.data});
     }
 
