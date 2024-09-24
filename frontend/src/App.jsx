@@ -18,6 +18,7 @@ import Logout from './components/login/logout.jsx';
 import ProtectedRoute from './ProtectedRoutes.jsx';
 import UserSidebar from './components/login/sidebar.jsx';
 import { styled } from '@mui/system';
+import ManageUsers from './components/users/manageUsers.jsx';
 
 // Main content wrapper with margin to accommodate the sidebar
 const ContentWrapper = styled('div')({
@@ -34,7 +35,7 @@ function App() {
         <div>
           {/* Render the sidebar only if the route is not /login */}
           {location.pathname !== '/login' && <UserSidebar userName={api.name} />}
-          
+
           {/* Content Wrapper to shift based on sidebar */}
           <ContentWrapper>
             {location.pathname !== '/' && (
@@ -42,6 +43,7 @@ function App() {
                 <Link component={RouterLink} to="/" className="breadcrumbLink">
                   Home
                 </Link>
+
                 {location.pathname.includes('/inventory') && (
                   <ProtectedRoute allowedRoles={['admin', 'worker']}>
                     <Link component={RouterLink} to="/inventory" className="breadcrumbLink">
@@ -75,11 +77,20 @@ function App() {
                     Check-out
                   </Link>
                 )}
+                {/* MANAGE USERS PATH  */}
+                {location.pathname.includes('/users') && (
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <Link component={RouterLink} to="/users" className="breadcrumbLink">
+                      Manage-Users
+                    </Link>
+                  </ProtectedRoute>
+                )}
                 {location.pathname.includes('/checkin') && (
                   <Link component={RouterLink} to="/checkin" className="breadcrumbLink">
                     Check-in
                   </Link>
                 )}
+
                 {location.pathname.includes('/logout') && (
                   <Link component={RouterLink} to="/logout" className="breadcrumbLink">
                     Logout
@@ -98,6 +109,8 @@ function App() {
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/checkin" element={<Checkin />} />
               <Route path="/logout" element={<Logout />} />
+              <Route path="/users" element={<ManageUsers />} />
+
             </Routes>
 
             <Outlet />

@@ -1,7 +1,7 @@
 import { responsiveFontSizes } from '@mui/material';
 import { createContext, useContext, useState } from 'react';
 import config from './src/config';
-const apiURL = "http:/10.35.90.105:8081/api";
+const apiURL = "http://localhost:8081/api";
 import { jwtDecode } from "jwt-decode";
 /*==========================================================
  * Context for providing API object

@@ -34,3 +34,13 @@ export const BackgroundContainer = styled('div')({
  export const StyledButton = styled(Button)({
     marginTop: '10px',
   });
+
+  export const StyledHeading = styled('h2')({
+    color: '#2B3674',
+    fontFamily: 'DM Sans, sans-serif', // Added sans-serif as a fallback
+    fontSize: '34px',
+    fontStyle: 'normal',
+    fontWeight: 700,
+    lineHeight: '42px', // 123.529%
+    letterSpacing: '-0.68px',
+  });

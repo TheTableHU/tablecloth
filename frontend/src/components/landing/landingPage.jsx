@@ -29,6 +29,14 @@ export default function LandingPage() {
           </Card>
         </Link>)
 }
+{ ['admin'].includes(api.role) && (<Link to="/users" className="card-link">
+          <Card className="MuiCard-root" variant="outlined">
+            <Typography className="cardContent">Manage-Users</Typography>
+          </Card>
+        </Link>)
+}
+
+
       </div>
     </>
   );
