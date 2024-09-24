@@ -213,6 +213,41 @@ export class Api {
     })
     return response;
   }
+  async getUsers(){
+    let response = await fetch(config.host + '/api/users', {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + this.token, 
+      }
+    })
+    return response;
+  }
+  async resetPIN(hNumber){
+    let response = await fetch(config.host + '/api/users/reset', {
+      method: 'POST',
+      headers:{
+        'Authorization': 'Bearer ' + this.token, 
+        'Content-Type': 'application/json',
+      },
+      body:JSON.stringify({
+        hNumber
+      })
+    })
+    return response;
+  }
+  async deleteUser(hNumber){
+    let response = await fetch(config.host + '/api/users', {
+      method: 'DELETE',
+      headers:{
+        'Authorization': 'Bearer ' + this.token, 
+        'Content-Type': 'application/json',
+      },
+      body:JSON.stringify({
+        hNumber
+      })
+    })
+    return response;
+  }
 }
 
 

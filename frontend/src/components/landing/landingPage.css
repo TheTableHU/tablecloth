@@ -40,8 +40,11 @@
   
   .cardDisplay {
     display: flex;
+    flex-wrap: wrap; /* Allows cards to wrap to the next row */
     justify-content: center;
-  }
+    gap: 20px; /* Adds space between the cards */
+    padding: 20px; /* Adds padding to avoid the cards touching the screen edges */
+}
 
 #landingImageContainer {
     display: flex;
