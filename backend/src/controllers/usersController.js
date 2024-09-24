@@ -1,8 +1,11 @@
+const path = require('path');
 const logger = require('../logger.js');
 const mailer = require('../mailer.js');
 const { models } = require('../models/index.js');
 const usersModel = models.Users;
 const bcrypt = require('bcrypt');
+
+const fs = require('fs');
 
 async function addUser(req, res) {
     const { name, hNumber, email, role } = req.body;
@@ -29,24 +32,22 @@ async function addUser(req, res) {
             PIN: hashedPin,
         });
 
-        // Send email to user
+        // Send templated email using Handlebars
         await mailer.sendMail({
             from: process.env.EMAIL,
             to: email,
-            subject: 'Credentials for TheTableHU',
-            text: `Hey! An account has just been created for you.
-            Please log in by scanning your Harding ID and then entering your PIN: ${randomPIN}.
-            This PIN is unique to you and we do not have access to it after it has been generated.
-            Please remember to always logout after your shift.`,
-            html: `<p>Hey! An account has just been created for you.
-            Please log in by scanning your Harding ID and then entering your PIN: ${randomPIN}.
-            This PIN is unique to you and we do not have access to it after it has been generated.
-            Please remember to always logout after your shift.</p>`,
+            subject: 'New Account for TheTableHU!',
+            template: 'new-user-thetable',  // name of your Handlebars template
+            context: {  // Variables for the template
+                name: name,
+                PIN: randomPIN,
+                role: role
+            }
         });
 
         return res.status(200).json({ message: "User created successfully with ID: " + newUser.id + " and PIN: " + randomPIN });
     } catch (error) {
-        console.error('Error while creating user:', error);
+        logger.error('Error while creating user:', error);
         return res.status(500).json({ message: "Error while creating user" });
     }
 }
