@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField';
 import Fab from '@mui/material/Fab';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import './checkoutPage.css';
+import { useApi } from '../../../api.js';
 
 export default function CheckoutPage() {
   const [receivedData, setReceivedData] = useState([]);
@@ -15,11 +16,11 @@ export default function CheckoutPage() {
   const [quantity, setQuantity] = useState(1);
   const [items, setItems] = useState([]);
   const [barcode, setBarcode] = useState('');
-
+  const api = useApi();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(config.host + '/api/inventory/checkout');
+        const response = await api.getCheckoutItems();
         const data = await response.json();
 
         if (data.success) {
@@ -121,13 +122,7 @@ export default function CheckoutPage() {
   }
   async function handleSubmit() {
     if (items.length !== 0) {
-      await fetch(config.host + '/api/inventory/shipment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ items }, true),
-      })
+      await api.addShipment(items)
         .then((response) => response.json())
         .then(() => {
           toast.success('Successfully submitted data.');

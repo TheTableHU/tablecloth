@@ -24,19 +24,26 @@ app.use((req, res, next) => {
   next();
 });
 
+
+
 // Enable CORS for all routes
 app.use(cors());
 
 // Import Routes
 const inventoryRoutes = require('./routes/inventory.js');
 const shopperRoutes = require('./routes/shopper.js');
+const loginRoutes = require("./routes/login.js");
+const userRoutes = require("./routes/users.js");
+const { checkCredentials, requireVolunteerPermissions, requireWorkerPermissions, requireAdminPermissions } = require('./checkCredentials.js');
 
 // Parse JSON bodies
 app.use(express.json());
 
 // Mount Routes
-app.use('/api/inventory', inventoryRoutes);
-app.use('/api/shopper', shopperRoutes);
+app.use('/api/inventory', checkCredentials, requireWorkerPermissions ,inventoryRoutes);
+app.use('/api/shopper', checkCredentials, requireVolunteerPermissions, shopperRoutes);
+app.use('/api/login', loginRoutes );
+app.use('/api/users', checkCredentials, requireAdminPermissions, userRoutes);
 
 // Database
 (async () => {
@@ -47,14 +54,14 @@ app.use('/api/shopper', shopperRoutes);
     logger: console,
   });
 
-  // Run migrations
-  try {
-    await umzug.up();  // Fixed typo here
-    logger.info('All migrations performed successfully');
-  } catch (error) {
-    logger.error('Error running migrations:', error);
-    process.exit(1);
-  }
+  // // Run migrations
+  // try {
+  //   await umzug.up();  // Fixed typo here
+  //   logger.info('All migrations performed successfully');
+  // } catch (error) {
+  //   logger.error('Error running migrations:', error);
+  //   process.exit(1);
+  // }
 
   // Sync models
   try {
