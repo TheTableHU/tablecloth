@@ -3,11 +3,15 @@ import { styled } from '@mui/system';
 import Sheet from '@mui/joy/Sheet';
 import CssBaseline from '@mui/joy/CssBaseline';
 import Button from '@mui/joy/Button';
-import ColoredLogo from './Assets/ColoredLogo.png'; 
+import ColoredLogo from './Assets/ColoredLogo.png';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { BackgroundContainer, StyledForm, StyledImage } from '../StyledComponents/styledComponents.jsx';
+import {
+  BackgroundContainer,
+  StyledForm,
+  StyledImage,
+} from '../StyledComponents/styledComponents.jsx';
 import { useApi } from '../../../api.js';
 import InputAdornment from '@mui/material/InputAdornment';
 import { Typography } from '@mui/material';
@@ -18,19 +22,22 @@ import { ToastWrapper } from '../../Wrappers.jsx';
 export default function RequireLogin({ children }) {
   const api = useApi();
   if (api.loggedIn && api.isTokenExpired == false) {
-    
-    return <>{children}</>
-  }
-  else {
+    return <>{children}</>;
+  } else {
     api.setToken(null);
-    return <><div className="background"></div><Login /></>
+    return (
+      <>
+        <div className="background"></div>
+        <Login />
+      </>
+    );
   }
 }
 
 export function Login() {
   const api = useApi();
   const [hNumber, setHNumber] = useState('');
-  const [PIN, setPIN] = useState(Array(4).fill('')); 
+  const [PIN, setPIN] = useState(Array(4).fill(''));
   const [showPINInput, setShowPINInput] = useState(false);
 
   useEffect(() => {
@@ -40,18 +47,17 @@ export function Login() {
   }, [showPINInput]);
   const handleHNumberSubmit = async (e) => {
     e.preventDefault();
-    setShowPINInput(true); 
+    if (hNumber != '') setShowPINInput(true);
   };
 
   const handlePINChange = (e, index) => {
     const { value } = e.target;
 
-    if (/^\d$/.test(value)) { 
+    if (/^\d$/.test(value)) {
       const newPIN = [...PIN];
       newPIN[index] = value;
       setPIN(newPIN);
 
-     
       if (index < 3) {
         document.getElementById(`pin-${index + 1}`).focus();
       }
@@ -59,7 +65,7 @@ export function Login() {
       if (index === 3) {
         handlePINSubmit(newPIN.join(''));
       }
-    } else if (e.key === 'Backspace' || e.key === 'Delete') { 
+    } else if (e.key === 'Backspace' || e.key === 'Delete') {
       const newPIN = [...PIN];
       newPIN[index] = '';
       setPIN(newPIN);
@@ -72,22 +78,22 @@ export function Login() {
 
   const handlePINSubmit = async (finalPIN) => {
     try {
-      let response = await api.login(hNumber, finalPIN);
+      setHNumber(hNumber.substring(0, 8));
+      let response = await api.login(hNumber.substring(0, 8), finalPIN);
       if (response.status == 401) {
         setPIN(Array(4).fill(''));
         document.getElementById(`pin-${0}`).focus();
-        toast.error("Incorrect PIN, try again");
+        toast.error('Incorrect PIN, try again');
       } else if (response.status == 404) {
         setPIN(Array(4).fill(''));
         document.getElementById(`pin-${0}`).focus();
         setHNumber('');
         setShowPINInput(false);
-        toast.error("H# Not Found, please try again");
+        toast.error('H# Not Found, please try again');
         setTimeout(() => document.getElementById('outlined-start-adornment').focus(), 0);
       } else {
         let responseJSON = await response.json();
         await api.setToken(responseJSON);
-
       }
     } catch (error) {
       console.error('Error during login', error);
@@ -127,13 +133,14 @@ export function Login() {
                 id="outlined-start-adornment"
                 value={hNumber}
                 onChange={(e) => {
-                  if (/^\d+$|^$/.test(e.target.value)) { // Only accept digits, allow clearing input
+                  if (/^\d+$|^$/.test(e.target.value)) {
+                    // Only accept digits, allow clearing input
                     setHNumber(e.target.value);
                   }
                 }}
                 sx={{
                   m: 1,
-                  width: '40ch'  // Bigger input width
+                  width: '40ch', // Bigger input width
                 }}
                 InputProps={{
                   type: 'text',
@@ -143,9 +150,7 @@ export function Login() {
                   },
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Typography sx={{ fontSize: '1.5rem', fontWeight: 500 }}>
-                        H
-                      </Typography>
+                      <Typography sx={{ fontSize: '1.5rem', fontWeight: 500 }}>H</Typography>
                     </InputAdornment>
                   ),
                 }}
@@ -199,8 +204,6 @@ export function Login() {
                 />
               ))}
             </Box>
-
-
           )}
         </Sheet>
       </BackgroundContainer>
