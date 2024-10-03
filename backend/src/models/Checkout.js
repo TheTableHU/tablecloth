@@ -13,7 +13,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     items: DataTypes.JSON,
     checkoutDate: DataTypes.DATE,
-    userLoggedIn: DataTypes.STRING, 
+    userLoggedIn: DataTypes.STRING,
+    hNumber: { 
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
   }, {
     tableName: 'Checkout',
     timestamps: false,
@@ -21,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Checkout.associate = function (models) {
     Checkout.belongsTo(models.Users, { foreignKey: 'userLoggedIn', targetKey: 'hNumber' });
+    Checkout.belongsTo(models.Shopper, { foreignKey: 'hNumber', targetKey: 'hNumber' }); 
   };
-
   return Checkout;
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import config from '../../config.jsx';
-import Grid from '@mui/material/Grid'; 
+import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { ToastWrapper, toast, ItemList, ItemForm } from '../../Wrappers.jsx';
@@ -9,6 +9,8 @@ import Fab from '@mui/material/Fab';
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import './checkoutPage.css';
 import { useNewApi } from '../../../api.js';
+import { Paper } from '@mui/material';
+import { textAlign } from '@mui/system';
 
 export default function CheckoutPage() {
   const api = useNewApi();
@@ -18,6 +20,8 @@ export default function CheckoutPage() {
   const [items, setItems] = useState([]);
   const [barcode, setBarcode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isValidID, setIsValidID] = useState(false);
+  const [hNumber, setHNumber] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,7 +56,6 @@ export default function CheckoutPage() {
     const existingItem = items.find((item) => item.id === itemId);
 
     if (existingItem) {
-      
       setItems((prevItems) =>
         prevItems.map((item) =>
           item.id === itemId
@@ -72,7 +75,7 @@ export default function CheckoutPage() {
         primaryText: itemName,
         secondaryText: `Quantity: ${quantityToAdd}`,
         checkoutQuantity: quantityToAdd,
-        imageLink: newItemData?.imageLink || null
+        imageLink: newItemData?.imageLink || null,
       };
       setItems((prevItems) => [...prevItems, newItem]);
     }
@@ -92,7 +95,6 @@ export default function CheckoutPage() {
         setQuantity(1);
       } else {
         console.error('Selected item not found in inventory.');
-        
       }
     }
   }
@@ -117,41 +119,44 @@ export default function CheckoutPage() {
 
   async function handleSubmit(override) {
     setLoading(true);
-    try{
-    if (items.length !== 0) {
-      await api.submitCheckout(items, override)
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            toast.success('Successfully submitted data.');
-            setItems([]);
-            if (override) {
-              toast.success('Override successful!');
+    try {
+      if (items.length !== 0) {
+        await api
+          .submitCheckout(items, override, hNumber)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              toast.success('Successfully submitted data.');
+              setItems([]);
+              if (override) {
+                toast.success('Override successful!');
+              }
+            } else if (data.category != null) {
+              toast.error(
+                <div>
+                  Uh oh! {data.category} is over the limit!
+                  <br />
+                  <br />
+                  <a href="#" onClick={handleOverride}>
+                    Override
+                  </a>
+                </div>,
+              );
             }
-          } else if (data.category != null) {
-            toast.error(
-              <div>
-                Uh oh! {data.category} is over the limit!
-                <br />
-                <br />
-                <a href="#" onClick={handleOverride}>
-                  Override
-                </a>
-              </div>,
-            );
-          }
-        })
-        .catch((error) => {
-          console.error('Error submitting data:', error);
-        });
-    } else {
-      toast.error('Please add items before submitting.');
+          })
+          .catch((error) => {
+            console.error('Error submitting data:', error);
+          });
+      } else {
+        toast.error('Please add items before submitting.');
+      }
+    } catch (err) {
+      logger.err('Error when checking out: ' + err.message);
+    } finally {
+      setLoading(false);
+      setHNumber('');
+      setIsValidID(false);
     }
-  }catch(err){
-    logger.err("Error when checking out: " + err.message)
-  }finally{
-    setLoading(false)
-  }
   }
 
   function handleOverride() {
@@ -162,57 +167,152 @@ export default function CheckoutPage() {
       toast.error('Incorrect password.');
     }
   }
+  async function handleSubmitShopper(e) {
+    e.preventDefault();
+    console.log(hNumber);
+    const response = await api.returningShopper('', hNumber.substring(0, 8));
+    const data = await response.json();
+
+    try {
+      if (data.success === true) {
+        toast.success('Student is allowed to shop. Welcome back!');
+        setIsValidID(true);
+      } else if (data.error === 'ShopperNotFound') {
+        toast.error(
+          'Shopper not found. Either HNumber was entered incorrectly or shopper is not registered yet.',
+        );
+        setHNumber('');
+      } else if (data.error === 'ShopperBeenTwiceThisWeek') {
+        toast.error(
+          'Shopper has already been to The Table twice this week which is our limit. Please come again next week!',
+        );
+        setHNumber('');
+      } else {
+        toast.error('Failed to check in shopper. Please try again.');
+        setHNumber('');
+      }
+    } catch (err) {
+      toast.error('System error, reload page and try again.');
+      setHNumber('');
+    }
+  }
 
   return (
     <>
       <ToastWrapper />
-      <Grid container spacing={2} alignItems="center">
-        <Grid item xs={12} sm={4}>
-          <TextField
-            style={{
-              left: '10px'
+      {!isValidID && (
+        <>
+          <Paper
+            sx={{
+              display: 'flex',
+              flexDirection: 'column', // Stack children vertically
+              justifyContent: 'center', // Center horizontally
+              alignItems: 'center', // Center vertically
+              width: '70%',
+              margin: 'auto',
+              marginTop: '15vh',
+              height: '70vh', // Height of the Paper
+              position: 'relative', // Needed for positioning the input
+              overflow: 'hidden', // Prevent overflow of children
+              '& > :not(style)': {
+                m: 1,
+                width: '100%', // Full width of the container if needed
+                height: 'auto', // Adjust height automatically
+              },
             }}
-            id="barcodeInput"
-            label="Scan Barcode"
-            value={barcode}
-            onChange={(e) => setBarcode(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleBarcodeSubmit()}
-            autoFocus
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12} sm={8}>
-          <ItemForm
-            receivedData={receivedData}
-            selectedItem={selectedItem}
-            setSelectedItem={setSelectedItem}
-            quantity={quantity}
-            setQuantity={setQuantity}
-            addButton={addButton}
-          />
-        </Grid>
-      </Grid>
-      <Box>
-        <ItemList items={items} deleteButton={deleteButton} updateQuantity={updateQuantity} />
-      </Box>
-      <Fab
-        color="secondary"
-        variant="extended"
-        aria-label="checkout"
-        disabled={loading}
-        onClick={() => handleSubmit(false)}
-        sx={{
-          position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          fontSize: '20px',
-          padding: '16px 32px',
-          minWidth: '160px',
-        }}
-      >
-        <ShoppingCartCheckoutIcon sx={{ mr: 1, fontSize: '30px' }} />
-        {loading? 'Submitting items...' : "Checkout"}
-      </Fab>
+            elevation={24}
+          >
+            <h2
+              style={{
+                textAlign: 'center', // Center the text
+                padding: '20px', // Add padding
+                backgroundColor: 'rgba(76, 175, 80, 0.2)', // Greenish background with opacity
+                borderRadius: '4px', // Optional: rounded corners
+                margin: 'auto', // Center the element itself
+                width: '80%', // Optional: specify width for better layout
+                display: 'inline-block', // Ensure the background applies correctly
+              }}
+            >
+              Please Scan the Student's ID
+            </h2>{' '}
+            {/* Title */}
+            <img
+              src="barcode-scanner.png"
+              alt="Barcode Scanner"
+              style={{
+                maxWidth: '90%', // Limit max width
+                maxHeight: '80%', // Limit max height
+                objectFit: 'contain', // Scale image while preserving aspect ratio
+              }}
+            />
+          </Paper>
+          <form onSubmit={handleSubmitShopper} style={{ width: '100%' }}>
+            <TextField
+              onBlur={(e) => e.target.focus()}
+              type="text"
+              value={hNumber}
+              style={{ position: 'absolute', opacity: 0, pointerEvents: 'none' }} // Hidden from view
+              autoFocus
+              autoComplete="off"
+              onChange={(e) => {
+                setHNumber(String(e.target.value));
+              }} // Handle input value if needed
+            />
+          </form>
+        </>
+      )}
+
+      {isValidID && (
+        <>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} sm={4}>
+              <TextField
+                style={{
+                  left: '10px',
+                }}
+                id="barcodeInput"
+                label="Scan Barcode"
+                value={barcode}
+                onChange={(e) => setBarcode(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleBarcodeSubmit()}
+                autoFocus
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={8}>
+              <ItemForm
+                receivedData={receivedData}
+                selectedItem={selectedItem}
+                setSelectedItem={setSelectedItem}
+                quantity={quantity}
+                setQuantity={setQuantity}
+                addButton={addButton}
+              />
+            </Grid>
+          </Grid>
+          <Box>
+            <ItemList items={items} deleteButton={deleteButton} updateQuantity={updateQuantity} />
+          </Box>
+          <Fab
+            color="secondary"
+            variant="extended"
+            aria-label="checkout"
+            disabled={loading}
+            onClick={() => handleSubmit(false)}
+            sx={{
+              position: 'fixed',
+              bottom: '20px',
+              right: '20px',
+              fontSize: '20px',
+              padding: '16px 32px',
+              minWidth: '160px',
+            }}
+          >
+            <ShoppingCartCheckoutIcon sx={{ mr: 1, fontSize: '30px' }} />
+            {loading ? 'Submitting items...' : 'Checkout'}
+          </Fab>
+        </>
+      )}
     </>
   );
 }

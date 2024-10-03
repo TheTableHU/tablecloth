@@ -44,6 +44,7 @@ async function addUser(req, res) {
             hNumber,
             role,
             PIN: hashedPin,
+            
         });
 
 

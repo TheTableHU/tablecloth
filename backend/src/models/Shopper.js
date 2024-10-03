@@ -129,7 +129,7 @@ module.exports = (sequelize, DataTypes) => {
     const formData = shopper.formData;
 
     const shopperData = {
-      hNumber: parseInt(formData.hNumber, 8),
+      hNumber: (String(formData.hNumber)).substring(0,8),
       classification: formData.classification,
       dateRegistered: new Date().toISOString().slice(0, 10),
       home: formData.home,
@@ -164,9 +164,6 @@ module.exports = (sequelize, DataTypes) => {
         }
 
         logger.info(`Created shopper with hNumber ${createdShopper.hNumber}`);
-
-        await this.sequelize.models.ShopperVisit.createVisit(createdShopper.hNumber);
-
         return createdShopper;
       });
 

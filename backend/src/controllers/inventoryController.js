@@ -6,7 +6,7 @@ const axios = require('axios');
 const inventoryModel = models.Inventory;
 const categoryModel = models.Category;
 const CheckoutModel = models.Checkout;
-
+const shopperVisit = models.ShopperVisit;
 
 async function getAllCategories(req, res) {
   let categories = await categoryModel.getAllCategories();
@@ -84,8 +84,12 @@ async function checkoutItems(req, res) {
   const { items } = req.body;
   try{
   if (Array.isArray(items) && items.length > 0) {
+    if(!req.body.hNumber){
+      res.status(400).json({success: false});
+    }
     const checkoutResult = await inventoryModel.checkout(items, req.body.override);
-    let checkoutRecord = await CheckoutModel.create({items, checkoutDate: new Date(), userLoggedIn: res.locals.hNumber});
+    let checkoutRecord = await CheckoutModel.create({items, checkoutDate: new Date(), userLoggedIn: res.locals.hNumber, hNumber: req.body.hNumber});
+    const result = await shopperVisit.createVisit((req.body.hNumber).substring(0,8), '');
     if (checkoutResult.status === 'success') {
       res.json({ success: true });
     } else if (checkoutResult.status === 'CategoryOverLimit') {

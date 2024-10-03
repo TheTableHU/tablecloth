@@ -17,8 +17,9 @@ async function getAllShoppers(req, res) {
 }
 
 async function checkinShopper(req, res) {
+  //This no longer creates a visit record, it only checks if the shopper is allowed to shop (if its registered, and within the limit)
+  //The visit record is created at the moment of hitting the Checkout button
   let Shopper = await shopperModel.getSpecificShopper(req.params.hNumber);
-  const howAreWeHelping = req.body.howAreWeHelping;
 
   if (!Shopper) {
     res.status(400).json({ success: false, error: 'ShopperNotFound' });
@@ -32,8 +33,7 @@ async function checkinShopper(req, res) {
       logger.warn('Shopper has been twice this week');
       res.status(400).json({ success: false, error: 'ShopperBeenTwiceThisWeek' });
     } else {
-      const result = await shopperVisit.createVisit(hNumber, howAreWeHelping);
-      res.json({ success: true, data: result });
+      res.json({ success: true});
     }
   } catch (error) {
     logger.error(error);

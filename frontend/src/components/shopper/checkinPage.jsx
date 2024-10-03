@@ -132,7 +132,7 @@ export default function CheckinPage() {
       } else if (data.error === 'InvalidHNumber') {
         toast.error('Looks like an invalid HNumber. Please check and try again.');
       } else if (data.error === 'ShopperAlreadyExists') {
-        toast.error('Shopper already registered. Please check in as a returning shopper.');
+        toast.error('Shopper already registered. Please head to checkout.');
       } else {
         toast.error('Failed to register shopper. Please try again.');
       }
@@ -144,35 +144,7 @@ export default function CheckinPage() {
     }
   }
   
-  async function handleReturningShopperSubmit() {
-    setLoading(true);
-    try {
-      const response = await api.returningShopper(howAreWeHelping, returningHNum);
-      const data = await response.json();
-  
-      if (data.success === true) {
-        toast.success('Shopper checked in successfully! Welcome back!');
-        setReturningHNum('');
-        setHowAreWeHelping('');
-      } else if (data.error === 'ShopperNotFound') {
-        toast.error(
-          'Shopper not found. Either HNumber was entered incorrectly or shopper is not registered yet.',
-        );
-      } else if (data.error === 'ShopperBeenTwiceThisWeek') {
-        toast.error(
-          'Shopper has already been to The Table twice this week which is our limit. Please come again next week!',
-        );
-      } else {
-        toast.error('Failed to check in shopper. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      toast.error('An error occurred. Please try again.');
-    } finally {
-      setLoading(false);  // Re-enable button
-    }
-  }
-  
+ 
 
   const newShopperForm = () => {
     return (
@@ -395,55 +367,13 @@ export default function CheckinPage() {
     );
   };
 
-  function returningShopperForm() {
-    return (
-      <div className="returningShopper">
-        <h1>Returning Shopper</h1>
-        <FormControl fullWidth>
-          <HNumWrapper
-            value={returningHNum}
-            onChange={(event) => handleHNumChange(event, 'returning')}
-          />
-        </FormControl>
 
-        <div className="formFullWidthRowBottom">
-          <FormControl component="fieldset" fullWidth>
-            <TextField
-              id="howAreWeHelping"
-              label="Share how The Table has helped you!"
-              value={howAreWeHelping}
-              autoComplete="off"
-              helperText="Please only fill out once (otherwise leave blank)"
-              onChange={handleHowAreWeHelpingChange}
-            />
-          </FormControl>
-        </div>
-
-        <div className="submitButtonContainer">
-          <Button
-            className="submitButton"
-            variant="contained"
-            color="primary"
-            disabled={loading}
-            onClick={handleReturningShopperSubmit}
-          >
-             {loading ? 'Submitting...' : 'Submit'}
-          </Button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <Container maxWidth="md">
       <ToastWrapper />
-      <div id="toggleFormContainer">
-        <Button variant="contained" color="primary" onClick={toggleFormDisplay}>
-          {displayNewShopperForm ? 'Show Returning Shopper Form' : 'Show New Shopper Form'}
-        </Button>
-      </div>
 
-      {displayNewShopperForm ? newShopperForm() : returningShopperForm()}
+      {newShopperForm()}
     </Container>
   );
 }

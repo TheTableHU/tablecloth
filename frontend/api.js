@@ -149,14 +149,14 @@ export class Api {
     })
     return response;
   }
-  async submitCheckout(items, override){
+  async submitCheckout(items, override, hNumber){
     let response = await fetch(config.host + '/api/inventory/checkout', {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer '+ this.token,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ items, override }),
+      body: JSON.stringify({ items, override, hNumber }),
     })
     return response;
   }
