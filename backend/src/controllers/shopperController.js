@@ -17,7 +17,7 @@ async function getAllShoppers(req, res) {
 }
 
 async function checkinShopper(req, res) {
-  const Shopper = await shopperModel.getSpecificShopper(req.params.hNumber);
+  let Shopper = await shopperModel.getSpecificShopper(req.params.hNumber);
   const howAreWeHelping = req.body.howAreWeHelping;
 
   if (!Shopper) {
@@ -26,11 +26,13 @@ async function checkinShopper(req, res) {
   }
 
   try {
-    if (await shopperVisit.isShopperAtWeekLimit(Shopper.hNumber)) {
+    let hNumber = Shopper.hNumber;
+    hNumber = String(hNumber).substring(0,8);
+    if (await shopperVisit.isShopperAtWeekLimit(hNumber)) {
       logger.warn('Shopper has been twice this week');
       res.status(400).json({ success: false, error: 'ShopperBeenTwiceThisWeek' });
     } else {
-      const result = await shopperVisit.createVisit(Shopper.hNumber, howAreWeHelping);
+      const result = await shopperVisit.createVisit(hNumber, howAreWeHelping);
       res.json({ success: true, data: result });
     }
   } catch (error) {
@@ -50,7 +52,7 @@ async function createShopper(req, res) {
 
   try {
     const result = await shopperModel.createShopper(req.body);
-
+    
     if (result === null) {
       res.status(400).json({ success: false, error: 'ShopperAlreadyExists' });
     } else {

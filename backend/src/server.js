@@ -40,7 +40,7 @@ const { checkCredentials, requireVolunteerPermissions, requireWorkerPermissions,
 app.use(express.json());
 
 // Mount Routes
-app.use('/api/inventory', checkCredentials, requireWorkerPermissions ,inventoryRoutes);
+app.use('/api/inventory', checkCredentials ,inventoryRoutes);
 app.use('/api/shopper', checkCredentials, requireVolunteerPermissions, shopperRoutes);
 app.use('/api/login', loginRoutes );
 app.use('/api/users', checkCredentials, requireAdminPermissions, userRoutes);

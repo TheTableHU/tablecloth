@@ -5,7 +5,7 @@ async function createMailer() {
   const { default: hbs } = await import('nodemailer-express-handlebars');
 
   let mailer = nodemailer.createTransport({
-    service: 'Zoho',
+    service: 'Gmail',
     auth: {
       user: process.env.EMAIL,
       pass: process.env.EMAIL_PASSWORD,

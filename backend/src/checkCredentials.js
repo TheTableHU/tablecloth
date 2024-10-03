@@ -56,6 +56,7 @@ async function checkCredentials(req, res, next) {
             res.locals.name = payload.sub;
             res.locals.payload = payload;
             res.locals.email = payload.email;
+            res.locals.hNumber = payload.hNumber;
             next();
         }
         

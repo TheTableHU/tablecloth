@@ -79,7 +79,7 @@ export function Login() {
   const handlePINSubmit = async (finalPIN) => {
     try {
       setHNumber(hNumber.substring(0, 8));
-      let response = await api.login(hNumber.substring(0, 8), finalPIN);
+      let response = await api.login(hNumber, finalPIN);
       if (response.status == 401) {
         setPIN(Array(4).fill(''));
         document.getElementById(`pin-${0}`).focus();
@@ -130,6 +130,7 @@ export function Login() {
               <TextField
                 autoFocus
                 label="Scan your Harding ID"
+                autoComplete="off"
                 id="outlined-start-adornment"
                 value={hNumber}
                 onChange={(e) => {

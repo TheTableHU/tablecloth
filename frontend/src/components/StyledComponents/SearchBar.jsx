@@ -27,13 +27,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   paddingLeft: `calc(1em + ${theme.spacing(4)})`,
   width: '100%',
+  marginTop: '20px',
+  marginBottom: '20px',
   [theme.breakpoints.up('md')]: {
     width: '40ch',
   },
 }));
 
 // Search component
-export const Search = ({ placeholder, search, setSearch }) => (
+export const Search = ({ placeholder, search, setSearch}) => (
   <SearchContainer>
     <SearchIconWrapper>
       <SearchIcon />

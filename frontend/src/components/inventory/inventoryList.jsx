@@ -4,12 +4,15 @@ import Box from '@mui/material/Box';
 import config from '../../config';
 import { ToastWrapper, toast } from '../../Wrappers.jsx';
 import { useNewApi } from '../../../api.js';
+import { Search } from '../StyledComponents/SearchBar.jsx';
 
 
 export default function InventoryList() {
   const api = useNewApi();
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
+  const [filteredRows, setFilteredRows] = useState([]);
+  const [search, setSearch] = useState('');
 
   const fetchInventory = async () => {
     try {
@@ -19,10 +22,10 @@ export default function InventoryList() {
       if (data.success) {
         const apiColumns = (data.columns || []).map(col => ({
           ...col,
-          editable: true 
         }));
         setColumns(apiColumns);
         setRows(data.data);
+        setFilteredRows(data.data);
       } else {
         console.error('Error fetching inventory:', data.error);
         setRows([]);
@@ -43,6 +46,22 @@ export default function InventoryList() {
       clearInterval(intervalId);
     };
   }, []);
+  useEffect(() => {
+    if (search) {
+      const filtered = rows.filter(row => {
+        const searchLower = search.toLowerCase();
+        console.log(row);
+        return (
+          row.barcode.toLowerCase().includes(searchLower) ||
+          row.item.toLowerCase().includes(searchLower) ||
+          row.Category.toLowerCase().includes(searchLower)
+        );
+      });
+      setFilteredRows(filtered);
+    } else {
+      setFilteredRows(rows); // Show all users when search is empty
+    }
+  }, [search, rows]);
 
   // Send updated row to the server
   // Return true if successful, false otherwise
@@ -104,9 +123,10 @@ export default function InventoryList() {
   return (
     <>
       <ToastWrapper />
+      <Search placeholder="Search an item" search={search} setSearch={setSearch}></Search>
       <Box sx={{ height: '96vh', width: '100%' }}>
         <DataGrid
-          rows={rows}
+          rows={filteredRows}
           columns={columns}
           pageSize={5}
           cellEditMode="cellClick"

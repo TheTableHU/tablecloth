@@ -129,7 +129,7 @@ module.exports = (sequelize, DataTypes) => {
     const formData = shopper.formData;
 
     const shopperData = {
-      hNumber: parseInt(formData.hNumber, 10),
+      hNumber: parseInt(formData.hNumber, 8),
       classification: formData.classification,
       dateRegistered: new Date().toISOString().slice(0, 10),
       home: formData.home,
@@ -197,30 +197,37 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   // Format date for better readability
-  async function formatDate(shopper) {
-    const dateRegistered = shopper.getDataValue('dateRegistered');
-    const updatedAt = shopper.getDataValue('updatedAt');
-
-    const parsedDateRegistered = parseAndFormatDate(dateRegistered);
-
-    const parsedUpdatedAt = parseAndFormatDate(updatedAt);
-
-    shopper.setDataValue('dateRegistered', parsedDateRegistered);
-    shopper.setDataValue('updatedAt', parsedUpdatedAt);
-
-    return shopper;
-  }
-
   function parseAndFormatDate(dateString) {
+    if (!dateString) {
+      // If the dateString is null, undefined, or empty, return it as-is or handle accordingly
+      logger.error('Received null or undefined date string.');
+      return dateString;
+    }
+  
     const parsedDate = parseISO(dateString);
-
+  
     if (isValid(parsedDate)) {
       return format(parsedDate, 'MMMM dd, yyyy');
     } else {
-      logger.error(`Invalid date: `, dateString);
+      logger.error(`Invalid date: ${dateString}`);
       return dateString;
     }
   }
+  
+  async function formatDate(shopper) {
+    const dateRegistered = shopper.getDataValue('dateRegistered');
+    const updatedAt = shopper.getDataValue('updatedAt');
+  
+    // Only format the dates if they are valid
+    const parsedDateRegistered = dateRegistered ? parseAndFormatDate(dateRegistered) : dateRegistered;
+    const parsedUpdatedAt = updatedAt ? parseAndFormatDate(updatedAt) : updatedAt;
+  
+    shopper.setDataValue('dateRegistered', parsedDateRegistered);
+    shopper.setDataValue('updatedAt', parsedUpdatedAt);
+  
+    return shopper;
+  }
+  
 
   return Shopper;
 };

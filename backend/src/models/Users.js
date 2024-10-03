@@ -48,7 +48,7 @@ try {
   });
 
   Users.login = async function (hNumber, PIN) {
-    const findUser = await Users.findOne({ where: { hNumber } });
+    const findUser = await Users.findOne({ where: { hNumber: hNumber.substring(0,8) } });
 
     if (findUser) {
       const isMatch = await bcrypt.compare(PIN, findUser.PIN);
@@ -58,12 +58,14 @@ try {
           name: findUser.name,
           email: findUser.email,
           role: findUser.role,
+          hNumber: findUser.hNumber
         });
         logger.info('User ' + findUser.name + ' has logged in successfully.' )
         return { status: 200, token, data: {
           name: findUser.name,
           email: findUser.email,
           role: findUser.role,
+          hNumber: findUser.hNumber
         } };
       } else {
         logger.error("H#" + findUser.hNumber + " used with incorrect PIN.")

@@ -26,6 +26,18 @@ async function addUser(req, res) {
 
     try {
 
+        await mailer.sendMail({
+            from: process.env.EMAIL,
+            to: email,
+            subject: 'New Account for TheTableHU!',
+            template: 'new-user-thetable', 
+            context: { 
+                name: name,
+                PIN: randomPIN,
+                role: role
+            }
+        });
+
         const newUser = await usersModel.create({
             name,
             email,
@@ -34,18 +46,6 @@ async function addUser(req, res) {
             PIN: hashedPin,
         });
 
-        // Send templated email using Handlebars
-        await mailer.sendMail({
-            from: process.env.EMAIL,
-            to: email,
-            subject: 'New Account for TheTableHU!',
-            template: 'new-user-thetable',  // name of your Handlebars template
-            context: {  // Variables for the template
-                name: name,
-                PIN: randomPIN,
-                role: role
-            }
-        });
 
         return res.status(200).json({ message: "User created successfully with ID: " + newUser.id});
     } catch (error) {

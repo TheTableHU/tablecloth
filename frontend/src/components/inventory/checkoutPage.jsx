@@ -17,6 +17,7 @@ export default function CheckoutPage() {
   const [quantity, setQuantity] = useState(1);
   const [items, setItems] = useState([]);
   const [barcode, setBarcode] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -115,6 +116,8 @@ export default function CheckoutPage() {
   }
 
   async function handleSubmit(override) {
+    setLoading(true);
+    try{
     if (items.length !== 0) {
       await api.submitCheckout(items, override)
         .then((response) => response.json())
@@ -144,6 +147,11 @@ export default function CheckoutPage() {
     } else {
       toast.error('Please add items before submitting.');
     }
+  }catch(err){
+    logger.err("Error when checking out: " + err.message)
+  }finally{
+    setLoading(false)
+  }
   }
 
   function handleOverride() {
@@ -191,6 +199,7 @@ export default function CheckoutPage() {
         color="secondary"
         variant="extended"
         aria-label="checkout"
+        disabled={loading}
         onClick={() => handleSubmit(false)}
         sx={{
           position: 'fixed',
@@ -202,7 +211,7 @@ export default function CheckoutPage() {
         }}
       >
         <ShoppingCartCheckoutIcon sx={{ mr: 1, fontSize: '30px' }} />
-        Checkout
+        {loading? 'Submitting items...' : "Checkout"}
       </Fab>
     </>
   );

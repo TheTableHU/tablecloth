@@ -33,6 +33,7 @@ const HNumWrapper = ({ value, onChange }) => {
   return (
     <TextField
       required
+      autoFocus
       label="H Number"
       value={value}
       onChange={onChange}

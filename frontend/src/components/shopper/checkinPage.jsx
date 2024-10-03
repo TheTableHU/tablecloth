@@ -39,6 +39,8 @@ export default function CheckinPage() {
   const [email, setEmail] = useState('');
   const [aboutUs, setAboutUs] = useState('');
   const [howAreWeHelping, setHowAreWeHelping] = useState('');
+  const [loading, setLoading] = useState(false);
+
 
   const [displayNewShopperForm, setDisplayNewShopperForm] = useState(true);
 
@@ -101,6 +103,7 @@ export default function CheckinPage() {
   };
 
   async function handleNewShopperSubmit() {
+    setLoading(true); 
     const formData = {
       hNumber: newHNum,
       liveWithUnder16: liveWithUnder16,
@@ -118,12 +121,11 @@ export default function CheckinPage() {
       aboutUs: aboutUs,
       internationalStudent: internationalStudent,
     };
-
+  
     try {
       const response = await api.addNewShopper(formData);
-
       const data = await response.json();
-
+  
       if (data.success === true) {
         toast.success('Shopper registered successfully! Welcome!');
         clearForm();
@@ -136,14 +138,18 @@ export default function CheckinPage() {
       }
     } catch (error) {
       console.error('Error submitting form:', error);
+      toast.error('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);  
     }
   }
-
+  
   async function handleReturningShopperSubmit() {
+    setLoading(true);
     try {
       const response = await api.returningShopper(howAreWeHelping, returningHNum);
-      let data = await response.json();
-
+      const data = await response.json();
+  
       if (data.success === true) {
         toast.success('Shopper checked in successfully! Welcome back!');
         setReturningHNum('');
@@ -161,8 +167,12 @@ export default function CheckinPage() {
       }
     } catch (error) {
       console.error('Error submitting form:', error);
+      toast.error('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);  // Re-enable button
     }
   }
+  
 
   const newShopperForm = () => {
     return (
@@ -371,14 +381,15 @@ export default function CheckinPage() {
         </div>
 
         <div className="submitButtonContainer">
-          <Button
-            className="submitButton"
-            variant="contained"
-            color="primary"
-            onClick={handleNewShopperSubmit}
-          >
-            Submit
-          </Button>
+        <Button
+  className="submitButton"
+  variant="contained"
+  color="primary"
+  onClick={handleNewShopperSubmit}
+  disabled={loading} 
+>
+  {loading ? 'Submitting...' : 'Submit'}
+</Button>
         </div>
       </div>
     );
@@ -413,9 +424,10 @@ export default function CheckinPage() {
             className="submitButton"
             variant="contained"
             color="primary"
+            disabled={loading}
             onClick={handleReturningShopperSubmit}
           >
-            Submit
+             {loading ? 'Submitting...' : 'Submit'}
           </Button>
         </div>
       </div>

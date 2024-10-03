@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Outlet, useLocation, Link as RouterLink } from 'react-router-dom';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
@@ -28,7 +28,11 @@ const ContentWrapper = styled('div')({
 function App() {
   const location = useLocation();
   const api = useNewApi(); // Create the API object using the hook
-
+  useEffect(() => {
+    if (window.location.protocol === 'https:') {
+      window.location.href = window.location.href.replace('https:', 'http:');
+    }
+  }, []);
   return (
     <ApiContext.Provider value={api}> {/* Wrap the app in ApiContext.Provider */}
       <RequireLogin> {/* Protect your routes with RequireLogin */}

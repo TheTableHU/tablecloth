@@ -118,19 +118,17 @@ export default function CheckoutPage() {
     let data = await response.json();
     if (data.success) {
       toast.success('Successfully submitted data.');
-      setItemName('');
-      setQuantity(1);
-      setSelectedCategory('');
-      setItemBarcode('');
-      setItemImage(null);
-    } else {
+
+    } else if(response.status == 403){
+      toast.error('Barcode already exists in the database. Go to Shipment page to add to inventory.')
+    }else{
       let message = data.message || 'Error submitting form';
-      setItemName('');
-      setQuantity(1);
-      setSelectedCategory('');
-      setItemBarcode('');
-      setItemImage(null);
     }
+    setItemName('');
+    setQuantity(1);
+    setSelectedCategory('');
+    setItemBarcode('');
+    setItemImage(null);
   }
   async function handleKeypress(e) {
     if (e.key === 'Enter') {

@@ -1,9 +1,10 @@
 const logger = require('../logger.js');
-const mailer = require('../mailer.js');
+const mailerPromise = require('../mailer.js');
 const { models } = require('../models/index.js');
 const ExpirationDates = models.ExpirationDates;
 
 async function sendExpirationEmails() {
+  const mailer = await mailerPromise();
   logger.info('Sending expiration emails...');
 
   // Get expired items from the database and see if they are two weeks from expiration and an email hasn't been sent

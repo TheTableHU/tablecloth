@@ -1,10 +1,11 @@
 // inventoryController.js
 
+const logger = require('../logger.js');
 const { models } = require('../models/index.js');
 const axios = require('axios');
 const inventoryModel = models.Inventory;
 const categoryModel = models.Category;
-
+const CheckoutModel = models.Checkout;
 
 
 async function getAllCategories(req, res) {
@@ -36,6 +37,8 @@ async function getInventory(req, res) {
     }));
 
     columns = columns.filter((column) => column.field !== 'categoryId');
+    columns = columns.filter((column) => column.field !== 'imageLink');
+
 
     columns.forEach((column) => {
       switch (column.headerName) {
@@ -48,6 +51,9 @@ async function getInventory(req, res) {
           break;
         case 'UpdatedAt':
           column.headerName = 'Last Updated';
+          break;
+        case 'Category':
+          column.editable = true;
           break;
         case 'Id':
           column.headerName = 'ID';
@@ -76,10 +82,10 @@ async function getItemNames(req, res) {
 
 async function checkoutItems(req, res) {
   const { items } = req.body;
-
+  try{
   if (Array.isArray(items) && items.length > 0) {
     const checkoutResult = await inventoryModel.checkout(items, req.body.override);
-
+    let checkoutRecord = await CheckoutModel.create({items, checkoutDate: new Date(), userLoggedIn: res.locals.hNumber});
     if (checkoutResult.status === 'success') {
       res.json({ success: true });
     } else if (checkoutResult.status === 'CategoryOverLimit') {
@@ -90,6 +96,10 @@ async function checkoutItems(req, res) {
   } else {
     res.json({ success: false });
   }
+}catch(err){
+  logger.error(err.message);
+  res.json({success: false})
+}
 }
 
 async function addShipmentItems(req, res) {
@@ -114,11 +124,11 @@ async function addItem(req, res) {
   if (item && quantity && category) {
     const existingRecord = await inventoryModel.findOne({
       where: {
-        barcode: barcode,
+        barcode: String(barcode),
       },
     });
     if(existingRecord){
-      res.json({message: "Barcode/Item already exists"})
+      res.status(403).json({message: "Barcode/Item already exists"})
     }else{
 
     const addResult = await inventoryModel.addItem(item, quantity, category, barcode, imageLink);

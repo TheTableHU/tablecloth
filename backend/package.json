@@ -38,7 +38,7 @@
     "moment-timezone": "^0.5.45",
     "mysql2": "^3.11.3",
     "node-cron": "^3.0.3",
-    "nodemailer": "^6.9.9",
+    "nodemailer": "^6.9.15",
     "nodemailer-express-handlebars": "^7.0.0",
     "sequelize": "^6.37.3",
     "sequelize-cli": "^6.6.2",

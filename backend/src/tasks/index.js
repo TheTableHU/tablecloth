@@ -19,7 +19,7 @@ async function cronTasks() {
 
   // Runs on Wednesday at 5 PM
   cron.schedule(
-    '0 17 * * 3',
+    '0 10 * * 6',
     async () => {
       await shoppersThisWeek();
     },

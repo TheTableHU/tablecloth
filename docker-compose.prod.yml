@@ -33,11 +33,11 @@ services:
       dockerfile: Dockerfile.prod
     container_name: frontend
     ports:
-      - "8080:80"
+      - "80:80"
     environment:
       - PORT=80
       - NODE_ENV=production
-      - VITE_BACKEND_HOST=http://localhost:8081
+      - VITE_BACKEND_HOST=http://10.31.1.134:8081
     env_file:
       - .env
     depends_on:
