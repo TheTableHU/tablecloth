@@ -122,7 +122,7 @@ export default function CheckoutPage() {
     try {
       if (items.length !== 0) {
         await api
-          .submitCheckout(items, override, hNumber)
+          .submitCheckout(items, override, (String(hNumber).substring(0,8)))
           .then((response) => response.json())
           .then((data) => {
             if (data.success) {
@@ -151,11 +151,14 @@ export default function CheckoutPage() {
         toast.error('Please add items before submitting.');
       }
     } catch (err) {
+      setItems([]);
       logger.err('Error when checking out: ' + err.message);
     } finally {
       setLoading(false);
       setHNumber('');
       setIsValidID(false);
+      setItems([]);
+
     }
   }
 
@@ -233,7 +236,7 @@ export default function CheckoutPage() {
                 display: 'inline-block', // Ensure the background applies correctly
               }}
             >
-              Please Scan the Student's ID
+              Please Scan the Shopper's ID
             </h2>{' '}
             {/* Title */}
             <img
