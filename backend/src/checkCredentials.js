@@ -35,7 +35,6 @@ async function requireVolunteerPermissions(req, res, next){
 
 
 async function checkCredentials(req, res, next) {
-
     const authorizationHeader = req.get('Authorization') || '';
     const match = authorizationHeader.match(/Bearer\s+(\S+)/i);
     let role = 'user';

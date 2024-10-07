@@ -1,28 +1,15 @@
-import { responsiveFontSizes } from '@mui/material';
 import { createContext, useContext, useState } from 'react';
 import config from './src/config';
-const apiURL = "http://localhost:8081/api";
 import { jwtDecode } from "jwt-decode";
-/*==========================================================
- * Context for providing API object
- */
-
 export const ApiContext = createContext(undefined);
 
-/*==========================================================
- * Hook to use a provided API object
- */
 export function useApi() {
   return useContext(ApiContext);
 }
 
-/*==========================================================
- * Hook to create a new API object (stored as state)
- */
 export function useNewApi() {
   const [api, setApi] = useState(() => new Api(sessionStorage.getItem('token'), JSON.parse(sessionStorage.getItem('data'))));
-
-  // Override the setToken method to create a new API object
+  const [isTrained, setIsTrained] = useState(false);
   api.setToken = function setToken(content) {
     let token = null, data = null;
     if (content != null && content.hasOwnProperty('token') && content.hasOwnProperty('data')) {
@@ -31,16 +18,21 @@ export function useNewApi() {
       if (token !== api.token) {
         if (token) {
           sessionStorage.setItem('token', token);
+          sessionStorage.setItem('lastTrainingDate', data.lastTrainingDate);
           sessionStorage.setItem('data', JSON.stringify(data)); // Serialize data before storing
         } else {
           sessionStorage.removeItem('token');
           sessionStorage.removeItem('data');
+          sessionStorage.removeItem('lastTrainingDate'); 
+
         }
       }
       setApi(new Api(token, data));
     } else {
       sessionStorage.removeItem('token');
       sessionStorage.removeItem('data');
+      sessionStorage.removeItem('lastTrainingDate'); 
+
       setApi(new Api(null, undefined));
     }
   };
@@ -48,10 +40,23 @@ export function useNewApi() {
   return api;
 }
 
+function fetchWithAuth(url, options, token) {
+  return fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      'Authorization': 'Bearer ' + token,
+    },
+  }).then(response => {
+    if (response.status === 401) {
+      // Token is expired or user is unauthorized, redirect to logout
+      window.location.href = '/logout';
+    }
+    return response;
+  });
+}
 
-/*==========================================================
- * Actual API class
- */
+
 export class Api {
 
   get isTokenExpired() {
@@ -60,12 +65,17 @@ export class Api {
     const currentTime = Date.now() / 1000; 
     return decoded.exp < currentTime; 
   }
-  setToken(token) { };
+
+  setToken(token) { }
+
   // Property to test if logged in
   get loggedIn() {
     return this.token !== null;
   }
-
+  async updateTrainingD(){
+      this.lastTrainingDate = new Date();
+      sessionStorage.setItem('lastTrainingDate', new Date()); 
+  }
 
   // Constructor
   constructor(token, data) {
@@ -73,16 +83,15 @@ export class Api {
     this.name = data ? data.name : null;
     this.email = data ? data.email : null;
     this.role = data ? data.role : null;
+    this.lastTrainingDate = data ? data.lastTrainingDate : null;
   }
-
-
 
   // API METHODS:
   async login(hNumber, pin) {
-    let response = await fetch(config.host + '/api/login', {
+    let response = await fetch(`${config.host}/api/login`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         hNumber: hNumber, pin: pin
@@ -90,200 +99,184 @@ export class Api {
     });
     return response;
   }
-  async addCategory(categoryName, maxItems){
-    let response = await fetch(config.host + '/api/inventory/addCategory', {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer ' + this.token,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ item: categoryName, maxQuantity: maxItems }),
-      });
-    return response;
-  }
-  async getCategories(){
-    let response  = await fetch(config.host + '/api/inventory/getCategories',{
-        method: 'GET',
-        headers:{
-            'Authorization': 'Bearer ' + this.token
-        }
-    });
-    return response;
-  }
-
-  async barcodeLookup(itemBarcode){
-    let response = await fetch(config.host + '/api/inventory/barcodeInfo/' + itemBarcode,{
-        method: 'GET',
-        headers:{
-            'Authorization': 'Bearer ' + this.token
-        }
-    })
-    return response;
-  }
-  
-  async addItem(itemName, quantity,selectedCategoryId, itemBarcode,itemImage){
-    let response = await fetch(config.host + '/api/inventory/additem', {
-        method: 'POST',
-        headers: {
-            'Authorization': 'Bearer ' + this.token,
-          'Content-Type': 'application/json',
-        },
-  
-        body: JSON.stringify({
-          item: String(itemName),
-          quantity: quantity,
-          category: selectedCategoryId,
-          barcode: String(itemBarcode),
-          imageLink: String(itemImage),
-        }),
-      });
-      return response;
-  }
-
-  async getCheckoutItems(){
-    let response = await fetch(config.host + '/api/inventory/checkout',{
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + this.token
-      }
-    })
-    return response;
-  }
-  async submitCheckout(items, override, hNumber){
-    let response = await fetch(config.host + '/api/inventory/checkout', {
+  async addCategory(categoryName, maxItems) {
+    let response = await fetchWithAuth(`${config.host}/api/inventory/addCategory`, {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer '+ this.token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ item: categoryName, maxQuantity: maxItems }),
+    }, this.token);
+    return response;
+  }
+
+  async getCategories() {
+    let response = await fetchWithAuth(`${config.host}/api/inventory/getCategories`, {
+      method: 'GET',
+    }, this.token);
+    return response;
+  }
+
+  async barcodeLookup(itemBarcode) {
+    let response = await fetchWithAuth(`${config.host}/api/inventory/barcodeInfo/${itemBarcode}`, {
+      method: 'GET',
+    }, this.token);
+    return response;
+  }
+
+  async addItem(itemName, quantity, selectedCategoryId, itemBarcode, itemImage) {
+    let response = await fetchWithAuth(`${config.host}/api/inventory/additem`, {
+      method: 'POST',
+      headers: { 
+                                     'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        item: String(itemName),
+        quantity: quantity,
+        category: selectedCategoryId,
+        barcode: String(itemBarcode),
+        imageLink: String(itemImage),
+      }),
+    }, this.token);
+    return response;
+  }
+
+  async getCheckoutItems() {
+    let response = await fetchWithAuth(`${config.host}/api/inventory/checkout`, {
+      method: 'GET',
+    }, this.token);
+    return response;
+  }
+  async updateTraining() {
+    this.updateTrainingD();
+    let response = await fetchWithAuth(`${config.host}/api/users/training`, {
+      method: 'POST',
+    }, this.token);
+    return response;
+  };
+
+  async submitCheckout(items, override, hNumber) {
+    let response = await fetchWithAuth(`${config.host}/api/inventory/checkout`, {
+      method: 'POST',
+      headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ items, override, hNumber }),
-    })
+    }, this.token);
     return response;
   }
-  async fetchInventory(){
-    let response = await fetch(config.host + '/api/inventory',{
-      headers:{
-      'Authorization': 'Bearer ' + this.token
-      }
-    });
+
+  async fetchInventory() {
+    let response = await fetchWithAuth(`${config.host}/api/inventory`, {
+      method: 'GET',
+    }, this.token);
     return response;
   }
-  async updateInventory(row){
-    let response = fetch(`${config.host}/api/inventory`, {
+
+  async updateInventory(row) {
+    let response = await fetchWithAuth(`${config.host}/api/inventory`, {
       method: 'PUT',
       headers: {
-        'Authorization': 'Bearer ' + this.token,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ row }),
-    });
+    }, this.token);
     return response;
   }
-  async addNewShopper(formData){
-    let response = fetch(`${config.host}/api/shopper/checkin/`, {
+
+  async addNewShopper(formData) {
+    let response = await fetchWithAuth(`${config.host}/api/shopper/checkin/`, {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer ' + this.token,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ formData }),
-    });
+    }, this.token);
     return response;
   }
-  async returningShopper(howAreWeHelping, returningHNum){
-    let response = await fetch(`${config.host}/api/shopper/checkin/${returningHNum}`, {
+
+  async returningShopper(howAreWeHelping, returningHNum) {
+    let response = await fetchWithAuth(`${config.host}/api/shopper/checkin/${returningHNum}`, {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer ' + this.token,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ howAreWeHelping }),
-    });
+    }, this.token);
     return response;
-
   }
-  async addShipment(items){
-    let response = await fetch(config.host + '/api/inventory/shipment', {
+
+  async addShipment(items) {
+    let response = await fetchWithAuth(`${config.host}/api/inventory/shipment`, {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer ' + this.token,  
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ items }, true),
-    })
+    }, this.token);
     return response;
   }
-  async getUsers(){
-    let response = await fetch(config.host + '/api/users', {
+
+  async getUsers() {
+    let response = await fetchWithAuth(`${config.host}/api/users`, {
       method: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + this.token, 
-      }
-    })
+    }, this.token);
     return response;
   }
-  async resetPIN(hNumber){
-    let response = await fetch(config.host + '/api/users/reset', {
+
+  async resetPIN(hNumber) {
+    let response = await fetchWithAuth(`${config.host}/api/users/reset`, {
       method: 'POST',
-      headers:{
-        'Authorization': 'Bearer ' + this.token, 
+      headers: {
         'Content-Type': 'application/json',
       },
-      body:JSON.stringify({
-        hNumber
-      })
-    })
+      body: JSON.stringify({ hNumber }),
+    }, this.token);
     return response;
   }
-  async deleteUser(hNumber){
-    let response = await fetch(config.host + '/api/users', {
+
+  async deleteUser(hNumber) {
+    let response = await fetchWithAuth(`${config.host}/api/users`, {
       method: 'DELETE',
-      headers:{
-        'Authorization': 'Bearer ' + this.token, 
+      headers: {
         'Content-Type': 'application/json',
       },
-      body:JSON.stringify({
-        hNumber
-      })
-    })
+      body: JSON.stringify({ hNumber }),
+    }, this.token);
     return response;
   }
-  async updateUser(name, hNumber, role, email){
-    let response = await fetch(config.host + '/api/users',{
+
+  async updateUser(name, hNumber, role, email) {
+    let response = await fetchWithAuth(`${config.host}/api/users`, {
       method: 'PUT',
-      headers:{
-        'Authorization': 'Bearer ' + this.token, 
+      headers: {
         'Content-Type': 'application/json',
       },
-      body:JSON.stringify({
-        row:{
+      body: JSON.stringify({
+        row: {
           name,
           hNumber,
           role,
           email
         }
-      })
-    }
-    )
+      }),
+    }, this.token);
     return response;
   }
-  async addUser(name, hNumber, role, email){
-    let response = await fetch(config.host + '/api/users',{
+
+  async addUser(name, hNumber, role, email) {
+    let response = await fetchWithAuth(`${config.host}/api/users`, {
       method: 'POST',
-      headers:{
-        'Authorization': 'Bearer ' + this.token, 
+      headers: {
         'Content-Type': 'application/json',
       },
-      body:JSON.stringify({
-          name,
-          hNumber,
-          role,
-          email
-      })
-    }
-    )
+      body: JSON.stringify({
+        name,
+        hNumber,
+        role,
+        email
+      }),
+    }, this.token);
     return response;
   }
 }
-
-

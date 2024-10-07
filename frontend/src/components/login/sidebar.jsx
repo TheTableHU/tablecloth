@@ -9,7 +9,7 @@ const SidebarContainer = styled('div')(({ expanded }) => ({
   top: 0,
   left: 0,
   height: 'auto',
-  width: expanded ? '200px' : '50px',
+  width: expanded ? '200px' : '90px',
   backgroundColor: '#1d516f',
   color: '#fff',
   display: 'flex',
@@ -29,7 +29,7 @@ const UserName = styled('div')({
   fontWeight: 'bold',
   marginBottom: '20px',
   textAlign: 'center',
-  color: '#fff', // White font color
+  color: '#fff', 
 });
 
 // Logout button style

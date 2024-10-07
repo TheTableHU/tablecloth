@@ -7,14 +7,15 @@ import { useApi } from '../../../api';
  *   Clears current API token
  */
 
-export default function Logout() {
+export default function Logout({isTrained, setIsTrained, counter, setCounter}) {
+
   const [done, setDone] = useState(false);
   const api = useApi();
   const navigate = useNavigate();
-  // Must do the logout as an effect, because we cannot change other
-  // components' state while rendering
   useEffect(() => {
     api.setToken(null);
+    setIsTrained(false);
+    setCounter(counter+1);
     navigate('/', { replace: true });
     setDone(true);
   }, [api]);

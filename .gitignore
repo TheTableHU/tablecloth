@@ -205,3 +205,4 @@ dist
 backup.tar.gz
 scripts/*.tar.gz
 *.pem
+*.mp4

@@ -16,6 +16,7 @@ export default function CheckoutPage() {
   const [quantity, setQuantity] = useState(1);
   const [items, setItems] = useState([]);
   const [barcode, setBarcode] = useState('');
+  const [loading, setLoading] = useState(false);
   const api = useApi();
   useEffect(() => {
     const fetchData = async () => {
@@ -92,6 +93,7 @@ export default function CheckoutPage() {
         console.error('Selected item not found in inventory.');
       }
     }
+    document.getElementById('barcodeInput').focus();
   }
 
   function handleBarcodeSubmit() {
@@ -121,6 +123,7 @@ export default function CheckoutPage() {
     }
   }
   async function handleSubmit() {
+    setLoading(true);
     if (items.length !== 0) {
       await api.addShipment(items)
         .then((response) => response.json())
@@ -134,6 +137,8 @@ export default function CheckoutPage() {
     } else {
       toast.error('Please add items before submitting.');
     }
+    setLoading(false);
+    document.getElementById('barcodeInput').focus();
   }
 
   return (
@@ -151,6 +156,7 @@ export default function CheckoutPage() {
             onChange={(e) => setBarcode(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleBarcodeSubmit()}
             autoFocus
+            autoComplete='off'
             fullWidth
           />
         </Grid>
@@ -172,6 +178,7 @@ export default function CheckoutPage() {
         color="secondary"
         variant="extended"
         aria-label="checkout"
+        disabled={loading}
         onClick={() => handleSubmit(false)}
         sx={{
           position: 'fixed',
@@ -183,7 +190,8 @@ export default function CheckoutPage() {
         }}
       >
         <LocalShippingIcon sx={{ mr: 1, fontSize: '30px' }} />
-        Update inventory
+        {loading? 'Updating...' : 'Update inventory'}
+
       </Fab>
     </>
   );

@@ -89,6 +89,7 @@ async function checkoutItems(req, res) {
     }
     const checkoutResult = await inventoryModel.checkout(items, req.body.override);
     let checkoutRecord = await CheckoutModel.create({items, checkoutDate: new Date(), userLoggedIn: res.locals.hNumber, hNumber: req.body.hNumber});
+    logger.error(req.body.hNumber);
     const result = await shopperVisit.createVisit((req.body.hNumber).substring(0,8), '');
     if (checkoutResult.status === 'success') {
       res.json({ success: true });

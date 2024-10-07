@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, Outlet, useLocation, Link as RouterLink } from 'react-router-dom';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
@@ -19,31 +19,29 @@ import ProtectedRoute from './ProtectedRoutes.jsx';
 import UserSidebar from './components/login/sidebar.jsx';
 import { styled } from '@mui/system';
 import ManageUsers from './components/users/manageUsers.jsx';
+import TrainingModules from './components/users/training.jsx';
 
-// Main content wrapper with margin to accommodate the sidebar
 const ContentWrapper = styled('div')({
-  marginLeft: '100px', // Shifts content to accommodate the collapsed sidebar width
+  marginLeft: '100px', 
 });
 
 function App() {
   const location = useLocation();
-  const api = useNewApi(); // Create the API object using the hook
-  useEffect(() => {
-    if (window.location.protocol === 'https:') {
-      window.location.href = window.location.href.replace('https:', 'http:');
-    }
-  }, []);
-  return (
-    <ApiContext.Provider value={api}> {/* Wrap the app in ApiContext.Provider */}
-      <RequireLogin> {/* Protect your routes with RequireLogin */}
-        <div>
-          {/* Render the sidebar only if the route is not /login */}
-          {location.pathname !== '/login' && <UserSidebar userName={api.name} />}
+  const api = useNewApi(); 
+  const [isTrained, setIsTrained] = useState(false);
+  const [counter, setCounter] = useState(0);
 
-          {/* Content Wrapper to shift based on sidebar */}
+  return (
+    <ApiContext.Provider value={api}>
+      <RequireLogin isTrained={isTrained} setIsTrained={setIsTrained} counter={counter} setCounter={setCounter}>
+          {location.pathname !== '/login' && <UserSidebar userName={api.name} />}
+          <div>
           <ContentWrapper>
             {location.pathname !== '/' && (
-              <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+              <Breadcrumbs
+                separator={<NavigateNextIcon fontSize="small" />}
+                aria-label="breadcrumb"
+              >
                 <Link component={RouterLink} to="/" className="breadcrumbLink">
                   Home
                 </Link>
@@ -64,7 +62,11 @@ function App() {
                 )}
                 {location.pathname.includes('/inventory/shipment') && (
                   <ProtectedRoute allowedRoles={['admin', 'worker']}>
-                    <Link component={RouterLink} to="/inventory/shipment" className="breadcrumbLink">
+                    <Link
+                      component={RouterLink}
+                      to="/inventory/shipment"
+                      className="breadcrumbLink"
+                    >
                       Shipment
                     </Link>
                   </ProtectedRoute>
@@ -103,7 +105,6 @@ function App() {
               </Breadcrumbs>
             )}
 
-            {/* Routes and Outlet for rendering child components */}
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/inventory" element={<InventoryLandingPage />} />
@@ -112,8 +113,9 @@ function App() {
               <Route path="/inventory/add" element={<AddItem />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/checkin" element={<Checkin />} />
-              <Route path="/logout" element={<Logout />} />
+              <Route path="/logout" element={<Logout  isTrained={isTrained} setIsTrained={setIsTrained} counter={counter} setCounter={setCounter}/>} />
               <Route path="/users" element={<ManageUsers />} />
+
 
             </Routes>
 
@@ -122,7 +124,7 @@ function App() {
         </div>
       </RequireLogin>
     </ApiContext.Provider>
-  );
+  )
 }
 
 export default App;

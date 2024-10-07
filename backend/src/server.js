@@ -43,7 +43,7 @@ app.use(express.json());
 app.use('/api/inventory', checkCredentials ,inventoryRoutes);
 app.use('/api/shopper', checkCredentials, requireVolunteerPermissions, shopperRoutes);
 app.use('/api/login', loginRoutes );
-app.use('/api/users', checkCredentials, requireAdminPermissions, userRoutes);
+app.use('/api/users', checkCredentials, userRoutes);
 
 // Database
 (async () => {

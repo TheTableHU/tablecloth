@@ -21,3 +21,6 @@
   #app > div > nav > ol {
     margin-left: 12px;
   }
+  @tailwind base;
+@tailwind components;
+@tailwind utilities;

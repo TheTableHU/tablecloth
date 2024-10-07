@@ -12,19 +12,19 @@ export default function LandingPage() {
       <div id="app" className="cardDisplay">
         <Link to="/inventory/shipment" className="card-link">
           <Card className="MuiCard-root" variant="outlined">
-            <Typography className="cardContent">Shipment</Typography>
+            <Typography className="cardContent" sx={{ fontSize: '2rem', fontWeight: 'bold' }}>Shipment</Typography>
           </Card>
         </Link>
 
         <Link to="/inventory/add" className="card-link">
           <Card className="MuiCard-root" variant="outlined">
-            <Typography className="cardContent">Add Item</Typography>
+            <Typography className="cardContent" sx={{ fontSize: '2rem', fontWeight: 'bold' }}>Add Item</Typography>
           </Card>
         </Link>
 
         <Link to="/inventory/list" className="card-link">
           <Card className="MuiCard-root" variant="outlined">
-            <Typography className="cardContent">List</Typography>
+            <Typography className="cardContent" sx={{ fontSize: '2rem', fontWeight: 'bold' }}>List</Typography>
           </Card>
         </Link>
       </div>

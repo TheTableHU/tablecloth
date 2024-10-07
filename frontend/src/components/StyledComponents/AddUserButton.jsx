@@ -10,20 +10,6 @@ import { ToastWrapper } from '../../Wrappers';
 // Example roles data for the Autocomplete
 const roles = ['admin', 'worker', 'user'];
 
-// Mock API function for adding a user
-const api = {
-  addUser: async (name, hNumber, email, role) => {
-    // Simulate an API response with success for testing
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          json: async () => ({ success: true }), // Simulating a successful response
-        });
-      }, 500);
-    });
-  },
-};
-
 export const AddUserButton = ({ actions, setActions }) => {
   const api = useApi();
   const [showForm, setShowForm] = useState(false);
@@ -31,6 +17,7 @@ export const AddUserButton = ({ actions, setActions }) => {
   const [hNumber, setHNumber] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleCloseModal = () => {
     setShowForm(false);
@@ -50,7 +37,7 @@ export const AddUserButton = ({ actions, setActions }) => {
     if (!name || !hNumber || !email || !role) {
       return;
     }
-
+    setLoading(true);
     let response = await api.addUser(name, hNumber, role, email);
 
     if (response.status == 409) {
@@ -59,8 +46,9 @@ export const AddUserButton = ({ actions, setActions }) => {
       toast.success('Account created and credentials sent to ' + email);
       setActions(actions + 1);
     } else {
-      toast.success('Error while creating user');
+      toast.error('Error while creating user');
     }
+    setLoading(false);
     handleCloseModal();
   };
 
@@ -89,6 +77,7 @@ export const AddUserButton = ({ actions, setActions }) => {
         }}
         startIcon={<AddCircleIcon />}
         onClick={() => setShowForm(true)}
+
       >
         Add User
       </Button>
@@ -139,8 +128,8 @@ export const AddUserButton = ({ actions, setActions }) => {
             />
           </DialogContent>
           <DialogActions>
-            <Button type="submit" variant="contained" disabled={!isFormValid}>
-              Add
+            <Button type="submit" variant="contained" disabled={!isFormValid || loading}>
+              {loading? 'Creating account...' : 'Add'}
             </Button>
             <Button onClick={handleCloseModal} variant="outlined">
               Cancel

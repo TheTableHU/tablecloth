@@ -42,6 +42,10 @@ try {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    lastTrainingDate:{
+      type: DataTypes.DATE,
+      allowNull: true
+    }
   }, {
     tableName: 'Users',
     timestamps: false,
@@ -65,7 +69,8 @@ try {
           name: findUser.name,
           email: findUser.email,
           role: findUser.role,
-          hNumber: findUser.hNumber
+          hNumber: findUser.hNumber,
+          lastTrainingDate: findUser.lastTrainingDate
         } };
       } else {
         logger.error("H#" + findUser.hNumber + " used with incorrect PIN.")
@@ -80,7 +85,7 @@ try {
   const generateToken = async (payload) => {
     const secretKey = privateKey;
     const options = {
-      expiresIn: '1h',
+      expiresIn: '2h',
       algorithm: 'RS256'
     };
 

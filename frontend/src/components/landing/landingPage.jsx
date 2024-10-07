@@ -16,24 +16,24 @@ export default function LandingPage() {
       <div id="app" className="cardDisplay">
         <Link to="/checkin" className="card-link">
           <Card className="MuiCard-root" variant="outlined">
-            <Typography className="cardContent">Check-in</Typography>
+            <Typography className="cardContent" sx={{ fontSize: '2rem', fontWeight: 'bold' }}>New-Shopper</Typography>
           </Card>
         </Link>
 
         <Link to="/checkout" className="card-link">
           <Card className="MuiCard-root" variant="outlined">
-            <Typography className="cardContent">Check-out</Typography>
+            <Typography className="cardContent" sx={{ fontSize: '2rem', fontWeight: 'bold' }}>Check-out</Typography>
           </Card>
         </Link>
         { ['admin', 'worker'].includes(api.role) && (<Link to="/inventory" className="card-link">
           <Card className="MuiCard-root" variant="outlined">
-            <Typography className="cardContent">Inventory</Typography>
+            <Typography className="cardContent"  sx={{ fontSize: '2rem', fontWeight: 'bold' }}>Inventory</Typography>
           </Card>
         </Link>)
 }
 { ['admin'].includes(api.role) && (<Link to="/users" className="card-link">
           <Card className="MuiCard-root" variant="outlined">
-            <Typography className="cardContent">Manage-Users</Typography>
+            <Typography className="cardContent" sx={{ fontSize: '2rem', fontWeight: 'bold' }}>Manage-Users</Typography>
           </Card>
         </Link>)
 }

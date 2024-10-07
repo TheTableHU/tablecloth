@@ -108,13 +108,14 @@ const UsersTable = ({ search, setSearch, actions, setActions}) => {
   };
 
   const handleReset = async () => {
+    closeResetDialog();
+
     let response = await api.resetPIN(selectedUserForReset.hNumber);
     if (response.status === 200) {
       toast.success('New PIN has been sent to ' + selectedUserForReset.name);
     } else {
       toast.error('Error while trying to reset PIN');
     }
-    closeResetDialog();
   };
 
   return (

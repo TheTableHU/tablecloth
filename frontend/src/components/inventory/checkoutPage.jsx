@@ -97,6 +97,7 @@ export default function CheckoutPage() {
         console.error('Selected item not found in inventory.');
       }
     }
+    document.getElementById('barcodeInput').focus();
   }
 
   function handleBarcodeSubmit() {
@@ -115,6 +116,7 @@ export default function CheckoutPage() {
 
   function deleteButton(itemId) {
     setItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
+    document.getElementById('barcodeInput').focus();
   }
 
   async function handleSubmit(override) {
@@ -227,13 +229,15 @@ export default function CheckoutPage() {
           >
             <h2
               style={{
-                textAlign: 'center', // Center the text
-                padding: '20px', // Add padding
-                backgroundColor: 'rgba(76, 175, 80, 0.2)', // Greenish background with opacity
-                borderRadius: '4px', // Optional: rounded corners
-                margin: 'auto', // Center the element itself
-                width: '80%', // Optional: specify width for better layout
-                display: 'inline-block', // Ensure the background applies correctly
+                textAlign: 'center', 
+                padding: '20px', 
+                backgroundColor: 'rgba(76, 175, 80, 0.2)', 
+                borderRadius: '4px',
+                margin: 'auto',
+                width: '80%',
+                display: 'inline-block', 
+                fontSize: '1.5rem',
+                fontWeight: 'bold'
               }}
             >
               Please Scan the Shopper's ID
@@ -279,6 +283,7 @@ export default function CheckoutPage() {
                 onChange={(e) => setBarcode(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleBarcodeSubmit()}
                 autoFocus
+                autoComplete='off'
                 fullWidth
               />
             </Grid>

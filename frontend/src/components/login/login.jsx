@@ -18,13 +18,92 @@ import { Typography } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastWrapper } from '../../Wrappers.jsx';
+import TrainingModules from '../users/training.jsx';
+import UserSidebar from './sidebar.jsx';
+import { Route, Routes } from 'react-router-dom';
+import Logout from './logout.jsx';
 
-export default function RequireLogin({ children }) {
+const ContentWrapper = styled('div')({
+  marginLeft: '100px',
+  maxHeight: '100vh',
+});
+
+export default function RequireLogin({ children, isTrained, setIsTrained, counter, setCounter }) {
   const api = useApi();
+  const [lastTrainingDate, setLastTrainingDate] = useState(() => new Date(sessionStorage.getItem('lastTrainingDate')));
+
+  useEffect(() => {
+    const checkTraining = () => {
+      const currentDate = new Date();
+      const fourMonthsAgo = new Date();
+      const trainingD = sessionStorage.getItem('lastTrainingDate');
+      fourMonthsAgo.setMonth(currentDate.getMonth() - 4);
+      if (trainingD === 'null' || trainingD === null || new Date(trainingD) < fourMonthsAgo) {
+        setIsTrained(false);
+      } else {
+        setIsTrained(true);
+      }
+    };
+
+    checkTraining();
+    
+    const handleStorageChange = () => {
+      const newTrainingDate = new Date(sessionStorage.getItem('lastTrainingDate'));
+      setLastTrainingDate(newTrainingDate);
+      checkTraining(); // Check training status when storage changes
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [setIsTrained, counter]);
+
+  useEffect(() => {
+    if (!api.loggedIn || api.isTokenExpired) {
+      api.setToken(null);
+    } else {
+      // Check training again after login state changes
+      const trainingD = sessionStorage.getItem('lastTrainingDate');
+      if (trainingD !== 'null' && trainingD !== null) {
+        const trainingDate = new Date(trainingD);
+        const fourMonthsAgo = new Date();
+        fourMonthsAgo.setMonth(new Date().getMonth() - 4);
+        if (trainingDate >= fourMonthsAgo) {
+          setIsTrained(true);
+        } else {
+          setIsTrained(false);
+        }
+      } else {
+        setIsTrained(false);
+      }
+    }
+  }, [api.loggedIn, api.isTokenExpired, setIsTrained]);
+  useEffect(() => {
+    if (!api.loggedIn || api.isTokenExpired) {
+      api.setToken(null); 
+    }
+  }, [api]);
+
   if (api.loggedIn && api.isTokenExpired == false) {
-    return <>{children}</>;
+    if (!isTrained) {
+
+      return (
+        <>
+          <ToastWrapper />
+          <ContentWrapper>
+            <UserSidebar userName={api.name} />
+            <TrainingModules isTrained={isTrained} setIsTrained={setIsTrained} counter={counter} setCounter={setCounter}/>
+            <Routes>
+              <Route path="/logout" element={<Logout  isTrained={isTrained} setIsTrained={setIsTrained} counter={counter} setCounter={setCounter}/>} />
+            </Routes>
+          </ContentWrapper>
+        </>
+      );
+    } else {
+      return <>{children}</>;
+    }
   } else {
-    api.setToken(null);
     return (
       <>
         <div className="background"></div>

@@ -1,60 +1,66 @@
 .card-link {
-    text-decoration: none;
-    color: inherit;
-    margin: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: box-shadow 0.3s ease-in-out;
-  }
-  
-  .MuiCard-root {
-    width: 300px;
-    height: 300px;
-    background-color: #fff; /* Set background color of the card */
-    border: 1px solid #ddd; /* Add border for a subtle separation */
-    border-radius: 8px; /* Add border radius for rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add box shadow for a lifted effect */
-    background-color: transparent;
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 5s ease-in-out; /* Combine transitions */
-  }
-  
-  .MuiCard-root:hover {
-    transform: scale(1.05); /* Adad a slight scale effect on hover */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase box shadow on hover */
-    background-color: lightblue;
-  }
-  
-  .cardContent {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    height: 100%; /* Ensure the content takes the full height of the card */
-  }
-  
-  .MuiCard-root .MuiTypography-root {
-    font-size: 48px;
-  }
-  
-  .cardDisplay {
-    display: flex;
-    flex-wrap: wrap; /* Allows cards to wrap to the next row */
-    justify-content: center;
-    gap: 20px; /* Adds space between the cards */
-    padding: 20px; /* Adds padding to avoid the cards touching the screen edges */
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.MuiCard-root {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 20vw; 
+}
+
+.MuiCard-root:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  background-color: lightblue;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.MuiTypography-root {
+  font-size: 10rem; /* Larger text */
+  font-weight: bold; /* Bold text */
+}
+
+.cardDisplay {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  width: 100%;
 }
 
 #landingImageContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
-  #landingLogo {
-    width: 20%;
-    height: 20%;
-    object-fit: cover;
-  }
+#landingLogo {
+  width: 20%;
+  height: 20%;
+  object-fit: cover;
+  max-width: 200px;
+  max-height: 200px;
+}

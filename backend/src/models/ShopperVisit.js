@@ -35,29 +35,18 @@ module.exports = (sequelize, DataTypes) => {
 
   // Makes a new entry logging when a shopper visits
   ShopperVisit.createVisit = async function (hNumber, howAreWeHelping) {
-    const centralTime = new Intl.DateTimeFormat('en-US', {
-      timeZone: 'America/Chicago',
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      hour12: false, // Use 24-hour format
-    }).format(new Date());
-
     try {
       const result = await ShopperVisit.create({
         hNumber: hNumber,
-        visitTime: centralTime,
+        visitTime: new Date(),
         howAreWeHelping: howAreWeHelping || null,
       });
 
-      logger.info(`Shopper ${hNumber} visited at ${centralTime}`);
+      logger.info(`Shopper ${hNumber} visited at ${new Date()}`);
 
       return result;
     } catch (error) {
-      logger.error(error);
+      logger.error(error.message);
       return null;
     }
   };

@@ -13,4 +13,7 @@ export default defineConfig({
     outDir: 'build',
   },
   plugins: [react()],
+  css: {
+    postcss: './postcss.config.js'
+  }
 });

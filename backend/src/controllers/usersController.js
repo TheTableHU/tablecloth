@@ -54,8 +54,6 @@ async function addUser(req, res) {
         return res.status(500).json({ message: "Error while creating user" });
     }
 }
-
-
 async function getUsers(req, res) {
     try {
         const allUsers = await usersModel.findAll();
@@ -75,7 +73,6 @@ async function getUsers(req, res) {
 async function updateUser(req, res) {
     const row = req.body.row;
 
-    // Validate required fields
     if (!row || !row.hNumber || !row.name || !row.email || !row.role) {
         return res.status(400).json({ message: 'Missing required fields: hNumber, name, email, and role are required.' });
     }
@@ -176,8 +173,20 @@ async function resetPIN(req, res) {
         return res.status(500).json({ message: 'Could not reset PIN: ' + error.message });
     }
 }
-
+async function updateTraining(req, res){
+    let hNumber = res.locals.hNumber;
+    try{
+    usersModel.update({lastTrainingDate: new Date()},{
+        where: {hNumber}
+    });
+    res.status(200).json({message: "Training updated"});
+}catch(err){
+    info.error(err.message);
+    res.status(500).json({message: err.message});
+}
+}
 module.exports = {
+    updateTraining,
     addUser,
     getUsers,
     updateUser,

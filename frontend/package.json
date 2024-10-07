@@ -7,6 +7,8 @@
     "@babel/core": "^7.0.0-0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@heroicons/react": "^2.1.5",
+    "@material-tailwind/react": "^2.1.10",
     "@mui/icons-material": "^5.14.18",
     "@mui/joy": "^5.0.0-beta.48",
     "@mui/material": "^5.14.18",
@@ -17,6 +19,7 @@
     "bcryptjs": "^2.4.3",
     "eslint": "^7",
     "jwt-decode": "^4.0.0",
+    "primereact": "^10.8.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-pro-sidebar": "^1.1.0",
@@ -25,7 +28,10 @@
     "vite": "^5.0.12"
   },
   "devDependencies": {
-    "@babel/plugin-transform-private-property-in-object": "^7.21.11"
+    "@babel/plugin-transform-private-property-in-object": "^7.21.11",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13"
   },
   "scripts": {
     "start": "vite",
