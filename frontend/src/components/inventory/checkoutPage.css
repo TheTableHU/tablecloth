@@ -10,6 +10,11 @@
   .itemSelect {
     flex: 1;
   }
+  .checkoutBtn{
+    padding: 50px;
+    font-size: 30px;
+    border-radius: 40px;
+  }
 
   .listItem {
     flex: 1;

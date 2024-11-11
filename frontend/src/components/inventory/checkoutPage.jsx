@@ -275,6 +275,7 @@ export default function CheckoutPage() {
             <Grid item xs={12} sm={4}>
               <TextField
                 style={{
+                  marginTop: '10px',
                   left: '10px',
                 }}
                 id="barcodeInput"
@@ -287,7 +288,7 @@ export default function CheckoutPage() {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={8}>
+            {/* <Grid item xs={12} sm={8}>
               <ItemForm
                 receivedData={receivedData}
                 selectedItem={selectedItem}
@@ -296,7 +297,7 @@ export default function CheckoutPage() {
                 setQuantity={setQuantity}
                 addButton={addButton}
               />
-            </Grid>
+            </Grid> */}
           </Grid>
           <Box>
             <ItemList items={items} deleteButton={deleteButton} updateQuantity={updateQuantity} />
@@ -305,6 +306,7 @@ export default function CheckoutPage() {
             color="secondary"
             variant="extended"
             aria-label="checkout"
+            className="checkoutBtn"
             disabled={loading}
             onClick={() => handleSubmit(false)}
             sx={{
@@ -314,6 +316,9 @@ export default function CheckoutPage() {
               fontSize: '20px',
               padding: '16px 32px',
               minWidth: '160px',
+              padding: "50px",
+              fontSize: "30px",
+              borderRadius: "40px",
             }}
           >
             <ShoppingCartCheckoutIcon sx={{ mr: 1, fontSize: '30px' }} />

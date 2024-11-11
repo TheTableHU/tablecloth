@@ -61,7 +61,7 @@ export default function RequireLogin({ children, isTrained, setIsTrained, counte
 
   useEffect(() => {
     if (!api.loggedIn || api.isTokenExpired) {
-      api.setToken(null);
+      // api.setToken(null);
     } else {
       // Check training again after login state changes
       const trainingD = sessionStorage.getItem('lastTrainingDate');
@@ -81,7 +81,7 @@ export default function RequireLogin({ children, isTrained, setIsTrained, counte
   }, [api.loggedIn, api.isTokenExpired, setIsTrained]);
   useEffect(() => {
     if (!api.loggedIn || api.isTokenExpired) {
-      api.setToken(null); 
+      // api.setToken(null); 
     }
   }, [api]);
 

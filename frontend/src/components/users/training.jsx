@@ -12,11 +12,6 @@ export default function TrainingModules({isTrained, setIsTrained}) {
   const [isLastStep, setIsLastStep] = React.useState(false);
   const [isFirstStep, setIsFirstStep] = React.useState(false);
   const [videoWatched, setVideoWatched] = useState(false);
-  useEffect(()=>{
-    toast.warning(
-      'You have not been trained. Please take the training module before using the system.',
-    );
-  },[])
   async function handleDone() {
     let result = await api.updateTraining();
     setIsTrained(true);
